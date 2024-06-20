@@ -1,6 +1,6 @@
 // app/api/getUserId/route.ts
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import { authOptions } from "../auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 
 export async function GET() {
