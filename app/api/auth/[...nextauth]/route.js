@@ -1,38 +1,23 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+// app/api/auth/[...nextauth]/route.ts
+import NextAuth from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { PrismaClient } from "@prisma/client";
-import { JWT } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
-
-// Extendemos el tipo `Session` para incluir `accessToken`
-declare module "next-auth" {
-  interface Session {
-    accessToken?: string;
-    user: {
-      id?: string;
-      email?: string;
-      name?: string;
-    };
-  }
-}
 
 const prisma = new PrismaClient();
 
-async function requestRefreshOfAccessToken(token: JWT): Promise<JWT> {
+async function requestRefreshOfAccessToken(token) {
   const response = await fetch(`${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token`, {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      client_id: process.env.KEYCLOAK_CLIENT_ID!,
-      client_secret: process.env.KEYCLOAK_CLIENT_SECRET!,
+      client_id: process.env.KEYCLOAK_CLIENT_ID,
+      client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
       grant_type: "refresh_token",
-      refresh_token: token.refreshToken as string,
+      refresh_token: token.refreshToken,
     }),
     method: "POST",
   });
-
   const tokens = await response.json();
   if (!response.ok) throw tokens;
-
   return {
     ...token,
     accessToken: tokens.access_token,
@@ -42,15 +27,15 @@ async function requestRefreshOfAccessToken(token: JWT): Promise<JWT> {
   };
 }
 
-const authOptions: NextAuthOptions = {
+export const authOptions = {
   providers: [
     KeycloakProvider({
-      clientId: process.env.KEYCLOAK_CLIENT_ID!,
-      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
-      issuer: process.env.KEYCLOAK_ISSUER!,
+      clientId: process.env.KEYCLOAK_CLIENT_ID,
+      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
+      issuer: process.env.KEYCLOAK_ISSUER,
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET!,
+  secret: process.env.NEXTAUTH_SECRET,
   session: { maxAge: 60 * 30 },
   callbacks: {
     async jwt({ token, account, user }) {
@@ -60,13 +45,13 @@ const authOptions: NextAuthOptions = {
           accessToken: account.access_token,
           idToken: account.id_token,
           refreshToken: account.refresh_token,
-          expiresAt: account.expires_at as number,
+          expiresAt: account.expires_at,
         };
       }
       if (user) {
         token.id = user.id;  // Asegúrate de agregar el ID del usuario al token
       }
-      if (Date.now() < (token.expiresAt as number) * 1000 - 60 * 1000) {
+      if (Date.now() < token.expiresAt * 1000 - 60 * 1000) {
         return token;
       } else {
         try {
@@ -80,7 +65,6 @@ const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
-      session.user = session.user || {}; // Asegurarse de que session.user esté definido
       session.user.id = token.id;  // Asegúrate de que el ID del usuario esté en la sesión
       return session;
     },
@@ -91,8 +75,8 @@ const authOptions: NextAuthOptions = {
         if (!existingUser) {
           const newUser = await prisma.user.create({
             data: {
-              email: user.email!,
-              name: user.name!,
+              email: user.email,
+              name: user.name,
             },
           });
           user.id = newUser.id;  // Asigna el nuevo ID de usuario
@@ -109,5 +93,5 @@ const authOptions: NextAuthOptions = {
   },
 };
 
-const handler = (req: NextRequest) => NextAuth(authOptions)(req, new NextResponse());
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
