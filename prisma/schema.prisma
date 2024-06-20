@@ -14,7 +14,15 @@ model User {
   id        String    @id @default(cuid())
   email     String    @unique
   name      String?
-  employees Employee[]
+  companies Company[]
+}
+
+model Company {
+  id         String    @id @default(cuid())
+  name       String
+  userId     String
+  user       User      @relation(fields: [userId], references: [id])
+  employees  Employee[]
 }
 
 model Employee {
@@ -23,8 +31,8 @@ model Employee {
   role        String
   department  String
   description String
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
 }
 
 // model Contact {

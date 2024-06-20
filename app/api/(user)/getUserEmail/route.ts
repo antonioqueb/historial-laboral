@@ -1,6 +1,6 @@
 // app/api/getUserEmail/route.ts
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/authOptions";
+import { authOptions } from "../../(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 
 
