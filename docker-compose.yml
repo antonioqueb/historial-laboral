@@ -1,0 +1,6 @@
+services:
+  historial-laboral-service:
+    container_name: historial-laboral-image
+    build: .
+    ports:
+      - "108:3000"
