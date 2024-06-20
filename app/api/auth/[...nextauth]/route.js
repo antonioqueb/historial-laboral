@@ -1,11 +1,31 @@
-// app/api/auth/[...nextauth]/route.ts
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function requestRefreshOfAccessToken(token) {
+interface Token {
+  accessToken: string;
+  idToken: string;
+  refreshToken: string;
+  expiresAt: number;
+  error?: string;
+}
+
+interface Account {
+  access_token: string;
+  id_token: string;
+  refresh_token: string;
+  expires_at: number;
+}
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
+async function requestRefreshOfAccessToken(token: Token): Promise<Token> {
   const response = await fetch(`${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token`, {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
@@ -27,35 +47,35 @@ async function requestRefreshOfAccessToken(token) {
   };
 }
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     KeycloakProvider({
-      clientId: process.env.KEYCLOAK_CLIENT_ID,
-      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
-      issuer: process.env.KEYCLOAK_ISSUER,
+      clientId: process.env.KEYCLOAK_CLIENT_ID!,
+      clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
+      issuer: process.env.KEYCLOAK_ISSUER!,
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET!,
   session: { maxAge: 60 * 30 },
   callbacks: {
     async jwt({ token, account, user }) {
       if (account) {
         token = {
           ...token,
-          accessToken: account.access_token,
-          idToken: account.id_token,
-          refreshToken: account.refresh_token,
-          expiresAt: account.expires_at,
+          accessToken: (account as Account).access_token,
+          idToken: (account as Account).id_token,
+          refreshToken: (account as Account).refresh_token,
+          expiresAt: (account as Account).expires_at,
         };
       }
       if (user) {
-        token.id = user.id;  // Asegúrate de agregar el ID del usuario al token
+        token.id = (user as User).id;
       }
       if (Date.now() < token.expiresAt * 1000 - 60 * 1000) {
         return token;
       } else {
         try {
-          token = await requestRefreshOfAccessToken(token);
+          token = await requestRefreshOfAccessToken(token as Token);
         } catch (error) {
           console.error("Error refreshing access token", error);
           return { ...token, error: "RefreshAccessTokenError" };
@@ -64,24 +84,24 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken;
-      session.user.id = token.id;  // Asegúrate de que el ID del usuario esté en la sesión
+      session.accessToken = (token as Token).accessToken;
+      session.user.id = (token as Token).id;
       return session;
     },
     async signIn({ user, account, profile }) {
-      const email = user.email;
+      const email = (user as User).email;
       if (email) {
         const existingUser = await prisma.user.findUnique({ where: { email } });
         if (!existingUser) {
           const newUser = await prisma.user.create({
             data: {
-              email: user.email,
-              name: user.name,
+              email: (user as User).email,
+              name: (user as User).name,
             },
           });
-          user.id = newUser.id;  // Asigna el nuevo ID de usuario
+          (user as User).id = newUser.id;
         } else {
-          user.id = existingUser.id;  // Asigna el ID del usuario existente
+          (user as User).id = existingUser.id;
         }
       }
       return true;
