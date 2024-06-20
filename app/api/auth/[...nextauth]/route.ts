@@ -48,7 +48,7 @@ async function requestRefreshOfAccessToken(token: Token): Promise<Token> {
   };
 }
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID!,
@@ -119,5 +119,4 @@ const authHandler = async (req: NextRequest) => {
   return response;
 };
 
-export const GET = authHandler;
-export const POST = authHandler;
+export { authHandler as GET, authHandler as POST, authOptions };
