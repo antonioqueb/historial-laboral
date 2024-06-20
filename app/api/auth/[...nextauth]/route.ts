@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { PrismaClient } from "@prisma/client";
 
@@ -48,7 +48,7 @@ async function requestRefreshOfAccessToken(token: Token): Promise<Token> {
   };
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions = {
   providers: [
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID!,
@@ -115,8 +115,10 @@ export const authOptions: NextAuthOptions = {
 };
 
 const authHandler = async (req: NextRequest) => {
-  const response = await NextAuth(req, authOptions);
-  return response;
+  return NextAuth(req, authOptions);
 };
 
-export { authHandler as GET, authHandler as POST };
+export const GET = authHandler;
+export const POST = authHandler;
+
+export default authOptions;
