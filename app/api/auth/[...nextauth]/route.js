@@ -29,8 +29,8 @@ async function requestRefreshOfAccessToken(token: Token): Promise<Token> {
   const response = await fetch(`${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token`, {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      client_id: process.env.KEYCLOAK_CLIENT_ID,
-      client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
+      client_id: process.env.KEYCLOAK_CLIENT_ID!,
+      client_secret: process.env.KEYCLOAK_CLIENT_SECRET!,
       grant_type: "refresh_token",
       refresh_token: token.refreshToken,
     }),
