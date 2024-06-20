@@ -1,10 +1,9 @@
-// app/api/getUserEmail/route.ts
+// app/api/getUserName/route.ts
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/authOptions";
+import { authOptions } from "../../auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 
-
-// Define the type for the session with the user email
+// Define the type for the session with the user name
 interface ExtendedSession {
   user: {
     id: string;
@@ -14,11 +13,14 @@ interface ExtendedSession {
   };
 }
 
-
 export async function GET() {
     const session = await getServerSession(authOptions) as ExtendedSession | null;
-    if (!session || !session.user || !session.user.email) {
+    if (!session || !session.user || !session.user.name) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    return NextResponse.json({ email: session.user.email }, { status: 200 });
+    
+    const fullName = session.user.name;
+    const firstName = fullName.split(" ").slice(0, 2).join(" ");
+
+    return NextResponse.json({ name: firstName }, { status: 200 });
 }

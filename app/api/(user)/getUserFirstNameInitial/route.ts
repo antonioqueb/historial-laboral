@@ -1,6 +1,6 @@
-// app/api/getUserName/route.ts
+// app/api/getUserFirstNameInitial/route.ts
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/authOptions";
+import { authOptions } from "../../auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 
 // Define the type for the session with the user name
@@ -20,7 +20,7 @@ export async function GET() {
     }
     
     const fullName = session.user.name;
-    const firstName = fullName.split(" ").slice(0, 2).join(" ");
+    const firstNameInitial = fullName.split(" ")[0].charAt(0).toUpperCase();
 
-    return NextResponse.json({ name: firstName }, { status: 200 });
+    return NextResponse.json({ initial: firstNameInitial }, { status: 200 });
 }
