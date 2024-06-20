@@ -1,8 +1,8 @@
-import NextAuth, { NextAuthOptions, RequestInternal } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { PrismaClient } from "@prisma/client";
 import { JWT } from "next-auth/jwt";
-import { Session } from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
 
 // Extendemos el tipo `Session` para incluir `accessToken`
 declare module "next-auth" {
@@ -42,7 +42,7 @@ async function requestRefreshOfAccessToken(token: JWT): Promise<JWT> {
   };
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID!,
@@ -109,5 +109,5 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-const handler = NextAuth(authOptions);
+const handler = (req: NextRequest) => NextAuth(authOptions)(req, new NextResponse());
 export { handler as GET, handler as POST };
