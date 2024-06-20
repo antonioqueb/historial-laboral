@@ -10,6 +10,7 @@ interface Token {
   refreshToken: string;
   idToken: string;
   expiresAt: number;
+  id?: string; // Añadir la propiedad 'id'
   error?: string;
 }
 
@@ -56,6 +57,9 @@ export const authOptions: NextAuthOptions = {
           expiresAt: account.expires_at!,
         };
       }
+      if (user) {
+        newToken.id = user.id; // Añadir el ID del usuario al token
+      }
       if (Date.now() < newToken.expiresAt * 1000 - 60 * 1000) {
         return newToken as unknown as JWT;
       } else {
@@ -71,7 +75,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       (session as Session & { accessToken?: string }).accessToken = (token as unknown as Token).accessToken;
       if (session.user) {
-        (session.user as { id?: string }).id = (token as any).id;
+        (session.user as { id?: string }).id = (token as any).id; // Añadir el ID del usuario a la sesión
       }
       return session;
     },
@@ -91,6 +95,7 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
   },
+  
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
