@@ -1,4 +1,4 @@
-import { NextApiHandler } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import NextAuth, { NextAuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { PrismaClient } from "@prisma/client";
@@ -114,6 +114,10 @@ const authOptions: NextAuthOptions = {
   },
 };
 
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, authOptions);
+const authHandler = async (req: NextRequest) => {
+  const response = await NextAuth(req, authOptions);
+  return response;
+};
 
-export { authHandler as GET, authHandler as POST };
+export const GET = authHandler;
+export const POST = authHandler;
