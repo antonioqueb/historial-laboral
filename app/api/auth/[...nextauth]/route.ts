@@ -119,4 +119,4 @@ const authHandler = async (req: NextRequest) => {
   return response;
 };
 
-export { authHandler as GET, authHandler as POST, authOptions };
+export { authHandler as GET, authHandler as POST };
