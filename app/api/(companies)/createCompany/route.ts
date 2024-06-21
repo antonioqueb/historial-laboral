@@ -12,13 +12,50 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, userId } = await req.json();
+    const {
+        name,
+        userId,
+        razonSocial,
+        rfc,
+        domicilioFiscalCalle,
+        domicilioFiscalNumero,
+        domicilioFiscalColonia,
+        domicilioFiscalMunicipio,
+        domicilioFiscalEstado,
+        domicilioFiscalCodigoPostal,
+        nombreComercial,
+        objetoSocial,
+        representanteLegalNombre,
+        representanteLegalCurp,
+        capitalSocial,
+        registrosImss,
+        registrosInfonavit,
+        giroActividadEconomica,
+        certificaciones
+    } = await req.json();
 
     // Crear la empresa en la base de datos
     const company = await prisma.company.create({
         data: {
-            name: name,
-            userId: userId,
+            name,
+            userId,
+            razonSocial,
+            rfc,
+            domicilioFiscalCalle,
+            domicilioFiscalNumero,
+            domicilioFiscalColonia,
+            domicilioFiscalMunicipio,
+            domicilioFiscalEstado,
+            domicilioFiscalCodigoPostal,
+            nombreComercial,
+            objetoSocial,
+            representanteLegalNombre,
+            representanteLegalCurp,
+            capitalSocial,
+            registrosImss,
+            registrosInfonavit,
+            giroActividadEconomica,
+            certificaciones
         },
     });
 

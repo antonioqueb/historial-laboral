@@ -9,6 +9,25 @@ export default function CreateCompany() {
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
 
+  // Nuevos campos
+  const [razonSocial, setRazonSocial] = useState("");
+  const [rfc, setRfc] = useState("");
+  const [domicilioFiscalCalle, setDomicilioFiscalCalle] = useState("");
+  const [domicilioFiscalNumero, setDomicilioFiscalNumero] = useState("");
+  const [domicilioFiscalColonia, setDomicilioFiscalColonia] = useState("");
+  const [domicilioFiscalMunicipio, setDomicilioFiscalMunicipio] = useState("");
+  const [domicilioFiscalEstado, setDomicilioFiscalEstado] = useState("");
+  const [domicilioFiscalCodigoPostal, setDomicilioFiscalCodigoPostal] = useState("");
+  const [nombreComercial, setNombreComercial] = useState("");
+  const [objetoSocial, setObjetoSocial] = useState("");
+  const [representanteLegalNombre, setRepresentanteLegalNombre] = useState("");
+  const [representanteLegalCurp, setRepresentanteLegalCurp] = useState("");
+  const [capitalSocial, setCapitalSocial] = useState(0.0);
+  const [registrosImss, setRegistrosImss] = useState("");
+  const [registrosInfonavit, setRegistrosInfonavit] = useState("");
+  const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
+  const [certificaciones, setCertificaciones] = useState("");
+
   useEffect(() => {
     if (session) {
       const fetchUserId = async () => {
@@ -42,7 +61,27 @@ export default function CreateCompany() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, userId }),
+      body: JSON.stringify({
+        name,
+        userId,
+        razonSocial,
+        rfc,
+        domicilioFiscalCalle,
+        domicilioFiscalNumero,
+        domicilioFiscalColonia,
+        domicilioFiscalMunicipio,
+        domicilioFiscalEstado,
+        domicilioFiscalCodigoPostal,
+        nombreComercial,
+        objetoSocial,
+        representanteLegalNombre,
+        representanteLegalCurp,
+        capitalSocial,
+        registrosImss,
+        registrosInfonavit,
+        giroActividadEconomica,
+        certificaciones
+      }),
     });
 
     if (res.ok) {
@@ -84,6 +123,25 @@ export default function CreateCompany() {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
+
+            {/* Nuevos campos */}
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="razonSocial">
+                Razón Social:
+              </label>
+              <input
+                id="razonSocial"
+                type="text"
+                value={razonSocial}
+                onChange={(e) => setRazonSocial(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+
+            {/* Agregar el resto de los campos de la misma manera */}
+            
+            {/* Botón para enviar */}
             <button
               type="submit"
               className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"

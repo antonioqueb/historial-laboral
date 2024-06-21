@@ -18,12 +18,31 @@ model User {
 }
 
 model Company {
-  id         String    @id @default(cuid())
-  name       String
-  userId     String
-  user       User      @relation(fields: [userId], references: [id])
-  employees  Employee[]
+  id                     String   @id @default(cuid())
+  name                   String
+  userId                 String
+  user                   User     @relation(fields: [userId], references: [id])
+  employees              Employee[]
+  razonSocial            String   @default("")
+  rfc                    String   @unique @default("")
+  domicilioFiscalCalle   String   @default("")
+  domicilioFiscalNumero  String   @default("")
+  domicilioFiscalColonia String   @default("")
+  domicilioFiscalMunicipio String @default("")
+  domicilioFiscalEstado  String   @default("")
+  domicilioFiscalCodigoPostal String @default("")
+  nombreComercial        String?  @default("")
+  objetoSocial           String   @default("")
+  representanteLegalNombre String @default("")
+  representanteLegalCurp String   @default("")
+  capitalSocial          Float    @default(0.0)
+  registrosImss          String?  @default("")
+  registrosInfonavit     String?  @default("")
+  giroActividadEconomica String   @default("")
+  certificaciones        String[] @default([])
 }
+
+
 
 model Employee {
   id          String   @id @default(cuid())
