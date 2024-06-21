@@ -1,5 +1,5 @@
 'use client';
-// pages/create-company.tsx
+
 import React, { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
@@ -56,30 +56,53 @@ export default function CreateCompany() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
       {!session && (
-        <>
-          <p>You are not signed in</p>
-          <button onClick={() => signIn()}>Sign in</button>
-        </>
+        <div className="text-center">
+          <p className="text-lg font-medium">You are not signed in</p>
+          <button
+            onClick={() => signIn()}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Sign in
+          </button>
+        </div>
       )}
       {session && (
-        <>
-          <form onSubmit={handleSubmit}>
-            <label>
-              Company Name:
+        <div className="w-full max-w-md">
+          <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyName">
+                Company Name:
+              </label>
               <input
+                id="companyName"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
-            </label>
-            <button type="submit">Create Company</button>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+            >
+              Create Company
+            </button>
           </form>
-          <p>{message}</p>
-          <button onClick={() => signOut()}>Sign out</button>
-        </>
+          {message && (
+            <p className="text-center text-red-500 text-xs italic">{message}</p>
+          )}
+          <div className="text-center mt-4">
+            <button
+              onClick={() => signOut()}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Sign out
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
