@@ -87,10 +87,7 @@ export default function DashboardNavbar() {
   return (
     <header className={`sticky top-0 z-50 flex items-center justify-between h-16 px-4 md:px-6 w-full transition-all duration-300 ${isScrolled ? 'backdrop-blur-md' : ''}`}>
       <div className="flex items-center">
-        <Link className="flex items-center mr-6" href="#">
-          {/* <BriefcaseIcon className="h-6 w-6 text-zinc-950 dark:text-zinc-100" /> */}
-          <span className="text-xl font-bold text-zinc-950 dark:text-zinc-100">HL</span>
-        </Link>
+      
         <nav className="hidden md:flex space-x-4">
           {menuOptions.map((option, index) => (
             <Link
