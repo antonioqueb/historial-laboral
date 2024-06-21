@@ -84,7 +84,7 @@ export default function CreateCompany() {
         registrosImss,
         registrosInfonavit,
         giroActividadEconomica,
-        certificaciones
+        certificaciones: certificaciones.split(',').map(cert => cert.trim())
       }),
     });
 
