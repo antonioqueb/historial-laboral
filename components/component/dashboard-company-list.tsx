@@ -47,7 +47,7 @@ export default function ListCompanies() {
     <div className="min-h-screen p-6">
       {!session && (
         <div className="flex flex-col items-center justify-center h-full">
-          <Alert variant="warning">You are not signed in</Alert>
+          <Alert variant="destructive">You are not signed in</Alert>
           <Button onClick={() => signIn()} className="mt-4">Sign in</Button>
         </div>
       )}
