@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { FaStore } from "react-icons/fa";
+
 export default function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -40,6 +42,14 @@ export default function DashboardSidebar() {
               href="/tablero/">
               <LayoutGridIcon className="h-5 w-5" />
               Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link
+              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive(['/tablero', '/tablero/analisis']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
+              href="/tablero/empresas">
+              <FaStore className="h-5 w-5" />
+              Empresa
             </Link>
           </li>
           <li>

@@ -36,11 +36,18 @@ export default function DashboardNavbar() {
         { label: 'Listar', href: '/tablero/empleados/lista' },
         { label: 'Historial', href: '/tablero/empleados/historial' },
       ]);
+    } else if (pathname.startsWith('/tablero/empresas')) {
+      setMenuOptions([
+        { label: 'Registrar Empresa', href: '/tablero/empresas/crear' },
+        { label: 'Listar Empresas', href: '/tablero/ajustes/listar' },
+      ]);
+      
     } else if (pathname.startsWith('/tablero/ajustes')) {
       setMenuOptions([
         { label: 'General', href: '/tablero/ajustes' },
         { label: 'Empresa', href: '/tablero/ajustes/empresa' },
       ]);
+      
     } else if (pathname.startsWith('/tablero/menciones')) {
       setMenuOptions([
         { label: 'Moderar', href: '/tablero/menciones' },
