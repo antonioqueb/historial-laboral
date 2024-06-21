@@ -44,7 +44,7 @@ export default function ListCompanies() {
   }, [session]);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen p-6">
       {!session && (
         <div className="flex flex-col items-center justify-center h-full">
           <Alert variant="warning">You are not signed in</Alert>
@@ -53,7 +53,9 @@ export default function ListCompanies() {
       )}
       {session && (
         <div>
-          <h1 className="text-2xl font-bold mb-4">My Companies</h1>
+          <h1 className="text-2xl font-bold mb-4">
+            {companies.length > 1 ? "Compañías" : "Compañía"}
+          </h1>
           {message && <Alert variant="error" className="mb-4">{message}</Alert>}
           <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:p-6">
             {companies.length > 0 ? (
