@@ -114,7 +114,9 @@ export default function CreateCompany() {
         <>
           <h1 className="text-3xl font-bold mb-8">Registrar Empresa</h1>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Información General */}
             <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Información General</h2>
               <div>
                 <Label htmlFor="companyName">Nombre</Label>
                 <Input
@@ -145,6 +147,31 @@ export default function CreateCompany() {
                   required
                 />
               </div>
+              <div>
+                <Label htmlFor="nombreComercial">Nombre Comercial</Label>
+                <Input
+                  id="nombreComercial"
+                  type="text"
+                  value={nombreComercial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNombreComercial(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="objetoSocial">Objeto Social</Label>
+                <Input
+                  id="objetoSocial"
+                  type="text"
+                  value={objetoSocial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setObjetoSocial(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Domicilio Fiscal */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Domicilio Fiscal</h2>
               <div>
                 <Label htmlFor="domicilioFiscalCalle">Calle</Label>
                 <Input
@@ -205,21 +232,13 @@ export default function CreateCompany() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="nombreComercial">Nombre Comercial</Label>
-                <Input
-                  id="nombreComercial"
-                  type="text"
-                  value={nombreComercial}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNombreComercial(e.target.value)}
-                  required
-                />
-              </div>
-       
             </div>
+
+            {/* Información del Representante Legal */}
             <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Representante Legal</h2>
               <div>
-                <Label htmlFor="representanteLegalNombre">Representante Legal - Nombre</Label>
+                <Label htmlFor="representanteLegalNombre">Nombre</Label>
                 <Input
                   id="representanteLegalNombre"
                   type="text"
@@ -229,7 +248,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="representanteLegalCurp">Representante Legal - CURP</Label>
+                <Label htmlFor="representanteLegalCurp">CURP</Label>
                 <Input
                   id="representanteLegalCurp"
                   type="text"
@@ -238,7 +257,21 @@ export default function CreateCompany() {
                   required
                 />
               </div>
-          
+            </div>
+
+            {/* Información Adicional */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Información Adicional</h2>
+              <div>
+                <Label htmlFor="capitalSocial">Capital Social</Label>
+                <Input
+                  id="capitalSocial"
+                  type="number"
+                  value={capitalSocial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCapitalSocial(parseFloat(e.target.value))}
+                  required
+                />
+              </div>
               <div>
                 <Label htmlFor="registrosImss">Registros IMSS</Label>
                 <Input
@@ -269,8 +302,18 @@ export default function CreateCompany() {
                   required
                 />
               </div>
-           
+              <div>
+                <Label htmlFor="certificaciones">Certificaciones</Label>
+                <Input
+                  id="certificaciones"
+                  type="text"
+                  value={certificaciones}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCertificaciones(e.target.value)}
+                  placeholder="Separar por comas"
+                />
+              </div>
             </div>
+            
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
               <Button type="submit">Registrar Empresa</Button>
             </div>
