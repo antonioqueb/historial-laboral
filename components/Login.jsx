@@ -11,7 +11,7 @@ export default function Login() {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/dashboard');
+      router.push('/tablero');
     }
   }, [status, router]);
 
