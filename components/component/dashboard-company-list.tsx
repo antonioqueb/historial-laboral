@@ -1,3 +1,4 @@
+'use client';
 // pages/list-companies.tsx
 import React, { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
