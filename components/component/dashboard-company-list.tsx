@@ -2,6 +2,9 @@
 // pages/list-companies.tsx
 import React, { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import {Button} from "@/components/ui/button";
+import {Card} from "@/components/ui/card";
+import {Alert} from "@/components/ui/alert";
 
 interface Company {
   id: string;
@@ -17,7 +20,6 @@ export default function ListCompanies() {
     if (session) {
       const fetchUserIdAndCompanies = async () => {
         try {
-          // Fetch the user ID
           const userIdRes = await fetch("/api/getUserId");
           if (!userIdRes.ok) {
             setMessage("Failed to fetch user ID.");
@@ -25,7 +27,6 @@ export default function ListCompanies() {
           }
           const { id: userId } = await userIdRes.json();
 
-          // Fetch the companies using the user ID
           const companiesRes = await fetch(`/api/listCompanies`);
           if (companiesRes.ok) {
             const data = await companiesRes.json();
@@ -42,28 +43,30 @@ export default function ListCompanies() {
   }, [session]);
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100 p-6">
       {!session && (
-        <>
-          <p>You are not signed in</p>
-          <button onClick={() => signIn()}>Sign in</button>
-        </>
+        <div className="flex flex-col items-center justify-center h-full">
+          <Alert variant="warning">You are not signed in</Alert>
+          <Button onClick={() => signIn()} className="mt-4">Sign in</Button>
+        </div>
       )}
       {session && (
-        <>
-          <h1>My Companies</h1>
-          {companies.length > 0 ? (
-            <ul>
-              {companies.map((company) => (
-                <li key={company.id}>{company.name}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No companies found.</p>
-          )}
-          <p>{message}</p>
-          <button onClick={() => signOut()}>Sign out</button>
-        </>
+        <div>
+          <h1 className="text-2xl font-bold mb-4">My Companies</h1>
+          {message && <Alert variant="error" className="mb-4">{message}</Alert>}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {companies.length > 0 ? (
+              companies.map((company) => (
+                <Card key={company.id} className="p-4 bg-white shadow-lg rounded-lg">
+                  <h2 className="text-xl font-semibold">{company.name}</h2>
+                </Card>
+              ))
+            ) : (
+              <p>No companies found.</p>
+            )}
+          </div>
+          <Button onClick={() => signOut()} className="mt-6">Sign out</Button>
+        </div>
       )}
     </div>
   );
