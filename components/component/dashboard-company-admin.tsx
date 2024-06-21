@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 export default function CreateCompany() {
   const { data: session } = useSession();
@@ -95,7 +99,7 @@ export default function CreateCompany() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-white">
+    <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
       {!session && (
         <div className="text-center">
           <p className="text-lg font-medium text-black">You are not signed in</p>
@@ -108,268 +112,202 @@ export default function CreateCompany() {
         </div>
       )}
       {session && (
-        <div className="w-full max-w-md">
-          <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-gray-300">
-            <h2 className="text-2xl font-bold text-center text-black mb-6">Create Company</h2>
-            
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="companyName">
-                Company Name:
-              </label>
-              <input
-                id="companyName"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
+        <>
+          <h1 className="text-3xl font-bold mb-8">Create Company</h1>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="companyName">Company Name</Label>
+                <Input
+                  id="companyName"
+                  type="text"
+                  value={name}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="razonSocial">Razón Social</Label>
+                <Input
+                  id="razonSocial"
+                  type="text"
+                  value={razonSocial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRazonSocial(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="rfc">RFC</Label>
+                <Input
+                  id="rfc"
+                  type="text"
+                  value={rfc}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRfc(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalCalle">Domicilio Fiscal - Calle</Label>
+                <Input
+                  id="domicilioFiscalCalle"
+                  type="text"
+                  value={domicilioFiscalCalle}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalCalle(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalNumero">Domicilio Fiscal - Número</Label>
+                <Input
+                  id="domicilioFiscalNumero"
+                  type="text"
+                  value={domicilioFiscalNumero}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalNumero(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalColonia">Domicilio Fiscal - Colonia</Label>
+                <Input
+                  id="domicilioFiscalColonia"
+                  type="text"
+                  value={domicilioFiscalColonia}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalColonia(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalMunicipio">Domicilio Fiscal - Municipio</Label>
+                <Input
+                  id="domicilioFiscalMunicipio"
+                  type="text"
+                  value={domicilioFiscalMunicipio}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalMunicipio(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalEstado">Domicilio Fiscal - Estado</Label>
+                <Input
+                  id="domicilioFiscalEstado"
+                  type="text"
+                  value={domicilioFiscalEstado}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalEstado(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalCodigoPostal">Domicilio Fiscal - Código Postal</Label>
+                <Input
+                  id="domicilioFiscalCodigoPostal"
+                  type="text"
+                  value={domicilioFiscalCodigoPostal}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalCodigoPostal(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="nombreComercial">Nombre Comercial</Label>
+                <Input
+                  id="nombreComercial"
+                  type="text"
+                  value={nombreComercial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNombreComercial(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="objetoSocial">Objeto Social</Label>
+                <Textarea
+                  id="objetoSocial"
+                  value={objetoSocial}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObjetoSocial(e.target.value)}
+                  required
+                  className="min-h-[100px]"
+                />
+              </div>
             </div>
-
-            {/* Nuevos campos */}
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="razonSocial">
-                Razón Social:
-              </label>
-              <input
-                id="razonSocial"
-                type="text"
-                value={razonSocial}
-                onChange={(e) => setRazonSocial(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="representanteLegalNombre">Representante Legal - Nombre</Label>
+                <Input
+                  id="representanteLegalNombre"
+                  type="text"
+                  value={representanteLegalNombre}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepresentanteLegalNombre(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="representanteLegalCurp">Representante Legal - CURP</Label>
+                <Input
+                  id="representanteLegalCurp"
+                  type="text"
+                  value={representanteLegalCurp}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepresentanteLegalCurp(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="capitalSocial">Capital Social</Label>
+                <Input
+                  id="capitalSocial"
+                  type="number"
+                  step="0.01"
+                  value={capitalSocial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCapitalSocial(parseFloat(e.target.value))}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="registrosImss">Registros IMSS</Label>
+                <Input
+                  id="registrosImss"
+                  type="text"
+                  value={registrosImss}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosImss(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="registrosInfonavit">Registros Infonavit</Label>
+                <Input
+                  id="registrosInfonavit"
+                  type="text"
+                  value={registrosInfonavit}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosInfonavit(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="giroActividadEconomica">Giro o Actividad Económica</Label>
+                <Input
+                  id="giroActividadEconomica"
+                  type="text"
+                  value={giroActividadEconomica}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGiroActividadEconomica(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="certificaciones">Certificaciones</Label>
+                <Textarea
+                  id="certificaciones"
+                  value={certificaciones}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCertificaciones(e.target.value)}
+                  required
+                  className="min-h-[100px]"
+                />
+              </div>
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="rfc">
-                RFC:
-              </label>
-              <input
-                id="rfc"
-                type="text"
-                value={rfc}
-                onChange={(e) => setRfc(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
+            <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
+              <Button type="submit">Create Company</Button>
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalCalle">
-                Domicilio Fiscal - Calle:
-              </label>
-              <input
-                id="domicilioFiscalCalle"
-                type="text"
-                value={domicilioFiscalCalle}
-                onChange={(e) => setDomicilioFiscalCalle(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalNumero">
-                Domicilio Fiscal - Número:
-              </label>
-              <input
-                id="domicilioFiscalNumero"
-                type="text"
-                value={domicilioFiscalNumero}
-                onChange={(e) => setDomicilioFiscalNumero(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalColonia">
-                Domicilio Fiscal - Colonia:
-              </label>
-              <input
-                id="domicilioFiscalColonia"
-                type="text"
-                value={domicilioFiscalColonia}
-                onChange={(e) => setDomicilioFiscalColonia(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalMunicipio">
-                Domicilio Fiscal - Municipio:
-              </label>
-              <input
-                id="domicilioFiscalMunicipio"
-                type="text"
-                value={domicilioFiscalMunicipio}
-                onChange={(e) => setDomicilioFiscalMunicipio(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalEstado">
-                Domicilio Fiscal - Estado:
-              </label>
-              <input
-                id="domicilioFiscalEstado"
-                type="text"
-                value={domicilioFiscalEstado}
-                onChange={(e) => setDomicilioFiscalEstado(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalCodigoPostal">
-                Domicilio Fiscal - Código Postal:
-              </label>
-              <input
-                id="domicilioFiscalCodigoPostal"
-                type="text"
-                value={domicilioFiscalCodigoPostal}
-                onChange={(e) => setDomicilioFiscalCodigoPostal(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="nombreComercial">
-                Nombre Comercial:
-              </label>
-              <input
-                id="nombreComercial"
-                type="text"
-                value={nombreComercial}
-                onChange={(e) => setNombreComercial(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="objetoSocial">
-                Objeto Social:
-              </label>
-              <input
-                id="objetoSocial"
-                type="text"
-                value={objetoSocial}
-                onChange={(e) => setObjetoSocial(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="representanteLegalNombre">
-                Representante Legal - Nombre:
-              </label>
-              <input
-                id="representanteLegalNombre"
-                type="text"
-                value={representanteLegalNombre}
-                onChange={(e) => setRepresentanteLegalNombre(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="representanteLegalCurp">
-                Representante Legal - CURP:
-              </label>
-              <input
-                id="representanteLegalCurp"
-                type="text"
-                value={representanteLegalCurp}
-                onChange={(e) => setRepresentanteLegalCurp(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="capitalSocial">
-                Capital Social:
-              </label>
-              <input
-                id="capitalSocial"
-                type="number"
-                step="0.01"
-                value={capitalSocial}
-                onChange={(e) => setCapitalSocial(parseFloat(e.target.value))}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="registrosImss">
-                Registros IMSS:
-              </label>
-              <input
-                id="registrosImss"
-                type="text"
-                value={registrosImss}
-                onChange={(e) => setRegistrosImss(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="registrosInfonavit">
-                Registros Infonavit:
-              </label>
-              <input
-                id="registrosInfonavit"
-                type="text"
-                value={registrosInfonavit}
-                onChange={(e) => setRegistrosInfonavit(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="giroActividadEconomica">
-                Giro o Actividad Económica:
-              </label>
-              <input
-                id="giroActividadEconomica"
-                type="text"
-                value={giroActividadEconomica}
-                onChange={(e) => setGiroActividadEconomica(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="certificaciones">
-                Certificaciones:
-              </label>
-              <input
-                id="certificaciones"
-                type="text"
-                value={certificaciones}
-                onChange={(e) => setCertificaciones(e.target.value)}
-                required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-
-            {/* Botón para enviar */}
-            <button
-              type="submit"
-              className="w-full bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 focus:outline-none focus:shadow-outline"
-            >
-              Create Company
-            </button>
           </form>
           {message && (
-            <p className="text-center text-red-500 text-xs italic">{message}</p>
+            <p className="text-center text-red-500 text-xs italic mt-4">{message}</p>
           )}
-          <div className="text-center mt-4">
-            <button
-              onClick={() => signOut()}
-              className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
-            >
-              Sign out
-            </button>
-          </div>
-        </div>
+        </>
       )}
     </div>
   );
