@@ -54,7 +54,7 @@ export default function ListCompanies() {
       {session && (
         <div>
           <h1 className="text-2xl font-bold mb-4">
-            {companies.length > 1 ? "Compañías" : "Compañía"}
+            {companies.length > 1 ? "Empresas" : "Empresa"}
           </h1>
           {message && <Alert variant="destructive" className="mb-4">{message}</Alert>}
           <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:p-6">
@@ -83,10 +83,9 @@ export default function ListCompanies() {
                 </div>
               ))
             ) : (
-              <p>No companies found.</p>
+              <p>Ops... No has registrado ninguna empresa aún.</p>
             )}
           </div>
-          <Button onClick={() => signOut()} className="mt-6">Sign out</Button>
         </div>
       )}
     </div>
