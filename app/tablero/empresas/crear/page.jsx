@@ -1,4 +1,4 @@
-import DashboardCompanydAdmin from '@/components/component/dashboard-company-admin';
+import DashboardCompanydAdmin from '@/components/component/dashboard-company-create';
 
 const AddEmployed = () => {
   return (
