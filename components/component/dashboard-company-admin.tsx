@@ -117,7 +117,7 @@ export default function CreateCompany() {
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="companyName">Nombre de la Empresa</Label>
+                <Label htmlFor="companyName">Nombre</Label>
                 <Input
                   id="companyName"
                   type="text"
@@ -216,16 +216,7 @@ export default function CreateCompany() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="objetoSocial">Objeto Social</Label>
-                <Textarea
-                  id="objetoSocial"
-                  value={objetoSocial}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObjetoSocial(e.target.value)}
-                  required
-                  className="min-h-[100px]"
-                />
-              </div>
+       
             </div>
             <div className="space-y-4">
               <div>
@@ -248,17 +239,7 @@ export default function CreateCompany() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="capitalSocial">Capital Social</Label>
-                <Input
-                  id="capitalSocial"
-                  type="number"
-                  step="0.01"
-                  value={capitalSocial}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCapitalSocial(parseFloat(e.target.value))}
-                  required
-                />
-              </div>
+          
               <div>
                 <Label htmlFor="registrosImss">Registros IMSS</Label>
                 <Input
@@ -280,7 +261,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="giroActividadEconomica">Giro o Actividad Económica</Label>
+                <Label htmlFor="giroActividadEconomica">Actividad Económica</Label>
                 <Input
                   id="giroActividadEconomica"
                   type="text"
@@ -289,23 +270,14 @@ export default function CreateCompany() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="certificaciones">Certificaciones</Label>
-                <Textarea
-                  id="certificaciones"
-                  value={certificaciones}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setCertificaciones(e.target.value)}
-                  required
-                  className="min-h-[100px]"
-                />
-              </div>
+           
             </div>
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
-              <Button type="submit">Create Company</Button>
+              <Button type="submit">Registrar Empresa</Button>
             </div>
           </form>
           {message && (
-            <p className="text-center text-red-500 text-xs italic mt-4">{message}</p>
+            <p className="text-center text-green-600 text-md italic mt-4">{message}</p>
           )}
         </>
       )}
