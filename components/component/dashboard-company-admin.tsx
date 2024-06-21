@@ -113,11 +113,11 @@ export default function CreateCompany() {
       )}
       {session && (
         <>
-          <h1 className="text-3xl font-bold mb-8">Create Company</h1>
+          <h1 className="text-3xl font-bold mb-8">Registrar Empresa</h1>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="companyName">Company Name</Label>
+                <Label htmlFor="companyName">Nombre de la Empresa</Label>
                 <Input
                   id="companyName"
                   type="text"
@@ -147,7 +147,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="domicilioFiscalCalle">Domicilio Fiscal - Calle</Label>
+                <Label htmlFor="domicilioFiscalCalle">Calle</Label>
                 <Input
                   id="domicilioFiscalCalle"
                   type="text"
@@ -157,7 +157,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="domicilioFiscalNumero">Domicilio Fiscal - Número</Label>
+                <Label htmlFor="domicilioFiscalNumero">Número</Label>
                 <Input
                   id="domicilioFiscalNumero"
                   type="text"
@@ -167,7 +167,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="domicilioFiscalColonia">Domicilio Fiscal - Colonia</Label>
+                <Label htmlFor="domicilioFiscalColonia">Colonia</Label>
                 <Input
                   id="domicilioFiscalColonia"
                   type="text"
@@ -177,7 +177,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="domicilioFiscalMunicipio">Domicilio Fiscal - Municipio</Label>
+                <Label htmlFor="domicilioFiscalMunicipio">Municipio</Label>
                 <Input
                   id="domicilioFiscalMunicipio"
                   type="text"
@@ -187,7 +187,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="domicilioFiscalEstado">Domicilio Fiscal - Estado</Label>
+                <Label htmlFor="domicilioFiscalEstado">Estado</Label>
                 <Input
                   id="domicilioFiscalEstado"
                   type="text"
@@ -197,7 +197,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="domicilioFiscalCodigoPostal">Domicilio Fiscal - Código Postal</Label>
+                <Label htmlFor="domicilioFiscalCodigoPostal">Código Postal</Label>
                 <Input
                   id="domicilioFiscalCodigoPostal"
                   type="text"
