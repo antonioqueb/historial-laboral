@@ -86,8 +86,16 @@ export const authOptions: NextAuthOptions = {
         if (!existingUser) {
           await prisma.user.create({
             data: {
+              id: user.id, // Usar el ID de Keycloak
               email: user.email!,
               name: user.name!,
+            },
+          });
+        } else if (existingUser.id !== user.id) {
+          await prisma.user.update({
+            where: { email },
+            data: {
+              id: user.id, // Actualizar el ID con el ID de Keycloak
             },
           });
         }
@@ -95,7 +103,6 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
   },
-  
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
