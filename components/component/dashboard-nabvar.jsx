@@ -38,8 +38,8 @@ export default function DashboardNavbar() {
       ]);
     } else if (pathname.startsWith('/tablero/empresas')) {
       setMenuOptions([
-        { label: 'Registrar Empresa', href: '/tablero/empresas/crear' },
-        { label: 'Listar Empresas', href: '/tablero/empresas/listar' },
+        { label: 'Registrar', href: '/tablero/empresas/crear' },
+        { label: 'Listar', href: '/tablero/empresas/listar' },
       ]);
       
     } else if (pathname.startsWith('/tablero/ajustes')) {

@@ -36,14 +36,14 @@ export default function DashboardSidebar() {
       </div>
       <nav className="flex-1 overflow-y-auto">
         <ul className="grid gap-1 p-4">
-          <li>
+          {/* <li>
             <Link
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive(['/tablero', '/tablero/analisis']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
               href="/tablero/">
               <LayoutGridIcon className="h-5 w-5" />
               Dashboard
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive(['/tablero', '/tablero/analisis']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
@@ -68,7 +68,7 @@ export default function DashboardSidebar() {
               Ajustes
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${isActive(['/tablero/menciones']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
               href="/tablero/menciones">
@@ -91,7 +91,7 @@ export default function DashboardSidebar() {
               <FileTextIcon className="h-5 w-5" />
               Reportes
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </div>
