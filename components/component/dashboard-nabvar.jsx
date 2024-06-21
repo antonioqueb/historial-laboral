@@ -36,7 +36,7 @@ export default function DashboardNavbar() {
         { label: 'Listar', href: '/tablero/empleados/lista' },
         { label: 'Historial', href: '/tablero/empleados/historial' },
       ]);
-    } else if (pathname.startsWith('/tablero/empresas')) {
+    } else if (pathname.startsWith('/tablero/empresas/listar')) {
       setMenuOptions([
         { label: 'Registrar', href: '/tablero/empresas/crear' },
         { label: 'Listar', href: '/tablero/empresas/listar' },
