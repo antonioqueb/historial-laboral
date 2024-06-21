@@ -90,7 +90,7 @@ export default function ListCompanies() {
   );
 }
 
-function EyeIcon(props) {
+function EyeIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -107,10 +107,10 @@ function EyeIcon(props) {
       <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
       <circle cx="12" cy="12" r="3" />
     </svg>
-  )
+  );
 }
 
-function FilePenIcon(props) {
+function FilePenIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -128,5 +128,5 @@ function FilePenIcon(props) {
       <path d="M14 2v4a2 2 0 0 0 2 2h4" />
       <path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z" />
     </svg>
-  )
+  );
 }
