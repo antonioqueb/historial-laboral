@@ -128,7 +128,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="razonSocial">Razón Social</Label>
+                <Label htmlFor="razonSocial">Razón Social*</Label>
                 <Input
                   id="razonSocial"
                   type="text"
@@ -138,7 +138,7 @@ export default function CreateCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="rfc">RFC</Label>
+                <Label htmlFor="rfc">RFC*</Label>
                 <Input
                   id="rfc"
                   type="text"
