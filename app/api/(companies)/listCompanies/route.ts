@@ -1,4 +1,4 @@
-// app/api/listCompanies/route.ts
+// app/api/(companies)/listCompanies/route.ts
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
@@ -32,6 +32,7 @@ export async function GET(req: Request) {
 
         return NextResponse.json({ companies }, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        // Convertir 'error' a tipo 'any'
+        return NextResponse.json({ error: (error as any).message }, { status: 500 });
     }
 }
