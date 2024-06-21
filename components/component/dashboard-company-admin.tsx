@@ -95,13 +95,13 @@ export default function CreateCompany() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-white">
       {!session && (
         <div className="text-center">
-          <p className="text-lg font-medium">You are not signed in</p>
+          <p className="text-lg font-medium text-black">You are not signed in</p>
           <button
             onClick={() => signIn()}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
           >
             Sign in
           </button>
@@ -109,9 +109,11 @@ export default function CreateCompany() {
       )}
       {session && (
         <div className="w-full max-w-md">
-          <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-gray-300">
+            <h2 className="text-2xl font-bold text-center text-black mb-6">Create Company</h2>
+            
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyName">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="companyName">
                 Company Name:
               </label>
               <input
@@ -120,13 +122,13 @@ export default function CreateCompany() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
 
             {/* Nuevos campos */}
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="razonSocial">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="razonSocial">
                 Razón Social:
               </label>
               <input
@@ -135,16 +137,223 @@ export default function CreateCompany() {
                 value={razonSocial}
                 onChange={(e) => setRazonSocial(e.target.value)}
                 required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="rfc">
+                RFC:
+              </label>
+              <input
+                id="rfc"
+                type="text"
+                value={rfc}
+                onChange={(e) => setRfc(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalCalle">
+                Domicilio Fiscal - Calle:
+              </label>
+              <input
+                id="domicilioFiscalCalle"
+                type="text"
+                value={domicilioFiscalCalle}
+                onChange={(e) => setDomicilioFiscalCalle(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalNumero">
+                Domicilio Fiscal - Número:
+              </label>
+              <input
+                id="domicilioFiscalNumero"
+                type="text"
+                value={domicilioFiscalNumero}
+                onChange={(e) => setDomicilioFiscalNumero(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalColonia">
+                Domicilio Fiscal - Colonia:
+              </label>
+              <input
+                id="domicilioFiscalColonia"
+                type="text"
+                value={domicilioFiscalColonia}
+                onChange={(e) => setDomicilioFiscalColonia(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalMunicipio">
+                Domicilio Fiscal - Municipio:
+              </label>
+              <input
+                id="domicilioFiscalMunicipio"
+                type="text"
+                value={domicilioFiscalMunicipio}
+                onChange={(e) => setDomicilioFiscalMunicipio(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalEstado">
+                Domicilio Fiscal - Estado:
+              </label>
+              <input
+                id="domicilioFiscalEstado"
+                type="text"
+                value={domicilioFiscalEstado}
+                onChange={(e) => setDomicilioFiscalEstado(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="domicilioFiscalCodigoPostal">
+                Domicilio Fiscal - Código Postal:
+              </label>
+              <input
+                id="domicilioFiscalCodigoPostal"
+                type="text"
+                value={domicilioFiscalCodigoPostal}
+                onChange={(e) => setDomicilioFiscalCodigoPostal(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="nombreComercial">
+                Nombre Comercial:
+              </label>
+              <input
+                id="nombreComercial"
+                type="text"
+                value={nombreComercial}
+                onChange={(e) => setNombreComercial(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="objetoSocial">
+                Objeto Social:
+              </label>
+              <input
+                id="objetoSocial"
+                type="text"
+                value={objetoSocial}
+                onChange={(e) => setObjetoSocial(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="representanteLegalNombre">
+                Representante Legal - Nombre:
+              </label>
+              <input
+                id="representanteLegalNombre"
+                type="text"
+                value={representanteLegalNombre}
+                onChange={(e) => setRepresentanteLegalNombre(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="representanteLegalCurp">
+                Representante Legal - CURP:
+              </label>
+              <input
+                id="representanteLegalCurp"
+                type="text"
+                value={representanteLegalCurp}
+                onChange={(e) => setRepresentanteLegalCurp(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="capitalSocial">
+                Capital Social:
+              </label>
+              <input
+                id="capitalSocial"
+                type="number"
+                step="0.01"
+                value={capitalSocial}
+                onChange={(e) => setCapitalSocial(parseFloat(e.target.value))}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="registrosImss">
+                Registros IMSS:
+              </label>
+              <input
+                id="registrosImss"
+                type="text"
+                value={registrosImss}
+                onChange={(e) => setRegistrosImss(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="registrosInfonavit">
+                Registros Infonavit:
+              </label>
+              <input
+                id="registrosInfonavit"
+                type="text"
+                value={registrosInfonavit}
+                onChange={(e) => setRegistrosInfonavit(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="giroActividadEconomica">
+                Giro o Actividad Económica:
+              </label>
+              <input
+                id="giroActividadEconomica"
+                type="text"
+                value={giroActividadEconomica}
+                onChange={(e) => setGiroActividadEconomica(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-800 text-sm font-bold mb-2" htmlFor="certificaciones">
+                Certificaciones:
+              </label>
+              <input
+                id="certificaciones"
+                type="text"
+                value={certificaciones}
+                onChange={(e) => setCertificaciones(e.target.value)}
+                required
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
 
-            {/* Agregar el resto de los campos de la misma manera */}
-            
             {/* Botón para enviar */}
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+              className="w-full bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 focus:outline-none focus:shadow-outline"
             >
               Create Company
             </button>
@@ -155,7 +364,7 @@ export default function CreateCompany() {
           <div className="text-center mt-4">
             <button
               onClick={() => signOut()}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
             >
               Sign out
             </button>
