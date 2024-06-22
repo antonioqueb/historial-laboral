@@ -41,7 +41,7 @@ export default function DashboardSidebar() {
         <li>
             <Link
               className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
-              href="/tablero/empresas">
+              href="/tablero">
               <FaStore className="h-6 w-6 md:h-8 md:w-8" />
               Tablero
             </Link>
