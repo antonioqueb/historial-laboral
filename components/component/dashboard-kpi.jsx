@@ -25,9 +25,6 @@ const cardData = [
   }
 ];
 
-// Estilos
-const cardStyle = { minHeight: '750px' };
-
 // Iconos
 function GaugeIcon(props) {
   return (
@@ -122,25 +119,25 @@ const StarIcons = ({ count }) => (
 
 export default function Component() {
   return (
-      <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
-        {cardData.map(({ title, description, mainValue, subValue, icon, stars }, index) => (
-          <Card key={index} style={cardStyle}>
-            <div className="flex flex-col justify-between h-full">
-              <CardHeader>
-                <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
-              </CardHeader>
-              <CardFooter className="flex items-center justify-between mt-auto">
-                <div className="grid gap-1">
-                  <div className="text-4xl font-bold">{mainValue}</div>
-                  {subValue && <div className="text-sm text-zinc-500 dark:text-zinc-400">{subValue}</div>}
-                  {stars && <StarIcons count={stars} />}
-                </div>
-                <IconComponent IconComponent={icon} className="h-12 w-12 text-zinc-400 ml-4" />
-              </CardFooter>
-            </div>
-          </Card>
-        ))}
-      </section>
+    <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
+      {cardData.map(({ title, description, mainValue, subValue, icon, stars }, index) => (
+        <Card key={index} className="min-h-[500px] lg:min-h-[850px]">
+          <div className="flex flex-col justify-between h-full">
+            <CardHeader>
+              <CardTitle>{title}</CardTitle>
+              <CardDescription>{description}</CardDescription>
+            </CardHeader>
+            <CardFooter className="flex items-center justify-between mt-auto">
+              <div className="grid gap-1">
+                <div className="text-4xl font-bold">{mainValue}</div>
+                {subValue && <div className="text-sm text-zinc-500 dark:text-zinc-400">{subValue}</div>}
+                {stars && <StarIcons count={stars} />}
+              </div>
+              <IconComponent IconComponent={icon} className="h-12 w-12 text-zinc-400 ml-4" />
+            </CardFooter>
+          </div>
+        </Card>
+      ))}
+    </section>
   );
 }
