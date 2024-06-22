@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { FaStore } from "react-icons/fa";
 import { FaIdCard } from "react-icons/fa";
 import { FaSlidersH } from "react-icons/fa";
+import { FaChartLine } from "react-icons/fa6";
 
 export default function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ export default function DashboardSidebar() {
       <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-200 dark:border-zinc-800">
         <Link className="flex items-center gap-2 font-semibold text-lg md:text-xl" href="/">
           <MountainIcon className="h-8 w-8 md:h-10 md:w-10" />
-          <span className="sr-only">Acme Inc</span>
+          {/* <span className="sr-only">Acme Inc</span> */}
         </Link>
         <button className="md:hidden" onClick={toggleSidebar}>
           {isOpen ? (
@@ -42,7 +43,7 @@ export default function DashboardSidebar() {
             <Link
               className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
               href="/tablero">
-              <FaStore className="h-6 w-6 md:h-8 md:w-8" />
+              <FaChartLine className="h-6 w-6 md:h-8 md:w-8" />
               Tablero
             </Link>
           </li>
