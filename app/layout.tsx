@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import SessionWrapper from "@/components/SessionWrapper";
 import SessionGuard from "@/components/SessionGuard";
+import { CompanyProvider } from '@/context/CompanyContext';
 
 import { cn } from "@/lib/utils";
 
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             disableTransitionOnChange
           >
             <SessionGuard>
+            <CompanyProvider>
               {children}
+            </CompanyProvider>
             </SessionGuard>
           </ThemeProvider>
         </body>

@@ -1,3 +1,4 @@
+
 import SearchHome from "@/components/SearchHome";
 import Header from "@/components/Header";
 
