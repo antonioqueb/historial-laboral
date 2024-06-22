@@ -10,7 +10,7 @@ const SelectCompanyPopup = () => {
 
   useEffect(() => {
     const fetchCompanies = async () => {
-      const res = await fetch('/api/(companies)/listCompanies'); // Correct endpoint to list companies
+      const res = await fetch('/api/listCompanies'); // Correct endpoint to list companies
       if (res.ok) {
         const data = await res.json();
         setCompanies(data);
