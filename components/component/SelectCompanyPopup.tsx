@@ -24,15 +24,18 @@ export function SelectCompanyPopup() {
     const fetchCompanyRFCs = async () => {
       try {
         const res = await fetch('http://192.168.1.69:108/api/getCompanyRFC');
+        console.log('Response:', res);
         if (!res.ok) {
           throw new Error(`Failed to fetch company RFCs, status: ${res.status}`);
         }
         const data = await res.json();
+        console.log('Data:', data);
         if (!data || !data.rfcs || !Array.isArray(data.rfcs)) {
           throw new Error('Data is not in the expected format');
         }
         setCompanyRFCs(data.rfcs.map((rfc: string) => ({ rfc })));
       } catch (err) {
+        console.log('Error:', err);
         if (err instanceof Error) {
           setError(err.message);
         } else {
