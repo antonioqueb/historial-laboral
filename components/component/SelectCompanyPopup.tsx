@@ -58,7 +58,27 @@ export function SelectCompanyPopup() {
 
   if (selectedCompany) return null;
 
-  console.log('Company RFCs before rendering:', companyRFCs);
+  const renderedCompanyRFCs = React.useMemo(() => {
+    console.log('Company RFCs before rendering:', companyRFCs);
+    if (companyRFCs.length === 0) {
+      return <CommandEmpty>No companies available</CommandEmpty>;
+    }
+    return companyRFCs.map((company) => (
+      <CommandItem
+        key={company.rfc}
+        value={company.rfc}
+        onSelect={() => handleSelect(company.rfc)}
+      >
+        <Check
+          className={cn(
+            "mr-2 h-4 w-4",
+            value === company.rfc ? "opacity-100" : "opacity-0"
+          )}
+        />
+        {company.rfc}
+      </CommandItem>
+    ));
+  }, [companyRFCs, value]);
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
@@ -77,28 +97,7 @@ export function SelectCompanyPopup() {
           <PopoverContent className="w-[200px] p-0">
             <Command>
               <CommandInput placeholder="Search company..." />
-              <CommandEmpty>No company found.</CommandEmpty>
-              <CommandGroup>
-                {companyRFCs.length > 0 ? (
-                  companyRFCs.map((company) => (
-                    <CommandItem
-                      key={company.rfc}
-                      value={company.rfc}
-                      onSelect={() => handleSelect(company.rfc)}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === company.rfc ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      {company.rfc}
-                    </CommandItem>
-                  ))
-                ) : (
-                  <CommandEmpty>No companies available</CommandEmpty>
-                )}
-              </CommandGroup>
+              {renderedCompanyRFCs}
             </Command>
           </PopoverContent>
         </Popover>
