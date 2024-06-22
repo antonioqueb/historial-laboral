@@ -7,28 +7,28 @@ export default function Component() {
 
   return (
     <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
-      <Card className="sm:min-h-screen sm:h-auto" style={cardStyle}>
+      <Card style={cardStyle}>
         <CardHeader>
           <CardTitle>Total de Empleados</CardTitle>
           <CardDescription>Número actual de empleados</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col justify-between h-full">
+        <CardContent className="flex items-center justify-between">
           <div className="grid gap-1">
             <div className="text-4xl font-bold">1,234</div>
             <div className="text-sm text-zinc-500 dark:text-zinc-400">En todos los departamentos</div>
           </div>
-          <UsersIcon className="h-12 w-12 text-zinc-400 self-end" />
+          <UsersIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
         <CardFooter>
           <div className="text-sm text-zinc-500 dark:text-zinc-400">Información actualizada el 01/01/2024</div>
         </CardFooter>
       </Card>
-      <Card className="sm:min-h-screen sm:h-auto" style={cardStyle}>
+      <Card style={cardStyle}>
         <CardHeader>
           <CardTitle>Calificación Promedio</CardTitle>
           <CardDescription>Basado en revisiones de compañeros</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col justify-between h-full">
+        <CardContent className="flex items-center justify-between">
           <div className="grid gap-1">
             <div className="text-4xl font-bold">4.8</div>
             <div className="flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400">
@@ -39,23 +39,23 @@ export default function Component() {
               <StarIcon className="h-4 w-4 fill-muted stroke-muted-foreground" />
             </div>
           </div>
-          <GaugeIcon className="h-12 w-12 text-zinc-400 self-end" />
+          <GaugeIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
         <CardFooter>
           <div className="text-sm text-zinc-500 dark:text-zinc-400">Basado en 1,234 revisiones</div>
         </CardFooter>
       </Card>
-      <Card className="sm:min-h-screen sm:h-auto" style={cardStyle}>
+      <Card style={cardStyle}>
         <CardHeader>
           <CardTitle>Revisiones Negativas</CardTitle>
           <CardDescription>Empleados con revisiones negativas</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col justify-between h-full">
+        <CardContent className="flex items-center justify-between">
           <div className="grid gap-1">
             <div className="text-4xl font-bold">124</div>
             <div className="text-sm text-zinc-500 dark:text-zinc-400">Necesita mejorar</div>
           </div>
-          <ThumbsDownIcon className="h-12 w-12 text-zinc-400 self-end" />
+          <ThumbsDownIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
         <CardFooter>
           <div className="text-sm text-zinc-500 dark:text-zinc-400">Última actualización: 01/01/2024</div>
