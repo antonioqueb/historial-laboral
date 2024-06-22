@@ -8,49 +8,30 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useCompany } from '@/context/CompanyContext';
 import { cn } from "@/lib/utils";
 
-// Define the types for the company data..
-interface Company {
-  id: string;
-  name: string;
-  userId: string;
-  razonSocial: string;
+// Define the types for the company RFC data
+interface CompanyRFC {
   rfc: string;
-  domicilioFiscalCalle: string;
-  domicilioFiscalNumero: string;
-  domicilioFiscalColonia: string;
-  domicilioFiscalMunicipio: string;
-  domicilioFiscalEstado: string;
-  domicilioFiscalCodigoPostal: string;
-  nombreComercial: string;
-  objetoSocial: string;
-  representanteLegalNombre: string;
-  representanteLegalCurp: string;
-  capitalSocial: number;
-  registrosImss: string;
-  registrosInfonavit: string;
-  giroActividadEconomica: string;
-  certificaciones: string[];
 }
 
 export function SelectCompanyPopup() {
   const { selectedCompany, setSelectedCompany } = useCompany();
-  const [companies, setCompanies] = React.useState<Company[]>([]);
+  const [companyRFCs, setCompanyRFCs] = React.useState<CompanyRFC[]>([]);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    const fetchCompanies = async () => {
+    const fetchCompanyRFCs = async () => {
       try {
-        const res = await fetch('http://192.168.1.69:108/api/listCompanies');
+        const res = await fetch('http://192.168.1.69:108/api/getCompanyRFC');
         if (!res.ok) {
-          throw new Error(`Failed to fetch companies, status: ${res.status}`);
+          throw new Error(`Failed to fetch company RFCs, status: ${res.status}`);
         }
         const data = await res.json();
-        if (!Array.isArray(data.companies)) {
+        if (!Array.isArray(data.rfcs)) {
           throw new Error('Data is not an array');
         }
-        setCompanies(data.companies);
+        setCompanyRFCs(data.rfcs.map((rfc: string) => ({ rfc })));
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -60,7 +41,7 @@ export function SelectCompanyPopup() {
       }
     };
 
-    fetchCompanies();
+    fetchCompanyRFCs();
   }, []);
 
   const handleSelect = (currentValue: string) => {
@@ -80,7 +61,7 @@ export function SelectCompanyPopup() {
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={open} className="w-[200px] justify-between">
               {value
-                ? companies.find((company) => company.rfc === value)?.name || "Select a company..."
+                ? companyRFCs.find((company) => company.rfc === value)?.rfc || "Select a company..."
                 : "Select a company..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -90,8 +71,8 @@ export function SelectCompanyPopup() {
               <CommandInput placeholder="Search company..." />
               <CommandEmpty>No company found.</CommandEmpty>
               <CommandGroup>
-                {companies.length > 0 ? (
-                  companies.map((company) => (
+                {companyRFCs.length > 0 ? (
+                  companyRFCs.map((company) => (
                     <CommandItem
                       key={company.rfc}
                       value={company.rfc}
@@ -103,7 +84,7 @@ export function SelectCompanyPopup() {
                           value === company.rfc ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {company.name}
+                      {company.rfc}
                     </CommandItem>
                   ))
                 ) : (
