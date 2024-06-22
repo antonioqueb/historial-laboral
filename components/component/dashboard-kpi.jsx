@@ -1,9 +1,11 @@
 import { CardTitle, CardDescription, CardHeader, CardContent, Card } from "@/components/ui/card"
 
 export default function Component() {
+  const minHeight = '550px';
+
   return (
     <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
-      <Card className="min-h-[150px]">
+      <Card style={{ minHeight }}>
         <CardHeader>
           <CardTitle>Total de Empleados</CardTitle>
           <CardDescription>Número actual de empleados</CardDescription>
@@ -16,7 +18,7 @@ export default function Component() {
           <UsersIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
       </Card>
-      <Card className="min-h-[150px]">
+      <Card style={{ minHeight }}>
         <CardHeader>
           <CardTitle>Calificación Promedio</CardTitle>
           <CardDescription>Basado en revisiones de compañeros</CardDescription>
@@ -35,7 +37,7 @@ export default function Component() {
           <GaugeIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
       </Card>
-      <Card className="min-h-[150px]">
+      <Card style={{ minHeight }}>
         <CardHeader>
           <CardTitle>Revisiones Negativas</CardTitle>
           <CardDescription>Empleados con revisiones negativas</CardDescription>
