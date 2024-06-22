@@ -28,8 +28,8 @@ export function SelectCompanyPopup() {
           throw new Error(`Failed to fetch company RFCs, status: ${res.status}`);
         }
         const data = await res.json();
-        if (!Array.isArray(data.rfcs)) {
-          throw new Error('Data is not an array');
+        if (!data || !data.rfcs || !Array.isArray(data.rfcs)) {
+          throw new Error('Data is not in the expected format');
         }
         setCompanyRFCs(data.rfcs.map((rfc: string) => ({ rfc })));
       } catch (err) {
