@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useCompany } from '@/context/CompanyContext';
 import { cn } from "@/lib/utils";
 
-export default function SelectCompanyPopup() {
+export function SelectCompanyPopup() {
   const { selectedCompany, setSelectedCompany } = useCompany();
   const [companies, setCompanies] = React.useState<any[]>([]);
   const [open, setOpen] = React.useState(false);
@@ -22,6 +22,7 @@ export default function SelectCompanyPopup() {
           throw new Error('Failed to fetch companies');
         }
         const data = await res.json();
+        console.log('Fetched data:', data); // Debugging line
         if (!data.companies || !Array.isArray(data.companies)) {
           throw new Error('Data is not an array');
         }

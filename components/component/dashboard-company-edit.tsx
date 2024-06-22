@@ -6,7 +6,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useCompany } from '@/context/CompanyContext';
-import SelectCompanyPopup from './SelectCompanyPopup'
+import {SelectCompanyPopup} from './SelectCompanyPopup'
 
 export default function EditCompany() {
   const { data: session } = useSession();
