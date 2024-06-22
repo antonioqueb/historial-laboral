@@ -22,7 +22,7 @@ export default function SelectCompanyPopup() {
           throw new Error('Failed to fetch companies');
         }
         const data = await res.json();
-        if (!Array.isArray(data.companies)) {
+        if (!data.companies || !Array.isArray(data.companies)) {
           throw new Error('Data is not an array');
         }
         setCompanies(data.companies);
@@ -64,7 +64,7 @@ export default function SelectCompanyPopup() {
                   <CommandItem
                     key={company.rfc}
                     value={company.rfc}
-                    onSelect={(currentValue) => handleSelect(currentValue)}
+                    onSelect={(currentValue: string) => handleSelect(currentValue)}
                   >
                     <Check
                       className={cn(
