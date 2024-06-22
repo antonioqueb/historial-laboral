@@ -2,7 +2,7 @@ import { CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card }
 
 export default function Component() {
   const cardStyle = {
-    minHeight: '580px'
+    minHeight: '80%'
   };
 
   return (
