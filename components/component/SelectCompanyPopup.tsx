@@ -8,9 +8,33 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useCompany } from '@/context/CompanyContext';
 import { cn } from "@/lib/utils";
 
+// Define the types for the company data
+interface Company {
+  id: string;
+  name: string;
+  userId: string;
+  razonSocial: string;
+  rfc: string;
+  domicilioFiscalCalle: string;
+  domicilioFiscalNumero: string;
+  domicilioFiscalColonia: string;
+  domicilioFiscalMunicipio: string;
+  domicilioFiscalEstado: string;
+  domicilioFiscalCodigoPostal: string;
+  nombreComercial: string;
+  objetoSocial: string;
+  representanteLegalNombre: string;
+  representanteLegalCurp: string;
+  capitalSocial: number;
+  registrosImss: string;
+  registrosInfonavit: string;
+  giroActividadEconomica: string;
+  certificaciones: string[];
+}
+
 export function SelectCompanyPopup() {
   const { selectedCompany, setSelectedCompany } = useCompany();
-  const [companies, setCompanies] = React.useState<any[]>([]);
+  const [companies, setCompanies] = React.useState<Company[]>([]);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
@@ -18,25 +42,19 @@ export function SelectCompanyPopup() {
   React.useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        console.log('Fetching companies...');
-        const res = await fetch('/api/listCompanies');
-        console.log('Response status:', res.status);
+        const res = await fetch('http://192.168.1.69:108/api/listCompanies');
         if (!res.ok) {
           throw new Error(`Failed to fetch companies, status: ${res.status}`);
         }
         const data = await res.json();
-        console.log('Fetched data:', data);
-        if (!data.companies || !Array.isArray(data.companies)) {
+        if (!Array.isArray(data.companies)) {
           throw new Error('Data is not an array');
         }
-        console.log('Setting companies:', data.companies);
         setCompanies(data.companies);
       } catch (err) {
         if (err instanceof Error) {
-          console.error('Error fetching companies:', err.message);
           setError(err.message);
         } else {
-          console.error('Unknown error:', err);
           setError('An unknown error occurred');
         }
       }
@@ -46,13 +64,10 @@ export function SelectCompanyPopup() {
   }, []);
 
   const handleSelect = (currentValue: string) => {
-    console.log('Company selected:', currentValue);
     setValue(currentValue);
     setSelectedCompany(currentValue);
     setOpen(false);
   };
-
-  console.log('Rendering component with companies:', companies);
 
   if (selectedCompany) return null;
 
@@ -65,7 +80,7 @@ export function SelectCompanyPopup() {
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={open} className="w-[200px] justify-between">
               {value
-                ? companies.find((company) => company.rfc === value)?.name
+                ? companies.find((company) => company.rfc === value)?.name || "Select a company..."
                 : "Select a company..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
@@ -75,25 +90,22 @@ export function SelectCompanyPopup() {
               <CommandInput placeholder="Search company..." />
               <CommandEmpty>No company found.</CommandEmpty>
               <CommandGroup>
-                {Array.isArray(companies) && companies.length > 0 ? (
-                  companies.map((company, index) => {
-                    console.log(`Rendering company at index ${index}:`, company);
-                    return (
-                      <CommandItem
-                        key={company.rfc}
-                        value={company.rfc}
-                        onSelect={(currentValue: string) => handleSelect(currentValue)}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            value === company.rfc ? "opacity-100" : "opacity-0"
-                          )}
-                        />
-                        {company.name}
-                      </CommandItem>
-                    );
-                  })
+                {companies.length > 0 ? (
+                  companies.map((company) => (
+                    <CommandItem
+                      key={company.rfc}
+                      value={company.rfc}
+                      onSelect={() => handleSelect(company.rfc)}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === company.rfc ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {company.name}
+                    </CommandItem>
+                  ))
                 ) : (
                   <CommandEmpty>No companies available</CommandEmpty>
                 )}
