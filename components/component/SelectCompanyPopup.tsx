@@ -52,6 +52,8 @@ export function SelectCompanyPopup() {
     setOpen(false);
   };
 
+  console.log('Rendering component with companies:', companies);
+
   if (selectedCompany) return null;
 
   return (
@@ -73,22 +75,25 @@ export function SelectCompanyPopup() {
               <CommandInput placeholder="Search company..." />
               <CommandEmpty>No company found.</CommandEmpty>
               <CommandGroup>
-                {companies && companies.length > 0 ? (
-                  companies.map((company) => (
-                    <CommandItem
-                      key={company.rfc}
-                      value={company.rfc}
-                      onSelect={(currentValue: string) => handleSelect(currentValue)}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === company.rfc ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      {company.name}
-                    </CommandItem>
-                  ))
+                {Array.isArray(companies) && companies.length > 0 ? (
+                  companies.map((company, index) => {
+                    console.log(`Rendering company at index ${index}:`, company);
+                    return (
+                      <CommandItem
+                        key={company.rfc}
+                        value={company.rfc}
+                        onSelect={(currentValue: string) => handleSelect(currentValue)}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            value === company.rfc ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {company.name}
+                      </CommandItem>
+                    );
+                  })
                 ) : (
                   <CommandEmpty>No companies available</CommandEmpty>
                 )}
