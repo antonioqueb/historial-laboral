@@ -1,8 +1,8 @@
-import { CardTitle, CardDescription, CardHeader, CardContent, Card } from "@/components/ui/card"
+import { CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card"
 
 export default function Component() {
   const cardStyle = {
-    minHeight: '550px'
+    minHeight: '600px'
   };
 
   return (
@@ -19,6 +19,9 @@ export default function Component() {
           </div>
           <UsersIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
+        <CardFooter>
+          <div className="text-sm text-zinc-500 dark:text-zinc-400">Información actualizada el 01/01/2024</div>
+        </CardFooter>
       </Card>
       <Card style={cardStyle}>
         <CardHeader>
@@ -38,6 +41,9 @@ export default function Component() {
           </div>
           <GaugeIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
+        <CardFooter>
+          <div className="text-sm text-zinc-500 dark:text-zinc-400">Basado en 1,234 revisiones</div>
+        </CardFooter>
       </Card>
       <Card style={cardStyle}>
         <CardHeader>
@@ -51,6 +57,9 @@ export default function Component() {
           </div>
           <ThumbsDownIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
+        <CardFooter>
+          <div className="text-sm text-zinc-500 dark:text-zinc-400">Última actualización: 01/01/2024</div>
+        </CardFooter>
       </Card>
     </section>
   )
