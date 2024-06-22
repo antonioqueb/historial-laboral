@@ -48,12 +48,17 @@ export function SelectCompanyPopup() {
   }, []);
 
   const handleSelect = (currentValue: string) => {
+    console.log('Selected Value:', currentValue);
     setValue(currentValue);
     setSelectedCompany(currentValue);
     setOpen(false);
   };
 
-  if (selectedCompany) return null;
+  // Ensure the component always returns a valid ReactNode
+  if (selectedCompany) return <></>;
+
+  // Logging companyRFCs outside JSX return
+  console.log('Company RFCs:', companyRFCs);
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
