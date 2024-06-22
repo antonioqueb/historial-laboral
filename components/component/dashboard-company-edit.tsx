@@ -31,7 +31,7 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
 
-  const [companies, setCompanies] = useState([]);
+  const [companies, setCompanies] = useState<string[]>([]);
 
   useEffect(() => {
     if (session) {
