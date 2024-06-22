@@ -31,6 +31,8 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
 
+  const [companies, setCompanies] = useState([]);
+
   useEffect(() => {
     if (session) {
       const fetchUserId = async () => {
@@ -44,37 +46,49 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
       };
       fetchUserId();
 
+      const fetchCompanies = async () => {
+        const res = await fetch("http://192.168.1.69:108/api/getCompanyRFC");
+        if (res.ok) {
+          const data = await res.json();
+          setCompanies(data.rfcs);
+        } else {
+          setMessage("Failed to fetch companies.");
+        }
+      };
+      fetchCompanies();
+
       if (initialRfc) {
-        const fetchCompanyData = async () => {
-          const res = await fetch(`/api/(companies)/getCompany?rfc=${initialRfc}`);
-          if (res.ok) {
-            const data = await res.json();
-            setName(data.name);
-            setRazonSocial(data.razonSocial);
-            setRfc(data.rfc);
-            setDomicilioFiscalCalle(data.domicilioFiscalCalle);
-            setDomicilioFiscalNumero(data.domicilioFiscalNumero);
-            setDomicilioFiscalColonia(data.domicilioFiscalColonia);
-            setDomicilioFiscalMunicipio(data.domicilioFiscalMunicipio);
-            setDomicilioFiscalEstado(data.domicilioFiscalEstado);
-            setDomicilioFiscalCodigoPostal(data.domicilioFiscalCodigoPostal);
-            setNombreComercial(data.nombreComercial);
-            setObjetoSocial(data.objetoSocial);
-            setRepresentanteLegalNombre(data.representanteLegalNombre);
-            setRepresentanteLegalCurp(data.representanteLegalCurp);
-            setCapitalSocial(data.capitalSocial);
-            setRegistrosImss(data.registrosImss);
-            setRegistrosInfonavit(data.registrosInfonavit);
-            setGiroActividadEconomica(data.giroActividadEconomica);
-            setCertificaciones(data.certificaciones.join(", "));
-          } else {
-            setMessage("Failed to fetch company data.");
-          }
-        };
-        fetchCompanyData();
+        fetchCompanyData(initialRfc);
       }
     }
   }, [session, initialRfc]);
+
+  const fetchCompanyData = async (rfc: string) => {
+    const res = await fetch(`/api/(companies)/getCompany?rfc=${rfc}`);
+    if (res.ok) {
+      const data = await res.json();
+      setName(data.name);
+      setRazonSocial(data.razonSocial);
+      setRfc(data.rfc);
+      setDomicilioFiscalCalle(data.domicilioFiscalCalle);
+      setDomicilioFiscalNumero(data.domicilioFiscalNumero);
+      setDomicilioFiscalColonia(data.domicilioFiscalColonia);
+      setDomicilioFiscalMunicipio(data.domicilioFiscalMunicipio);
+      setDomicilioFiscalEstado(data.domicilioFiscalEstado);
+      setDomicilioFiscalCodigoPostal(data.domicilioFiscalCodigoPostal);
+      setNombreComercial(data.nombreComercial);
+      setObjetoSocial(data.objetoSocial);
+      setRepresentanteLegalNombre(data.representanteLegalNombre);
+      setRepresentanteLegalCurp(data.representanteLegalCurp);
+      setCapitalSocial(data.capitalSocial);
+      setRegistrosImss(data.registrosImss);
+      setRegistrosInfonavit(data.registrosInfonavit);
+      setGiroActividadEconomica(data.giroActividadEconomica);
+      setCertificaciones(data.certificaciones.join(", "));
+    } else {
+      setMessage("Failed to fetch company data.");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,6 +140,12 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
     }
   };
 
+  const handleCompanySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedRfc = e.target.value;
+    setRfc(selectedRfc);
+    fetchCompanyData(selectedRfc);
+  };
+
   return (
     <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
       {!session && (
@@ -142,6 +162,22 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
       {session && (
         <>
           <h1 className="text-3xl font-bold mb-8">Editar Empresa</h1>
+          <div className="mb-4">
+            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+            <select
+              id="companySelect"
+              value={rfc}
+              onChange={handleCompanySelect}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="">Seleccionar...</option>
+              {companies.map((companyRfc) => (
+                <option key={companyRfc} value={companyRfc}>
+                  {companyRfc}
+                </option>
+              ))}
+            </select>
+          </div>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Información General */}
             <div className="space-y-4">
