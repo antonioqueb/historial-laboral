@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useCompany } from '@/context/CompanyContext';
 import { cn } from "@/lib/utils";
 
-// Define the types for the company data
+// Define the types for the company data..
 interface Company {
   id: string;
   name: string;
