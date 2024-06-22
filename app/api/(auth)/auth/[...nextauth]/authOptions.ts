@@ -1,3 +1,4 @@
+// app\api\(auth)\auth\[...nextauth]\authOptions.ts
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { PrismaClient } from "@prisma/client";
 import type { NextAuthOptions, Session, User, Account, Profile } from "next-auth";
