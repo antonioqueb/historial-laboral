@@ -64,7 +64,7 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
   }, [session, initialRfc]);
 
   const fetchCompanyData = async (rfc: string) => {
-    const res = await fetch(`/api/(companies)/getCompany?rfc=${rfc}`);
+    const res = await fetch(`/api/getCompany?rfc=${rfc}`);
     if (res.ok) {
       const data = await res.json();
       setName(data.name);
@@ -103,7 +103,7 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
       return;
     }
 
-    const res = await fetch("/api/(companies)/editCompany", {
+    const res = await fetch("/api/editCompany", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
