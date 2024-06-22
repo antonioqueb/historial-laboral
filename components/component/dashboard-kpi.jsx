@@ -5,19 +5,19 @@ const cardData = [
   {
     title: "Total de Empleados",
     description: "Número actual de empleados",
-    mainValue: "1,234",
+    mainValue: "1,137",
     subValue: "En todos los departamentos",
     icon: UsersIcon,
   },
   {
     title: "Calificación Promedio",
-    description: "Basado en revisiones de compañeros",
+    description: "Basado en revisiones de todos los empleados de todas tus empresas",
     mainValue: "4.8",
     stars: 4,
     icon: GaugeIcon,
   },
   {
-    title: "Revisiones Negativas",
+    title: "Informes Negativos",
     description: "Empleados con revisiones negativas",
     mainValue: "124",
     subValue: "Necesita mejorar",
@@ -26,7 +26,7 @@ const cardData = [
 ];
 
 // Estilos
-const cardStyle = { minHeight: '550px' };
+const cardStyle = { minHeight: '750px' };
 
 // Iconos
 function GaugeIcon(props) {
