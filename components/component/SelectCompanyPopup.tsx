@@ -33,7 +33,9 @@ export function SelectCompanyPopup() {
         if (!data || !data.rfcs || !Array.isArray(data.rfcs)) {
           throw new Error('Data is not in the expected format');
         }
-        setCompanyRFCs(data.rfcs.map((rfc: string) => ({ rfc })));
+        const formattedData = data.rfcs.map((rfc: string) => ({ rfc }));
+        console.log('Formatted Data:', formattedData);
+        setCompanyRFCs(formattedData);
       } catch (err) {
         console.log('Error:', err);
         if (err instanceof Error) {
@@ -54,11 +56,9 @@ export function SelectCompanyPopup() {
     setOpen(false);
   };
 
-  // Ensure the component always returns a valid ReactNode
-  if (selectedCompany) return <></>;
+  if (selectedCompany) return null;
 
-  // Logging companyRFCs outside JSX return
-  console.log('Company RFCs:', companyRFCs);
+  console.log('Company RFCs before rendering:', companyRFCs);
 
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
