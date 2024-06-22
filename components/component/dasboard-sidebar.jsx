@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { FaStore } from "react-icons/fa";
 import { FaIdCard } from "react-icons/fa";
 import { FaSlidersH } from "react-icons/fa";
-import { FaChartLine } from "react-icons/fa6";
+import { FaChartSimple } from "react-icons/fa6";
 
 export default function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function DashboardSidebar() {
             <Link
               className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
               href="/tablero">
-              <FaChartLine className="h-6 w-6 md:h-8 md:w-8" />
+              <FaChartSimple className="h-6 w-6 md:h-8 md:w-8" />
               Tablero
             </Link>
           </li>
