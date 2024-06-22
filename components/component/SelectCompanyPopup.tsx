@@ -10,9 +10,13 @@ const SelectCompanyPopup = () => {
 
   useEffect(() => {
     const fetchCompanies = async () => {
-      const res = await fetch('/api/companies'); // Assuming you have an endpoint to get all companies
-      const data = await res.json();
-      setCompanies(data);
+      const res = await fetch('/api/(companies)/listCompanies'); // Correct endpoint to list companies
+      if (res.ok) {
+        const data = await res.json();
+        setCompanies(data);
+      } else {
+        console.error("Failed to fetch companies");
+      }
     };
 
     fetchCompanies();
@@ -43,6 +47,7 @@ const SelectCompanyPopup = () => {
         <button
           onClick={handleSelect}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+          disabled={!selectedRfc} // Disable button if no company is selected
         >
           Select
         </button>
