@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { AvatarImage, AvatarFallback, Avatar } from '@/components/ui/avatar';
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu } from '@/components/ui/dropdown-menu';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -28,47 +27,68 @@ export default function DashboardNavbar() {
     };
   }, []);
 
-  useEffect(() => {
-    if (pathname.startsWith('/tablero')) {
-      if (pathname.startsWith('/tablero/empleados')) {
-        setMenuOptions([
-          { label: 'Resumen', href: '/tablero/empleados' },
-          { label: 'Administrar', href: '/tablero/empleados/administrar' },
-          { label: 'Listar', href: '/tablero/empleados/lista' },
-          { label: 'Historial', href: '/tablero/empleados/historial' },
-        ]);
-      } else if (pathname.startsWith('/tablero/empresas/listar')) {
-        setMenuOptions([
-          { label: 'Registrar', href: '/tablero/empresas/crear' },
-          { label: 'Listar', href: '/tablero/empresas/listar' },
-        ]);
-      } else if (pathname.startsWith('/tablero/ajustes')) {
-        setMenuOptions([
-          { label: 'General', href: '/tablero/ajustes' },
-          { label: 'Empresa', href: '/tablero/ajustes/empresa' },
-        ]);
-      } else if (pathname.startsWith('/tablero/menciones')) {
-        setMenuOptions([
-          { label: 'Moderar', href: '/tablero/menciones' },
-          // { label: 'Buscar', href: '/tablero/menciones/buscar' },
-          // { label: 'Informes', href: '/tablero/menciones/informes' },
-        ]);
-      } else if (pathname.startsWith('/tablero/notificaciones')) {
-        setMenuOptions([
-          { label: 'Ajustes', href: '/tablero/notificaciones' },
-          // { label: 'Categoría', href: '/tablero/notificaciones/categorias' },
-          // { label: 'Historial', href: '/tablero/notificaciones/historial' },
-        ]);
-      } else if (pathname.startsWith('/tablero/reportes')) {
-        setMenuOptions([
-          { label: 'Generar Reporte', href: '/tablero/reportes' }
-        ]);
-      } else {
-        setMenuOptions([
-          { label: 'Resumen', href: '/tablero' },
-        ]);
-      }
-    } else {
+
+useEffect(() => {
+    // Sección para el path '/tablero/empleados'
+    if (pathname.startsWith('/tablero/empleados')) {
+      setMenuOptions([
+        { label: 'Resumen', href: '/tablero/empleados'},
+        { label: 'Administrar', href: '/tablero/empleados/administrar' },
+        { label: 'Listar', href: '/tablero/empleados/lista' },
+        { label: 'Historial', href: '/tablero/empleados/historial' },
+      ]);
+    } 
+
+    // Sección para el path '/tablero/empresas/listar'
+    else if (pathname.startsWith('/tablero/empresas/listar')) {
+      setMenuOptions([
+        { label: 'Listar', href: '/tablero/empresas/listar' },
+        { label: 'Registrar', href: '/tablero/empresas/crear' }
+      ]);
+    } 
+
+    // Sección para el path '/tablero/ajustes'
+    else if (pathname.startsWith('/tablero/ajustes')) {
+      setMenuOptions([
+        { label: 'General', href: '/tablero/ajustes' },
+        { label: 'Empresa', href: '/tablero/ajustes/empresa' },
+      ]);
+    } 
+
+    // // Sección para el path '/tablero/menciones'
+    // else if (pathname.startsWith('/tablero/menciones')) {
+    //   setMenuOptions([
+    //     { label: 'Moderar', href: '/tablero/menciones' },
+    //     // { label: 'Buscar', href: '/tablero/menciones/buscar' },
+    //     // { label: 'Informes', href: '/tablero/menciones/informes' },
+    //   ]);
+    // } 
+
+    // // Sección para el path '/tablero/notificaciones'
+    // else if (pathname.startsWith('/tablero/notificaciones')) {
+    //   setMenuOptions([
+    //     { label: 'Ajustes', href: '/tablero/notificaciones' },
+    //     // { label: 'Categoría', href: '/tablero/notificaciones/categorias' },
+    //     // { label: 'Historial', href: '/tablero/notificaciones/historial' },
+    //   ]);
+    // } 
+
+    // // Sección para el path '/tablero/reportes'
+    // else if (pathname.startsWith('/tablero/reportes')) {
+    //   setMenuOptions([
+    //     { label: 'Generar Reporte', href: '/tablero/reportes' }
+    //   ]);
+    // } 
+
+    // Sección para el path '/tablero'
+    else if (pathname.startsWith('/tablero')) {
+      setMenuOptions([
+        { label: 'Resumen', href: '/tablero' },
+      ]);
+    } 
+
+    // Sección para cualquier otro path
+    else {
       setMenuOptions([
         { label: 'Inicio', href: '/' },
         { label: 'Acerca de', href: '/about' },
@@ -76,7 +96,7 @@ export default function DashboardNavbar() {
       ]);
     }
   }, [pathname]);
-  
+
 
   const handleImageError = () => {
     setImageError(true);
