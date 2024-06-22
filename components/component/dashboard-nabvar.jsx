@@ -54,32 +54,7 @@ useEffect(() => {
         { label: 'Empresa', href: '/tablero/ajustes/empresa' },
       ]);
     } 
-
-    // // Sección para el path '/tablero/menciones'
-    // else if (pathname.startsWith('/tablero/menciones')) {
-    //   setMenuOptions([
-    //     { label: 'Moderar', href: '/tablero/menciones' },
-    //     // { label: 'Buscar', href: '/tablero/menciones/buscar' },
-    //     // { label: 'Informes', href: '/tablero/menciones/informes' },
-    //   ]);
-    // } 
-
-    // // Sección para el path '/tablero/notificaciones'
-    // else if (pathname.startsWith('/tablero/notificaciones')) {
-    //   setMenuOptions([
-    //     { label: 'Ajustes', href: '/tablero/notificaciones' },
-    //     // { label: 'Categoría', href: '/tablero/notificaciones/categorias' },
-    //     // { label: 'Historial', href: '/tablero/notificaciones/historial' },
-    //   ]);
-    // } 
-
-    // // Sección para el path '/tablero/reportes'
-    // else if (pathname.startsWith('/tablero/reportes')) {
-    //   setMenuOptions([
-    //     { label: 'Generar Reporte', href: '/tablero/reportes' }
-    //   ]);
-    // } 
-
+    
     // Sección para el path '/tablero'
     else if (pathname.startsWith('/tablero')) {
       setMenuOptions([
