@@ -5,19 +5,16 @@ import { useSession, signIn } from "next-auth/react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useCompany } from '@/context/CompanyContext';
-import {SelectCompanyPopup} from './SelectCompanyPopup'
 
-export default function EditCompany() {
+export default function EditCompany({ initialRfc }: { initialRfc: string }) {
   const { data: session } = useSession();
-  const { selectedCompany, setSelectedCompany } = useCompany();
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
 
   // Nuevos campos
   const [razonSocial, setRazonSocial] = useState("");
-  const [rfc, setRfc] = useState(selectedCompany || "");
+  const [rfc, setRfc] = useState(initialRfc);
   const [domicilioFiscalCalle, setDomicilioFiscalCalle] = useState("");
   const [domicilioFiscalNumero, setDomicilioFiscalNumero] = useState("");
   const [domicilioFiscalColonia, setDomicilioFiscalColonia] = useState("");
@@ -37,7 +34,7 @@ export default function EditCompany() {
   useEffect(() => {
     if (session) {
       const fetchUserId = async () => {
-        const res = await fetch("/api/getUserId");
+        const res = await fetch("http://192.168.1.69:108/api/getUserId");
         if (res.ok) {
           const data = await res.json();
           setUserId(data.id);
@@ -47,9 +44,9 @@ export default function EditCompany() {
       };
       fetchUserId();
 
-      if (selectedCompany) {
+      if (initialRfc) {
         const fetchCompanyData = async () => {
-          const res = await fetch(`/api/(companies)/getCompany?rfc=${selectedCompany}`);
+          const res = await fetch(`/api/(companies)/getCompany?rfc=${initialRfc}`);
           if (res.ok) {
             const data = await res.json();
             setName(data.name);
@@ -77,7 +74,7 @@ export default function EditCompany() {
         fetchCompanyData();
       }
     }
-  }, [session, selectedCompany]);
+  }, [session, initialRfc]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,7 +128,6 @@ export default function EditCompany() {
 
   return (
     <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
-      <SelectCompanyPopup />
       {!session && (
         <div className="text-center">
           <p className="text-lg font-medium text-black">You are not signed in</p>
