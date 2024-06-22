@@ -1,59 +1,67 @@
-import { CardTitle, CardDescription, CardHeader, CardContent, Card } from "@/components/ui/card"
+import { CardTitle, CardDescription, CardHeader,  CardFooter,Card } from "@/components/ui/card"
+
+const cardStyle = { minHeight: '550px' };
+
+const Icon = ({ IconComponent, className }) => <IconComponent className={className} />;
+
+const cardData = [
+  {
+    title: "Total de Empleados",
+    description: "Número actual de empleados",
+    content: (
+      <>
+        <div className="text-4xl font-bold">1,234</div>
+        <div className="text-sm text-zinc-500 dark:text-zinc-400">En todos los departamentos</div>
+      </>
+    ),
+    icon: UsersIcon,
+  },
+  {
+    title: "Calificación Promedio",
+    description: "Basado en revisiones de compañeros",
+    content: (
+      <>
+        <div className="text-4xl font-bold">4.8</div>
+        <div className="flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400">
+          {[...Array(4)].map((_, i) => <StarIcon key={i} className="h-4 w-4 fill-primary" />)}
+          <StarIcon className="h-4 w-4 fill-muted stroke-muted-foreground" />
+        </div>
+      </>
+    ),
+    icon: GaugeIcon,
+  },
+  {
+    title: "Revisiones Negativas",
+    description: "Empleados con revisiones negativas",
+    content: (
+      <>
+        <div className="text-4xl font-bold">124</div>
+        <div className="text-sm text-zinc-500 dark:text-zinc-400">Necesita mejorar</div>
+      </>
+    ),
+    icon: ThumbsDownIcon,
+  }
+];
 
 export default function Component() {
-  const cardStyle = {
-    minHeight: '550px'
-  };
-
   return (
     <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
-      <Card style={cardStyle}>
-        <CardHeader>
-          <CardTitle>Total de Empleados</CardTitle>
-          <CardDescription>Número actual de empleados</CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center justify-between">
-          <div className="grid gap-1">
-            <div className="text-4xl font-bold">1,234</div>
-            <div className="text-sm text-zinc-500 dark:text-zinc-400">En todos los departamentos</div>
-          </div>
-          <UsersIcon className="h-12 w-12 text-zinc-400" />
-        </CardContent>
-      </Card>
-      <Card style={cardStyle}>
-        <CardHeader>
-          <CardTitle>Calificación Promedio</CardTitle>
-          <CardDescription>Basado en revisiones de compañeros</CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center justify-between">
-          <div className="grid gap-1">
-            <div className="text-4xl font-bold">4.8</div>
-            <div className="flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400">
-              <StarIcon className="h-4 w-4 fill-primary" />
-              <StarIcon className="h-4 w-4 fill-primary" />
-              <StarIcon className="h-4 w-4 fill-primary" />
-              <StarIcon className="h-4 w-4 fill-primary" />
-              <StarIcon className="h-4 w-4 fill-muted stroke-muted-foreground" />
+      {cardData.map(({ title, description, content, icon }, index) => (
+        <Card key={index} style={cardStyle}>
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </CardHeader>
+          <CardFooter className="flex items-center justify-between">
+            <div className="grid gap-1">
+              {content}
             </div>
-          </div>
-          <GaugeIcon className="h-12 w-12 text-zinc-400" />
-        </CardContent>
-      </Card>
-      <Card style={cardStyle}>
-        <CardHeader>
-          <CardTitle>Revisiones Negativas</CardTitle>
-          <CardDescription>Empleados con revisiones negativas</CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center justify-between">
-          <div className="grid gap-1">
-            <div className="text-4xl font-bold">124</div>
-            <div className="text-sm text-zinc-500 dark:text-zinc-400">Necesita mejorar</div>
-          </div>
-          <ThumbsDownIcon className="h-12 w-12 text-zinc-400" />
-        </CardContent>
-      </Card>
+            <Icon IconComponent={icon} className="h-12 w-12 text-zinc-400" />
+          </CardFooter>
+        </Card>
+      ))}
     </section>
-  )
+  );
 }
 
 function GaugeIcon(props) {
