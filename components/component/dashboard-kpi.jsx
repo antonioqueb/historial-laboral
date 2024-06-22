@@ -2,7 +2,7 @@ import { CardTitle, CardDescription, CardHeader, CardContent, Card } from "@/com
 
 export default function Component() {
   return (
-    <section className="grid gap-4 lg:grid-cols-3 xl:grid-cols-3 p-5">
+    <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
       <Card>
         <CardHeader>
           <CardTitle>Total de Empleados</CardTitle>
@@ -35,7 +35,6 @@ export default function Component() {
           <GaugeIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
       </Card>
-    
       <Card>
         <CardHeader>
           <CardTitle>Revisiones Negativas</CardTitle>
@@ -49,7 +48,6 @@ export default function Component() {
           <ThumbsDownIcon className="h-12 w-12 text-zinc-400" />
         </CardContent>
       </Card>
-      
     </section>
   )
 }
@@ -73,7 +71,6 @@ function GaugeIcon(props) {
     </svg>
   )
 }
-
 
 function StarIcon(props) {
   return (
@@ -114,7 +111,6 @@ function ThumbsDownIcon(props) {
   )
 }
 
-
 function UsersIcon(props) {
   return (
     <svg
@@ -136,4 +132,3 @@ function UsersIcon(props) {
     </svg>
   )
 }
-
