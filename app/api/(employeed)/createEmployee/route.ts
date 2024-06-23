@@ -72,6 +72,7 @@ export async function POST(req: Request) {
       contractType,
     } = Object.fromEntries(formData.entries());
 
+    // Crear el empleado
     const employee = await prisma.employee.create({
       data: {
         name: name as string,
@@ -99,7 +100,7 @@ export async function POST(req: Request) {
         jobTitle: jobTitle as string,
         workShift: workShift as string,
         contractType: contractType as string,
-        profileImageUrl: imageUrl,
+        profileImageUrl: imageUrl, // Guardar la URL de la imagen
       },
     });
 
