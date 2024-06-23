@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
   try {
     const formData = await req.formData();
-    const image = formData.get("image") as File | null;
+    const image = formData.get("profileImage") as File | null;
     const nss = formData.get("socialSecurityNumber") as string | null;
 
     console.log("Form Data:", formData);
@@ -48,6 +48,7 @@ export async function POST(req: Request) {
       const uploadResult = await response.json();
       imageUrl = uploadResult.imageUrl;
       console.log("Image URL from upload:", imageUrl);
+
     }
 
     const {
