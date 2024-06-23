@@ -45,28 +45,40 @@ model Company {
 
 
 model Employee {
-  id          String   @id @default(cuid())
-  name        String
-  role        String
-  department  String
-  description String
-  companyId   String
-  company     Company  @relation(fields: [companyId], references: [id])
+  id                   String   @id @default(cuid())
+  name                 String
+  role                 String
+  department           String
+  description          String
+  companyId            String
+  company              Company  @relation(fields: [companyId], references: [id])
+  socialSecurityNumber String   @unique
+  CURP                 String   @unique
+  RFC                  String   @unique
+  address              String
+  phoneNumber          String
+  email                String   @unique
+  birthDate            DateTime
+  hireDate             DateTime
+  emergencyContact     String
+  emergencyPhone       String
+  bankAccountNumber    String
+  clabeNumber          String   @unique
+  maritalStatus        String
+  nationality          String
+  educationLevel       String
+  gender               String
+  bloodType            String
+  jobTitle             String
+  workShift            String
+  contractType         String
+  salary               Float
+  bonus                Float
+  vacationDays         Int
+  sickDays             Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
 
-// model Contact {
-//   id        Int      @id @default(autoincrement())
-//   name      String
-//   email     String
-//   message   String
-//   createdAt DateTime @default(now())
-// }
 
-// model BudgetRequest {
-//   id          Int      @id @default(autoincrement())
-//   email       String
-//   phone       String
-//   projectType String
-//   description String
-//   createdAt   DateTime @default(now())
-// }
+
