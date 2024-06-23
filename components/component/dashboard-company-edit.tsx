@@ -49,7 +49,7 @@ export default function DashboardEmployedAdmin() {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await fetch('/api/listCompanies');
+        const res = await fetch('/api/listAllEmployees');
         if (res.ok) {
           const data = await res.json();
           setCompanies(data.companies);
