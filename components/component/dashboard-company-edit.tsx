@@ -1,20 +1,22 @@
-'use client';
-// components\component\dashboard-company-edit.tsx
+"use client";
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { useSearchParams } from 'next/navigation';
 
-export default function EditCompany({ initialRfc }: { initialRfc: string }) {
+export default function EditCompany() {
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [userId, setUserId] = useState("");
+  const searchParams = useSearchParams();
+  const initialRfc = searchParams.get("rfc");
 
   // Nuevos campos
   const [razonSocial, setRazonSocial] = useState("");
-  const [rfc, setRfc] = useState(initialRfc);
+  const [rfc, setRfc] = useState(initialRfc || "");
   const [domicilioFiscalCalle, setDomicilioFiscalCalle] = useState("");
   const [domicilioFiscalNumero, setDomicilioFiscalNumero] = useState("");
   const [domicilioFiscalColonia, setDomicilioFiscalColonia] = useState("");
@@ -36,7 +38,7 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
   useEffect(() => {
     if (session) {
       const fetchUserId = async () => {
-        const res = await fetch("http://192.168.1.69:108/api/getUserId");
+        const res = await fetch("/api/getUserId");
         if (res.ok) {
           const data = await res.json();
           setUserId(data.id);
@@ -47,7 +49,7 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
       fetchUserId();
 
       const fetchCompanies = async () => {
-        const res = await fetch("http://192.168.1.69:108/api/getCompanyRFC");
+        const res = await fetch("/api/getCompanyRFC");
         if (res.ok) {
           const data = await res.json();
           setCompanies(data.rfcs);
