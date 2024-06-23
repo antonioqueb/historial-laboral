@@ -163,7 +163,7 @@ export default function EditCompany({ initialRfc }: { initialRfc: string }) {
         <>
           <h1 className="text-3xl font-bold mb-8">Editar Empresa</h1>
           <div className="mb-4">
-            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+            <Label htmlFor="companySelect" className="text-2xl font-bold text-blue-600">Seleccionar Empresa</Label>
             <select
               id="companySelect"
               value={rfc}
