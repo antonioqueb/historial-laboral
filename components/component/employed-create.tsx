@@ -77,8 +77,60 @@ export default function DashboardEmployedAdmin() {
     setError(null);
     setSuccess(null);
   
+    const {
+      name,
+      role,
+      department,
+      description,
+      companyId,
+      socialSecurityNumber,
+      CURP,
+      RFC,
+      address,
+      phoneNumber,
+      email,
+      birthDate,
+      hireDate,
+      emergencyContact,
+      emergencyPhone,
+      bankAccountNumber,
+      clabeNumber,
+      maritalStatus,
+      nationality,
+      educationLevel,
+      gender,
+      bloodType,
+      jobTitle,
+      workShift,
+      contractType
+    } = formData;
+  
     const data = {
-      ...formData,
+      name,
+      role,
+      department,
+      description,
+      companyId,
+      socialSecurityNumber,
+      CURP,
+      RFC,
+      address,
+      phoneNumber,
+      email,
+      birthDate: new Date(birthDate),
+      hireDate: new Date(hireDate),
+      emergencyContact,
+      emergencyPhone,
+      bankAccountNumber,
+      clabeNumber,
+      maritalStatus,
+      nationality,
+      educationLevel,
+      gender,
+      bloodType,
+      jobTitle,
+      workShift,
+      contractType
     };
   
     try {
@@ -127,6 +179,7 @@ export default function DashboardEmployedAdmin() {
       setError('Error de conexión');
     }
   };
+  
   
   
   
