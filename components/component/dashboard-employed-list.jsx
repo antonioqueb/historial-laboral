@@ -28,6 +28,7 @@ export default function DashboardEmployedList() {
       async function fetchEmployees() {
         const response = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${selectedCompany}`);
         const data = await response.json();
+    
         setEmployees(data.employees);
       }
 

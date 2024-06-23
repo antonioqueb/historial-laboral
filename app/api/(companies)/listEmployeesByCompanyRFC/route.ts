@@ -1,5 +1,3 @@
-// app\api\(employed)\listEmployeesByCompanyRFC\route.ts
-
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
@@ -45,7 +43,27 @@ export async function GET(req: Request) {
         email: true,
         phoneNumber: true,
         profileImageUrl: true, // Añadir el campo profileImageUrl
-        // Añadir más campos si es necesario
+        description: true,
+        socialSecurityNumber: true,
+        CURP: true,
+        RFC: true,
+        address: true,
+        birthDate: true,
+        hireDate: true,
+        emergencyContact: true,
+        emergencyPhone: true,
+        bankAccountNumber: true,
+        clabeNumber: true,
+        maritalStatus: true,
+        nationality: true,
+        educationLevel: true,
+        gender: true,
+        bloodType: true,
+        jobTitle: true,
+        workShift: true,
+        contractType: true,
+        createdAt: true,
+        updatedAt: true,
       }
     });
 
