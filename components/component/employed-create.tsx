@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -79,13 +80,21 @@ export default function DashboardEmployedAdmin() {
     setError(null);
     setSuccess(null);
 
+    const data = {
+      ...formData,
+      salary: parseFloat(formData.salary),
+      bonus: parseFloat(formData.bonus),
+      vacationDays: parseInt(formData.vacationDays, 10),
+      sickDays: parseInt(formData.sickDays, 10),
+    };
+
     try {
-      const response = await fetch('/api/createEmployee', {
+      const response = await fetch('/api/employeed', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {
