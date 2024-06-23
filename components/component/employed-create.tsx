@@ -83,10 +83,10 @@ export default function DashboardEmployedAdmin() {
     // Convertir los campos necesarios a Float o Int
     const data = {
       ...formData,
-      salary: parseFloat(formData.salary),
-      bonus: parseFloat(formData.bonus),
-      vacationDays: parseInt(formData.vacationDays, 10),
-      sickDays: parseInt(formData.sickDays, 10),
+      salary: parseFloat(formData.salary) || 0,
+      bonus: parseFloat(formData.bonus) || 0,
+      vacationDays: parseInt(formData.vacationDays, 10) || 0,
+      sickDays: parseInt(formData.sickDays, 10) || 0,
     };
   
     try {
@@ -139,6 +139,7 @@ export default function DashboardEmployedAdmin() {
       setError('Error de conexión');
     }
   };
+  
   
 
   return (
