@@ -25,6 +25,10 @@ export async function POST(req: Request) {
     const image = formData.get("image") as File | null;
     const nss = formData.get("socialSecurityNumber") as string | null;
 
+    console.log("Form Data:", formData);
+    console.log("Image:", image);
+    console.log("NSS:", nss);
+
     let imageUrl: string | null = null;
     if (image && nss) {
       const uploadForm = new FormData();
@@ -43,6 +47,7 @@ export async function POST(req: Request) {
 
       const uploadResult = await response.json();
       imageUrl = uploadResult.imageUrl;
+      console.log("Image URL from upload:", imageUrl);
     }
 
     const {
@@ -71,6 +76,8 @@ export async function POST(req: Request) {
       workShift,
       contractType,
     } = Object.fromEntries(formData.entries());
+
+    console.log("Profile Image URL to be saved:", imageUrl);
 
     // Crear el empleado
     const employee = await prisma.employee.create({
@@ -106,6 +113,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ employee }, { status: 201 });
   } catch (error) {
+    console.error("Error creating employee:", error);
     return NextResponse.json({ error: (error as any).message }, { status: 500 });
   }
 }
