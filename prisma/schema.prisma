@@ -72,10 +72,6 @@ model Employee {
   jobTitle             String
   workShift            String
   contractType         String
-  salary               Float
-  bonus                Float
-  vacationDays         Int
-  sickDays             Int
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
