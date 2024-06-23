@@ -39,11 +39,8 @@ export default function DashboardEmployedAdmin() {
     jobTitle: '',
     workShift: '',
     contractType: '',
-    salary: '',
-    bonus: '',
-    vacationDays: '',
-    sickDays: '',
   });
+  
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -80,13 +77,8 @@ export default function DashboardEmployedAdmin() {
     setError(null);
     setSuccess(null);
   
-    // Convertir los campos necesarios a Float o Int
     const data = {
       ...formData,
-      salary: parseFloat(formData.salary) || 0,
-      bonus: parseFloat(formData.bonus) || 0,
-      vacationDays: parseInt(formData.vacationDays, 10) || 0,
-      sickDays: parseInt(formData.sickDays, 10) || 0,
     };
   
     try {
@@ -126,10 +118,6 @@ export default function DashboardEmployedAdmin() {
           jobTitle: '',
           workShift: '',
           contractType: '',
-          salary: '',
-          bonus: '',
-          vacationDays: '',
-          sickDays: '',
         });
       } else {
         const data = await response.json();
@@ -500,62 +488,7 @@ export default function DashboardEmployedAdmin() {
               required
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="salary">
-              Salario
-            </Label>
-            <Input
-              className="col-span-3"
-              id="salary"
-              name="salary"
-              value={formData.salary}
-              onChange={handleChange}
-              required
-              type="number"
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="bonus">
-              Bono
-            </Label>
-            <Input
-              className="col-span-3"
-              id="bonus"
-              name="bonus"
-              value={formData.bonus}
-              onChange={handleChange}
-              required
-              type="number"
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="vacationDays">
-              Días de Vacaciones
-            </Label>
-            <Input
-              className="col-span-3"
-              id="vacationDays"
-              name="vacationDays"
-              value={formData.vacationDays}
-              onChange={handleChange}
-              required
-              type="number"
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="sickDays">
-              Días de Enfermedad
-            </Label>
-            <Input
-              className="col-span-3"
-              id="sickDays"
-              name="sickDays"
-              value={formData.sickDays}
-              onChange={handleChange}
-              required
-              type="number"
-            />
-          </div>
+         
         </div>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         {success && <div className="text-green-500 mb-4">{success}</div>}
