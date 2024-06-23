@@ -86,8 +86,8 @@ export default function DashboardEmployedAdmin() {
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof typeof formData];
-      if (value !== null && value !== '') {
-        form.append(key, value as string | Blob);
+      if (value !== null && value !== undefined && value !== '') {
+        form.append(key, value);
       }
     });
 

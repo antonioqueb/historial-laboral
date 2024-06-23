@@ -2,10 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import fetch from "node-fetch";
-import FormData from "form-data";
 
-// Define the type for the session with the user ID
 interface ExtendedSession {
   user: {
     id: string;
@@ -25,20 +22,28 @@ export async function POST(req: Request) {
 
   try {
     const formData = await req.formData();
-    const image = formData.get("image") as File;
-    const nss = formData.get("socialSecurityNumber") as string;
+    const image = formData.get("image") as File | null;
+    const nss = formData.get("socialSecurityNumber") as string | null;
 
-    // Subir la imagen al servidor
-    const form = new FormData();
-    form.append("image", image);
-    form.append("nss", nss);
+    let imageUrl: string | null = null;
+    if (image && nss) {
+      const uploadForm = new FormData();
+      uploadForm.append("image", image);
+      uploadForm.append("nss", nss);
 
-    const response = await fetch("http://192.168.1.69:3008/upload", {
-      method: "POST",
-      body: form,
-    });
+      const response = await fetch("http://192.168.1.69:3008/upload", {
+        method: "POST",
+        body: uploadForm,
+      });
 
-    const { imageUrl } = await response.json();
+      if (!response.ok) {
+        const errorText = await response.text();
+        return NextResponse.json({ error: `Failed to upload image: ${errorText}` }, { status: response.status });
+      }
+
+      const uploadResult = await response.json();
+      imageUrl = uploadResult.imageUrl;
+    }
 
     const {
       name,
@@ -67,7 +72,6 @@ export async function POST(req: Request) {
       contractType,
     } = Object.fromEntries(formData.entries());
 
-    // Crear el empleado
     const employee = await prisma.employee.create({
       data: {
         name: name as string,
