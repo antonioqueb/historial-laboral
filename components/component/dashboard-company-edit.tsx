@@ -1,515 +1,395 @@
-'use client';
+"use client";
+import React, { useState, useEffect } from "react";
+import { useSession, signIn } from "next-auth/react";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { useSearchParams } from 'next/navigation';
 
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+export default function EditCompany() {
+  const { data: session } = useSession();
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [userId, setUserId] = useState("");
+  const searchParams = useSearchParams();
+  const initialRfc = searchParams.get("rfc");
 
-interface Company {
-  id: string;
-  razonSocial: string;
-}
+  // Nuevos campos
+  const [razonSocial, setRazonSocial] = useState("");
+  const [rfc, setRfc] = useState(initialRfc || "");
+  const [domicilioFiscalCalle, setDomicilioFiscalCalle] = useState("");
+  const [domicilioFiscalNumero, setDomicilioFiscalNumero] = useState("");
+  const [domicilioFiscalColonia, setDomicilioFiscalColonia] = useState("");
+  const [domicilioFiscalMunicipio, setDomicilioFiscalMunicipio] = useState("");
+  const [domicilioFiscalEstado, setDomicilioFiscalEstado] = useState("");
+  const [domicilioFiscalCodigoPostal, setDomicilioFiscalCodigoPostal] = useState("");
+  const [nombreComercial, setNombreComercial] = useState("");
+  const [objetoSocial, setObjetoSocial] = useState("");
+  const [representanteLegalNombre, setRepresentanteLegalNombre] = useState("");
+  const [representanteLegalCurp, setRepresentanteLegalCurp] = useState("");
+  const [capitalSocial, setCapitalSocial] = useState(0.0);
+  const [registrosImss, setRegistrosImss] = useState("");
+  const [registrosInfonavit, setRegistrosInfonavit] = useState("");
+  const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
+  const [certificaciones, setCertificaciones] = useState("");
 
-export default function DashboardEmployedAdmin() {
-  const [formData, setFormData] = useState({
-    name: '',
-    role: '',
-    department: '',
-    description: '',
-    companyId: '',
-    socialSecurityNumber: '',
-    CURP: '',
-    RFC: '',
-    address: '',
-    phoneNumber: '',
-    email: '',
-    birthDate: '',
-    hireDate: '',
-    emergencyContact: '',
-    emergencyPhone: '',
-    bankAccountNumber: '',
-    clabeNumber: '',
-    maritalStatus: '',
-    nationality: '',
-    educationLevel: '',
-    gender: '',
-    bloodType: '',
-    jobTitle: '',
-    workShift: '',
-    contractType: '',
-    profileImage: null as File | null,
-  });
-
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [companies, setCompanies] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const res = await fetch('/api/listAllEmployees');
+    if (session) {
+      const fetchUserId = async () => {
+        const res = await fetch("/api/getUserId");
         if (res.ok) {
           const data = await res.json();
-          setCompanies(data.companies);
+          setUserId(data.id);
         } else {
-          setError('Failed to fetch companies');
+          setMessage("Failed to fetch user ID.");
         }
-      } catch (err) {
-        setError('Failed to fetch companies');
+      };
+      fetchUserId();
+
+      const fetchCompanies = async () => {
+        const res = await fetch("/api/getCompanyRFC");
+        if (res.ok) {
+          const data = await res.json();
+          setCompanies(data.rfcs);
+        } else {
+          setMessage("Failed to fetch companies.");
+        }
+      };
+      fetchCompanies();
+
+      if (initialRfc) {
+        fetchCompanyData(initialRfc);
       }
-    };
+    }
+  }, [session, initialRfc]);
 
-    fetchCompanies();
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSelectChange = (value: string) => {
-    setFormData({ ...formData, companyId: value });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFormData({ ...formData, profileImage: e.target.files[0] });
+  const fetchCompanyData = async (rfc: string) => {
+    const res = await fetch(`/api/getCompany?rfc=${rfc}`);
+    if (res.ok) {
+      const data = await res.json();
+      setName(data.name);
+      setRazonSocial(data.razonSocial);
+      setRfc(data.rfc);
+      setDomicilioFiscalCalle(data.domicilioFiscalCalle);
+      setDomicilioFiscalNumero(data.domicilioFiscalNumero);
+      setDomicilioFiscalColonia(data.domicilioFiscalColonia);
+      setDomicilioFiscalMunicipio(data.domicilioFiscalMunicipio);
+      setDomicilioFiscalEstado(data.domicilioFiscalEstado);
+      setDomicilioFiscalCodigoPostal(data.domicilioFiscalCodigoPostal);
+      setNombreComercial(data.nombreComercial);
+      setObjetoSocial(data.objetoSocial);
+      setRepresentanteLegalNombre(data.representanteLegalNombre);
+      setRepresentanteLegalCurp(data.representanteLegalCurp);
+      setCapitalSocial(data.capitalSocial);
+      setRegistrosImss(data.registrosImss);
+      setRegistrosInfonavit(data.registrosInfonavit);
+      setGiroActividadEconomica(data.giroActividadEconomica);
+      setCertificaciones(data.certificaciones.join(", "));
+    } else {
+      setMessage("Failed to fetch company data.");
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
 
-    const form = new FormData();
-    Object.keys(formData).forEach((key) => {
-      const value = formData[key as keyof typeof formData];
-      if (value !== null && value !== '') {
-        form.append(key, value as string | Blob);
-      }
+    if (!session) {
+      setMessage("You must be logged in to edit a company.");
+      return;
+    }
+
+    if (!userId) {
+      setMessage("Failed to fetch user ID.");
+      return;
+    }
+
+    const res = await fetch("/api/editCompany", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        userId,
+        razonSocial,
+        rfc,
+        domicilioFiscalCalle,
+        domicilioFiscalNumero,
+        domicilioFiscalColonia,
+        domicilioFiscalMunicipio,
+        domicilioFiscalEstado,
+        domicilioFiscalCodigoPostal,
+        nombreComercial,
+        objetoSocial,
+        representanteLegalNombre,
+        representanteLegalCurp,
+        capitalSocial,
+        registrosImss,
+        registrosInfonavit,
+        giroActividadEconomica,
+        certificaciones: certificaciones.split(',').map(cert => cert.trim())
+      }),
     });
 
-    try {
-      const response = await fetch('/api/createEmployee', {
-        method: 'POST',
-        body: form,
-      });
-
-      if (response.ok) {
-        setSuccess('Empleado creado exitosamente');
-        setFormData({
-          name: '',
-          role: '',
-          department: '',
-          description: '',
-          companyId: '',
-          socialSecurityNumber: '',
-          CURP: '',
-          RFC: '',
-          address: '',
-          phoneNumber: '',
-          email: '',
-          birthDate: '',
-          hireDate: '',
-          emergencyContact: '',
-          emergencyPhone: '',
-          bankAccountNumber: '',
-          clabeNumber: '',
-          maritalStatus: '',
-          nationality: '',
-          educationLevel: '',
-          gender: '',
-          bloodType: '',
-          jobTitle: '',
-          workShift: '',
-          contractType: '',
-          profileImage: null,
-        });
-      } else {
-        const data = await response.json();
-        setError(data.error || 'Error al crear el empleado');
-      }
-    } catch (err) {
-      setError('Error de conexión');
+    if (res.ok) {
+      const data = await res.json();
+      setMessage(`Company updated: ${data.company.name}`);
+    } else {
+      const errorData = await res.json();
+      setMessage(`Failed to update company: ${errorData.error}`);
     }
+  };
+
+  const handleCompanySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedRfc = e.target.value;
+    setRfc(selectedRfc);
+    fetchCompanyData(selectedRfc);
   };
 
   return (
-    <div className="w-full mx-auto px-4 md:px-6 py-12">
-      <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">Administrar Empleados</h1>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="name">
-              Nombre
-            </Label>
-            <Input
-              className="col-span-3"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="role">
-              Rol
-            </Label>
-            <Select
-              value={formData.role}
-              onValueChange={(value) => setFormData({ ...formData, role: value })}
-              required
-            >
-              <SelectTrigger className="col-span-3">
-                <SelectValue placeholder="Seleccionar rol" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="manager">Gerente</SelectItem>
-                <SelectItem value="developer">Desarrollador</SelectItem>
-                <SelectItem value="designer">Diseñador</SelectItem>
-                <SelectItem value="hr">Recursos Humanos</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="department">
-              Departamento
-            </Label>
-            <Select
-              value={formData.department}
-              onValueChange={(value) => setFormData({ ...formData, department: value })}
-              required
-            >
-              <SelectTrigger className="col-span-3">
-                <SelectValue placeholder="Seleccionar departamento" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="engineering">Ingeniería</SelectItem>
-                <SelectItem value="design">Diseño</SelectItem>
-                <SelectItem value="hr">Recursos Humanos</SelectItem>
-                <SelectItem value="marketing">Mercadotecnia</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="description">
-              Descripción
-            </Label>
-            <Textarea
-              className="col-span-3"
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Ingrese una breve descripción del empleado"
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="companyId">
-              Empresa
-            </Label>
-            <Select
-              value={formData.companyId}
-              onValueChange={handleSelectChange}
-              required
-            >
-              <SelectTrigger className="col-span-3">
-                <SelectValue placeholder="Seleccionar empresa" />
-              </SelectTrigger>
-              <SelectContent>
-                {companies.map((company) => (
-                  <SelectItem key={company.id} value={company.id}>
-                    {company.razonSocial}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="socialSecurityNumber">
-              Número de Seguridad Social
-            </Label>
-            <Input
-              className="col-span-3"
-              id="socialSecurityNumber"
-              name="socialSecurityNumber"
-              value={formData.socialSecurityNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="CURP">
-              CURP
-            </Label>
-            <Input
-              className="col-span-3"
-              id="CURP"
-              name="CURP"
-              value={formData.CURP}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="RFC">
-              RFC
-            </Label>
-            <Input
-              className="col-span-3"
-              id="RFC"
-              name="RFC"
-              value={formData.RFC}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="address">
-              Dirección
-            </Label>
-            <Input
-              className="col-span-3"
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="phoneNumber">
-              Número de Teléfono
-            </Label>
-            <Input
-              className="col-span-3"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="email">
-              Correo Electrónico
-            </Label>
-            <Input
-              className="col-span-3"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="birthDate">
-              Fecha de Nacimiento
-            </Label>
-            <Input
-              type="date"
-              className="col-span-3"
-              id="birthDate"
-              name="birthDate"
-              value={formData.birthDate}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="hireDate">
-              Fecha de Contratación
-            </Label>
-            <Input
-              type="date"
-              className="col-span-3"
-              id="hireDate"
-              name="hireDate"
-              value={formData.hireDate}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="emergencyContact">
-              Contacto de Emergencia
-            </Label>
-            <Input
-              className="col-span-3"
-              id="emergencyContact"
-              name="emergencyContact"
-              value={formData.emergencyContact}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="emergencyPhone">
-              Teléfono de Emergencia
-            </Label>
-            <Input
-              className="col-span-3"
-              id="emergencyPhone"
-              name="emergencyPhone"
-              value={formData.emergencyPhone}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="bankAccountNumber">
-              Número de Cuenta Bancaria
-            </Label>
-            <Input
-              className="col-span-3"
-              id="bankAccountNumber"
-              name="bankAccountNumber"
-              value={formData.bankAccountNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="clabeNumber">
-              CLABE
-            </Label>
-            <Input
-              className="col-span-3"
-              id="clabeNumber"
-              name="clabeNumber"
-              value={formData.clabeNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="maritalStatus">
-              Estado Civil
-            </Label>
-            <Input
-              className="col-span-3"
-              id="maritalStatus"
-              name="maritalStatus"
-              value={formData.maritalStatus}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="nationality">
-              Nacionalidad
-            </Label>
-            <Input
-              className="col-span-3"
-              id="nationality"
-              name="nationality"
-              value={formData.nationality}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="educationLevel">
-              Nivel Educativo
-            </Label>
-            <Input
-              className="col-span-3"
-              id="educationLevel"
-              name="educationLevel"
-              value={formData.educationLevel}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="gender">
-              Género
-            </Label>
-            <Input
-              className="col-span-3"
-              id="gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="bloodType">
-              Tipo de Sangre
-            </Label>
-            <Input
-              className="col-span-3"
-              id="bloodType"
-              name="bloodType"
-              value={formData.bloodType}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="jobTitle">
-              Título del Trabajo
-            </Label>
-            <Input
-              className="col-span-3"
-              id="jobTitle"
-              name="jobTitle"
-              value={formData.jobTitle}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="workShift">
-              Turno de Trabajo
-            </Label>
-            <Input
-              className="col-span-3"
-              id="workShift"
-              name="workShift"
-              value={formData.workShift}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="contractType">
-              Tipo de Contrato
-            </Label>
-            <Input
-              className="col-span-3"
-              id="contractType"
-              name="contractType"
-              value={formData.contractType}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="profileImage">
-              Foto de Perfil
-            </Label>
-            <Input
-              type="file"
-              className="col-span-3"
-              id="profileImage"
-              name="profileImage"
-              onChange={handleFileChange}
-            />
-          </div>
+    <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
+      {!session && (
+        <div className="text-center">
+          <p className="text-lg font-medium text-black">You are not signed in</p>
+          <button
+            onClick={() => signIn()}
+            className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+          >
+            Sign in
+          </button>
         </div>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        {success && <div className="text-green-500 mb-4">{success}</div>}
-        <Button type="submit">Agregar</Button>
-      </form>
+      )}
+      {session && (
+        <>
+          <h1 className="text-3xl font-bold mb-8">Editar Empresa</h1>
+          <div className="mb-4">
+            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+            <select
+              id="companySelect"
+              value={rfc}
+              onChange={handleCompanySelect}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="">Seleccionar...</option>
+              {companies.map((companyRfc) => (
+                <option key={companyRfc} value={companyRfc}>
+                  {companyRfc}
+                </option>
+              ))}
+            </select>
+          </div>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Información General */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Información General</h2>
+              <div>
+                <Label htmlFor="companyName">Nombre</Label>
+                <Input
+                  id="companyName"
+                  type="text"
+                  value={name}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="razonSocial">Razón Social*</Label>
+                <Input
+                  id="razonSocial"
+                  type="text"
+                  value={razonSocial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRazonSocial(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="rfc">RFC*</Label>
+                <Input
+                  id="rfc"
+                  type="text"
+                  value={rfc}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRfc(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="nombreComercial">Nombre Comercial</Label>
+                <Input
+                  id="nombreComercial"
+                  type="text"
+                  value={nombreComercial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNombreComercial(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="objetoSocial">Objeto Social</Label>
+                <Input
+                  id="objetoSocial"
+                  type="text"
+                  value={objetoSocial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setObjetoSocial(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Domicilio Fiscal */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Domicilio Fiscal</h2>
+              <div>
+                <Label htmlFor="domicilioFiscalCalle">Calle</Label>
+                <Input
+                  id="domicilioFiscalCalle"
+                  type="text"
+                  value={domicilioFiscalCalle}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalCalle(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalNumero">Número</Label>
+                <Input
+                  id="domicilioFiscalNumero"
+                  type="text"
+                  value={domicilioFiscalNumero}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalNumero(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalColonia">Colonia</Label>
+                <Input
+                  id="domicilioFiscalColonia"
+                  type="text"
+                  value={domicilioFiscalColonia}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalColonia(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalMunicipio">Municipio</Label>
+                <Input
+                  id="domicilioFiscalMunicipio"
+                  type="text"
+                  value={domicilioFiscalMunicipio}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalMunicipio(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalEstado">Estado</Label>
+                <Input
+                  id="domicilioFiscalEstado"
+                  type="text"
+                  value={domicilioFiscalEstado}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalEstado(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="domicilioFiscalCodigoPostal">Código Postal</Label>
+                <Input
+                  id="domicilioFiscalCodigoPostal"
+                  type="text"
+                  value={domicilioFiscalCodigoPostal}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDomicilioFiscalCodigoPostal(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Información del Representante Legal */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Representante Legal</h2>
+              <div>
+                <Label htmlFor="representanteLegalNombre">Nombre</Label>
+                <Input
+                  id="representanteLegalNombre"
+                  type="text"
+                  value={representanteLegalNombre}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepresentanteLegalNombre(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="representanteLegalCurp">CURP</Label>
+                <Input
+                  id="representanteLegalCurp"
+                  type="text"
+                  value={representanteLegalCurp}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepresentanteLegalCurp(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Información Adicional */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Información Adicional</h2>
+              <div>
+                <Label htmlFor="capitalSocial">Capital Social</Label>
+                <Input
+                  id="capitalSocial"
+                  type="number"
+                  value={capitalSocial}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCapitalSocial(parseFloat(e.target.value))}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="registrosImss">Registros IMSS</Label>
+                <Input
+                  id="registrosImss"
+                  type="text"
+                  value={registrosImss}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosImss(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="registrosInfonavit">Registros Infonavit</Label>
+                <Input
+                  id="registrosInfonavit"
+                  type="text"
+                  value={registrosInfonavit}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosInfonavit(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="giroActividadEconomica">Actividad Económica</Label>
+                <Input
+                  id="giroActividadEconomica"
+                  type="text"
+                  value={giroActividadEconomica}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGiroActividadEconomica(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="certificaciones">Certificaciones</Label>
+                <Input
+                  id="certificaciones"
+                  type="text"
+                  value={certificaciones}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCertificaciones(e.target.value)}
+                  placeholder="Separar por comas"
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
+              <Button type="submit">Editar Empresa</Button>
+            </div>
+          </form>
+          {message && (
+            <p className="text-center text-green-600 text-md italic mt-4">{message}</p>
+          )}
+        </>
+      )}
     </div>
   );
 }
