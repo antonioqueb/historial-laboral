@@ -5,7 +5,7 @@ import { useSession, signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
-import { FaBuilding, FaMoneyBill, FaMapMarkedAlt } from 'react-icons/fa';
+import { FaBuilding, FaMoneyBill, FaMapMarkedAlt, FaCertificate, FaClipboardList, FaHome } from 'react-icons/fa';
 
 // Icon Component
 const IconComponent = ({ IconComponent, className }) => <IconComponent className={className} />;
@@ -33,6 +33,9 @@ export default function DashboardCompany() {
   const totalCompanies = companies.length;
   const totalCapitalSocial = companies.reduce((acc, company) => acc + company.capitalSocial, 0);
   const uniqueStates = new Set(companies.map(company => company.domicilioFiscalEstado)).size;
+  const totalCertificaciones = companies.reduce((acc, company) => acc + company.certificaciones.length, 0);
+  const totalRegistrosImss = companies.reduce((acc, company) => acc + company.registrosImss.length, 0);
+  const totalRegistrosInfonavit = companies.reduce((acc, company) => acc + company.registrosInfonavit.length, 0);
 
   const cardData = [
     {
@@ -52,6 +55,24 @@ export default function DashboardCompany() {
       description: "Estados donde están registradas las empresas",
       mainValue: uniqueStates,
       icon: FaMapMarkedAlt,
+    },
+    {
+      title: "Número de Certificaciones",
+      description: "Total de certificaciones de todas las empresas",
+      mainValue: totalCertificaciones,
+      icon: FaCertificate,
+    },
+    {
+      title: "Número de Registros IMSS",
+      description: "Total de registros IMSS de todas las empresas",
+      mainValue: totalRegistrosImss,
+      icon: FaClipboardList,
+    },
+    {
+      title: "Número de Registros Infonavit",
+      description: "Total de registros Infonavit de todas las empresas",
+      mainValue: totalRegistrosInfonavit,
+      icon: FaHome,
     }
   ];
 
