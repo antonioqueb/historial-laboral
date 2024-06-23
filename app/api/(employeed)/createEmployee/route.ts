@@ -107,7 +107,7 @@ export async function POST(req: Request) {
         jobTitle: jobTitle as string,
         workShift: workShift as string,
         contractType: contractType as string,
-        profileImageUrl: imageUrl, // Guardar la URL de la imagen
+        profileImageUrl: imageUrl as string, // Guardar la URL de la imagen
       },
     });
 
