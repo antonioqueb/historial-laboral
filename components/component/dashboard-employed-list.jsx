@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
@@ -10,16 +10,30 @@ import Image from "next/image";
 
 export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  const [selectedCompany, setSelectedCompany] = useState("");
 
   useEffect(() => {
-    async function fetchEmployees() {
-      const response = await fetch("/api/employees");
+    async function fetchCompanies() {
+      const response = await fetch("/api/getCompanyRFC");
       const data = await response.json();
-      setEmployees(data);
+      setCompanies(data.rfcs);
     }
 
-    fetchEmployees();
+    fetchCompanies();
   }, []);
+
+  useEffect(() => {
+    if (selectedCompany) {
+      async function fetchEmployees() {
+        const response = await fetch(`/api/employeed/listEmployeesByCompanyRFC?rfc=${selectedCompany}`);
+        const data = await response.json();
+        setEmployees(data.employees);
+      }
+
+      fetchEmployees();
+    }
+  }, [selectedCompany]);
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
@@ -81,6 +95,22 @@ export default function DashboardEmployedList() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+      </div>
+      <div className="mb-4">
+        <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+        <select
+          id="companySelect"
+          value={selectedCompany}
+          onChange={(e) => setSelectedCompany(e.target.value)}
+          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        >
+          <option value="">Seleccionar...</option>
+          {companies.map((companyRfc) => (
+            <option key={companyRfc} value={companyRfc}>
+              {companyRfc}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {employees.map((employee) => (
