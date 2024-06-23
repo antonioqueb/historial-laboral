@@ -79,7 +79,8 @@ export default function DashboardEmployedAdmin() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
-
+  
+    // Convertir los campos necesarios a Float o Int
     const data = {
       ...formData,
       salary: parseFloat(formData.salary),
@@ -87,7 +88,7 @@ export default function DashboardEmployedAdmin() {
       vacationDays: parseInt(formData.vacationDays, 10),
       sickDays: parseInt(formData.sickDays, 10),
     };
-
+  
     try {
       const response = await fetch('/api/employeed', {
         method: 'POST',
@@ -96,7 +97,7 @@ export default function DashboardEmployedAdmin() {
         },
         body: JSON.stringify(data),
       });
-
+  
       if (response.ok) {
         setSuccess('Empleado creado exitosamente');
         setFormData({
@@ -138,6 +139,7 @@ export default function DashboardEmployedAdmin() {
       setError('Error de conexión');
     }
   };
+  
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
