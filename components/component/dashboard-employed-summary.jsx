@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { FaPlus, FaStar, FaReply, FaBuilding, FaCog, FaThLarge, FaUsers } from 'react-icons/fa';
+import { FaPlus, FaStar, FaReply, FaBuilding } from 'react-icons/fa';
 
 export default function DashboardCompany() {
   const { data: session } = useSession();
@@ -17,7 +17,7 @@ export default function DashboardCompany() {
   useEffect(() => {
     if (session) {
       const fetchCompanies = async () => {
-        const res = await fetch("http://192.168.1.69:108/api/getCompanies");
+        const res = await fetch("http://192.168.1.69:108/api/listCompanies");
         if (res.ok) {
           const data = await res.json();
           setCompanies(data.companies);
