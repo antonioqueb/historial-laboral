@@ -7,13 +7,11 @@ import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
-import { PlusIcon, StarIcon, ReplyIcon, BuildingIcon, CogIcon, LayoutDashboardIcon, UsersIcon } from "@/icons"; // Asegúrate de tener estos íconos definidos/importados
+import { FaPlus, FaStar, FaReply, FaBuilding, FaCog, FaThLarge, FaUsers } from 'react-icons/fa';
 
 export default function DashboardCompany() {
   const { data: session } = useSession();
   const [companies, setCompanies] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -30,10 +28,6 @@ export default function DashboardCompany() {
       fetchCompanies();
     }
   }, [session]);
-
-  const handleCompanySelect = (company) => {
-    setSelectedCompany(company);
-  };
 
   return (
     <div className="flex min-h-screen">
@@ -55,14 +49,14 @@ export default function DashboardCompany() {
             <div className="flex items-center gap-4">
               <Input className="max-w-xs" placeholder="Buscar empresas..." type="search" />
               <Button>
-                <PlusIcon className="w-4 h-4 mr-2" />
+                <FaPlus className="w-4 h-4 mr-2" />
                 Nueva Empresa
               </Button>
             </div>
           </header>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {companies.map((company) => (
-              <Card key={company.rfc} onClick={() => handleCompanySelect(company)}>
+              <Card key={company.rfc}>
                 <CardHeader className="flex items-center gap-4">
                   <Avatar>
                     <AvatarImage src="/placeholder-company.jpg" />
@@ -74,95 +68,30 @@ export default function DashboardCompany() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <BuildingIcon className="w-4 h-4" />
+                      <FaBuilding className="w-4 h-4" />
                       <span className="text-sm font-semibold">{company.domicilioFiscalEstado}</span>
                     </div>
                   </div>
+                  <div className="text-sm text-zinc-500 dark:text-zinc-400">
+                    <p><strong>RFC:</strong> {company.rfc}</p>
+                    <p><strong>Dirección:</strong> {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                    <p><strong>Nombre Comercial:</strong> {company.nombreComercial}</p>
+                    <p><strong>Objeto Social:</strong> {company.objetoSocial}</p>
+                    <p><strong>Representante Legal:</strong> {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
+                    <p><strong>Capital Social:</strong> {company.capitalSocial}</p>
+                    <p><strong>Registros IMSS:</strong> {company.registrosImss}</p>
+                    <p><strong>Registros Infonavit:</strong> {company.registrosInfonavit}</p>
+                    <p><strong>Giro/Actividad Económica:</strong> {company.giroActividadEconomica}</p>
+                    <p><strong>Certificaciones:</strong> {company.certificaciones.join(", ")}</p>
+                  </div>
                 </CardContent>
-                <CardFooter>
-                  <Button className="w-full" variant="outline">
-                    Ver Detalles
-                  </Button>
-                </CardFooter>
               </Card>
             ))}
           </div>
-          {selectedCompany && (
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold mb-4">Detalles de {selectedCompany.name}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Label>Razón Social</Label>
-                  <Input value={selectedCompany.razonSocial} readOnly />
-                </div>
-                <div>
-                  <Label>RFC</Label>
-                  <Input value={selectedCompany.rfc} readOnly />
-                </div>
-                <div>
-                  <Label>Domicilio Fiscal</Label>
-                  <Input value={selectedCompany.domicilioFiscalCalle} readOnly />
-                </div>
-                <div>
-                  <Label>Número</Label>
-                  <Input value={selectedCompany.domicilioFiscalNumero} readOnly />
-                </div>
-                <div>
-                  <Label>Colonia</Label>
-                  <Input value={selectedCompany.domicilioFiscalColonia} readOnly />
-                </div>
-                <div>
-                  <Label>Municipio</Label>
-                  <Input value={selectedCompany.domicilioFiscalMunicipio} readOnly />
-                </div>
-                <div>
-                  <Label>Estado</Label>
-                  <Input value={selectedCompany.domicilioFiscalEstado} readOnly />
-                </div>
-                <div>
-                  <Label>Código Postal</Label>
-                  <Input value={selectedCompany.domicilioFiscalCodigoPostal} readOnly />
-                </div>
-                <div>
-                  <Label>Nombre Comercial</Label>
-                  <Input value={selectedCompany.nombreComercial} readOnly />
-                </div>
-                <div>
-                  <Label>Objeto Social</Label>
-                  <Input value={selectedCompany.objetoSocial} readOnly />
-                </div>
-                <div>
-                  <Label>Representante Legal</Label>
-                  <Input value={selectedCompany.representanteLegalNombre} readOnly />
-                </div>
-                <div>
-                  <Label>CURP del Representante Legal</Label>
-                  <Input value={selectedCompany.representanteLegalCurp} readOnly />
-                </div>
-                <div>
-                  <Label>Capital Social</Label>
-                  <Input value={selectedCompany.capitalSocial} readOnly />
-                </div>
-                <div>
-                  <Label>Registros IMSS</Label>
-                  <Input value={selectedCompany.registrosImss} readOnly />
-                </div>
-                <div>
-                  <Label>Registros Infonavit</Label>
-                  <Input value={selectedCompany.registrosInfonavit} readOnly />
-                </div>
-                <div>
-                  <Label>Giro/Actividad Económica</Label>
-                  <Input value={selectedCompany.giroActividadEconomica} readOnly />
-                </div>
-                <div>
-                  <Label>Certificaciones</Label>
-                  <Input value={selectedCompany.certificaciones.join(", ")} readOnly />
-                </div>
-              </div>
-            </div>
+          {message && (
+            <p className="text-center text-red-600 text-md italic mt-4">{message}</p>
           )}
         </div>
       )}
