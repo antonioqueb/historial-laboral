@@ -5,7 +5,6 @@ import { authOptions } from "@/app/api/(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-// Define the type for the session with the user ID
 interface ExtendedSession {
   user: {
     id: string;
@@ -18,39 +17,40 @@ interface ExtendedSession {
 const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
-    const session = await getServerSession(authOptions) as ExtendedSession | null;
-    if (!session || !session.user || !session.user.id) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const session = await getServerSession(authOptions) as ExtendedSession | null;
+  if (!session || !session.user || !session.user.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    const url = new URL(req.url);
-    const companyRFC = url.searchParams.get("rfc");
+  const url = new URL(req.url);
+  const companyRFC = url.searchParams.get("rfc");
 
-    if (!companyRFC) {
-        return NextResponse.json({ error: "RFC is required" }, { status: 400 });
-    }
+  if (!companyRFC) {
+    return NextResponse.json({ error: "RFC is required" }, { status: 400 });
+  }
 
-    try {
-        // Obtener los empleados de la empresa por RFC
-        const employees = await prisma.employee.findMany({
-            where: {
-                company: {
-                    rfc: companyRFC
-                }
-            },
-            select: {
-                id: true,
-                name: true,
-                role: true,
-                department: true,
-                email: true,
-                phoneNumber: true,
-                // Añadir más campos si es necesario
-            }
-        });
+  try {
+    // Obtener los empleados de la empresa por RFC
+    const employees = await prisma.employee.findMany({
+      where: {
+        company: {
+          rfc: companyRFC
+        }
+      },
+      select: {
+        id: true,
+        name: true,
+        role: true,
+        department: true,
+        email: true,
+        phoneNumber: true,
+        profileImageUrl: true, // Añadir el campo profileImageUrl
+        // Añadir más campos si es necesario
+      }
+    });
 
-        return NextResponse.json({ employees }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ error: (error as any).message }, { status: 500 });
-    }
+    return NextResponse.json({ employees }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: (error as any).message }, { status: 500 });
+  }
 }
