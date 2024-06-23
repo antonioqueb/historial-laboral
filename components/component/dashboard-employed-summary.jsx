@@ -4,8 +4,11 @@ import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CardHeader, CardContent, Card } from "@/components/ui/card";
-import { FaBuilding, FaMoneyBill, FaChartPie } from 'react-icons/fa';
+import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
+import { FaBuilding, FaMoneyBill, FaMapMarkedAlt } from 'react-icons/fa';
+
+// Icon Component
+const IconComponent = ({ IconComponent, className }) => <IconComponent className={className} />;
 
 export default function DashboardCompany() {
   const { data: session } = useSession();
@@ -29,10 +32,28 @@ export default function DashboardCompany() {
 
   const totalCompanies = companies.length;
   const totalCapitalSocial = companies.reduce((acc, company) => acc + company.capitalSocial, 0);
-  const companiesByState = companies.reduce((acc, company) => {
-    acc[company.domicilioFiscalEstado] = (acc[company.domicilioFiscalEstado] || 0) + 1;
-    return acc;
-  }, {});
+  const uniqueStates = new Set(companies.map(company => company.domicilioFiscalEstado)).size;
+
+  const cardData = [
+    {
+      title: "Total de Empresas",
+      description: "Número actual de empresas registradas",
+      mainValue: totalCompanies,
+      icon: FaBuilding,
+    },
+    {
+      title: "Capital Social Total",
+      description: "Capital social acumulado de todas las empresas",
+      mainValue: `$${totalCapitalSocial.toLocaleString()}`,
+      icon: FaMoneyBill,
+    },
+    {
+      title: "Número de Estados",
+      description: "Estados donde están registradas las empresas",
+      mainValue: uniqueStates,
+      icon: FaMapMarkedAlt,
+    }
+  ];
 
   return (
     <div className="flex min-h-screen">
@@ -59,46 +80,24 @@ export default function DashboardCompany() {
               </Button>
             </div>
           </header>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
-            <Card>
-              <CardHeader className="flex items-center gap-4">
-                <FaBuilding className="w-6 h-6 text-blue-500" />
-                <div>
-                  <h3 className="text-lg font-semibold">Total de Empresas</h3>
+          <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
+            {cardData.map(({ title, description, mainValue, icon }, index) => (
+              <Card key={index} className="min-h-[200px] lg:min-h-[300px]">
+                <div className="flex flex-col justify-between h-full">
+                  <CardHeader>
+                    <CardTitle>{title}</CardTitle>
+                    <CardDescription>{description}</CardDescription>
+                  </CardHeader>
+                  <CardFooter className="flex items-center justify-between mt-auto">
+                    <div className="grid gap-1">
+                      <div className="text-4xl font-bold">{mainValue}</div>
+                    </div>
+                    <IconComponent IconComponent={icon} className="h-12 w-12 text-zinc-400 ml-4" />
+                  </CardFooter>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">{totalCompanies}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex items-center gap-4">
-                <FaMoneyBill className="w-6 h-6 text-green-500" />
-                <div>
-                  <h3 className="text-lg font-semibold">Capital Social Total</h3>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">${totalCapitalSocial.toLocaleString()}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex items-center gap-4">
-                <FaChartPie className="w-6 h-6 text-red-500" />
-                <div>
-                  <h3 className="text-lg font-semibold">Empresas por Estado</h3>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {Object.keys(companiesByState).map((state) => (
-                  <div key={state} className="flex items-center justify-between">
-                    <span>{state}</span>
-                    <span>{companiesByState[state]}</span>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
+              </Card>
+            ))}
+          </section>
           {message && (
             <p className="text-center text-red-600 text-md italic mt-4">{message}</p>
           )}
