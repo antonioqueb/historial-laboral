@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -40,11 +40,34 @@ export default function DashboardEmployedAdmin() {
     sickDays: '',
   });
 
+  const [companies, setCompanies] = useState([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const res = await fetch('/api/listCompanies');
+        if (res.ok) {
+          const data = await res.json();
+          setCompanies(data.companies);
+        } else {
+          setError('Failed to fetch companies');
+        }
+      } catch (err) {
+        setError('Failed to fetch companies');
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (value: string) => {
+    setFormData({ ...formData, companyId: value });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -177,19 +200,26 @@ export default function DashboardEmployedAdmin() {
               required
             />
           </div>
-          {/* Add more fields for the additional data */}
           <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
             <Label className="text-right md:text-left md:col-span-1" htmlFor="companyId">
-              ID de la Compañía
+              Empresa
             </Label>
-            <Input
-              className="col-span-3"
-              id="companyId"
-              name="companyId"
+            <Select
               value={formData.companyId}
-              onChange={handleChange}
+              onValueChange={handleSelectChange}
               required
-            />
+            >
+              <SelectTrigger className="col-span-3">
+                <SelectValue placeholder="Seleccionar empresa" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.id}>
+                    {company.razonSocial}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
             <Label className="text-right md:text-left md:col-span-1" htmlFor="socialSecurityNumber">

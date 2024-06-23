@@ -33,9 +33,11 @@ useEffect(() => {
     if (pathname.startsWith('/tablero/empleados')) {
       setMenuOptions([
         { label: 'Resumen', href: '/tablero/empleados'},
-        { label: 'Administrar', href: '/tablero/empleados/administrar' },
-        { label: 'Listar', href: '/tablero/empleados/lista' },
-        { label: 'Historial', href: '/tablero/empleados/historial' },
+        { label: 'Crear', href: '/tablero/empleados/crear' },
+        { label: 'Editar', href: '/tablero/empleados/editar' },
+        { label: 'Listar', href: '/tablero/empleados/listar' },
+        { label: 'Valoración', href: '/tablero/empleados/valoracion' },
+
       ]);
     } 
 
