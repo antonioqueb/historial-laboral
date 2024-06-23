@@ -4,10 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-import { CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { FaPlus, FaStar, FaReply, FaBuilding } from 'react-icons/fa';
+import { CardHeader, CardContent, Card } from "@/components/ui/card";
+import { FaBuilding, FaMoneyBill, FaChartPie } from 'react-icons/fa';
 
 export default function DashboardCompany() {
   const { data: session } = useSession();
@@ -29,6 +27,13 @@ export default function DashboardCompany() {
     }
   }, [session]);
 
+  const totalCompanies = companies.length;
+  const totalCapitalSocial = companies.reduce((acc, company) => acc + company.capitalSocial, 0);
+  const companiesByState = companies.reduce((acc, company) => {
+    acc[company.domicilioFiscalEstado] = (acc[company.domicilioFiscalEstado] || 0) + 1;
+    return acc;
+  }, {});
+
   return (
     <div className="flex min-h-screen">
       {!session && (
@@ -45,50 +50,54 @@ export default function DashboardCompany() {
       {session && (
         <div className="flex-1 p-6">
           <header className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold">Empresas</h2>
+            <h2 className="text-2xl font-semibold">Dashboard de Empresas</h2>
             <div className="flex items-center gap-4">
               <Input className="max-w-xs" placeholder="Buscar empresas..." type="search" />
               <Button>
-                <FaPlus className="w-4 h-4 mr-2" />
+                <FaBuilding className="w-4 h-4 mr-2" />
                 Nueva Empresa
               </Button>
             </div>
           </header>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {companies.map((company) => (
-              <Card key={company.rfc}>
-                <CardHeader className="flex items-center gap-4">
-                  <Avatar>
-                    <AvatarImage src="/placeholder-company.jpg" />
-                    <AvatarFallback>{company.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="text-lg font-semibold">{company.name}</h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">{company.razonSocial}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
+            <Card>
+              <CardHeader className="flex items-center gap-4">
+                <FaBuilding className="w-6 h-6 text-blue-500" />
+                <div>
+                  <h3 className="text-lg font-semibold">Total de Empresas</h3>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{totalCompanies}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex items-center gap-4">
+                <FaMoneyBill className="w-6 h-6 text-green-500" />
+                <div>
+                  <h3 className="text-lg font-semibold">Capital Social Total</h3>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">${totalCapitalSocial.toLocaleString()}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex items-center gap-4">
+                <FaChartPie className="w-6 h-6 text-red-500" />
+                <div>
+                  <h3 className="text-lg font-semibold">Empresas por Estado</h3>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {Object.keys(companiesByState).map((state) => (
+                  <div key={state} className="flex items-center justify-between">
+                    <span>{state}</span>
+                    <span>{companiesByState[state]}</span>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <FaBuilding className="w-4 h-4" />
-                      <span className="text-sm font-semibold">{company.domicilioFiscalEstado}</span>
-                    </div>
-                  </div>
-                  <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                    <p><strong>RFC:</strong> {company.rfc}</p>
-                    <p><strong>Dirección:</strong> {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
-                    <p><strong>Nombre Comercial:</strong> {company.nombreComercial}</p>
-                    <p><strong>Objeto Social:</strong> {company.objetoSocial}</p>
-                    <p><strong>Representante Legal:</strong> {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
-                    <p><strong>Capital Social:</strong> {company.capitalSocial}</p>
-                    <p><strong>Registros IMSS:</strong> {company.registrosImss}</p>
-                    <p><strong>Registros Infonavit:</strong> {company.registrosInfonavit}</p>
-                    <p><strong>Giro/Actividad Económica:</strong> {company.giroActividadEconomica}</p>
-                    <p><strong>Certificaciones:</strong> {company.certificaciones.join(", ")}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                ))}
+              </CardContent>
+            </Card>
           </div>
           {message && (
             <p className="text-center text-red-600 text-md italic mt-4">{message}</p>
