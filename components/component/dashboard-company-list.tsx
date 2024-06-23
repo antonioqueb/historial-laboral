@@ -1,4 +1,3 @@
-'use client';
 // pages/list-companies.tsx
 import React, { useState, useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -10,12 +9,30 @@ import Link from "next/link";
 interface Company {
   id: string;
   name: string;
+  razonSocial: string;
+  rfc: string;
+  domicilioFiscalCalle: string;
+  domicilioFiscalNumero: string;
+  domicilioFiscalColonia: string;
+  domicilioFiscalMunicipio: string;
+  domicilioFiscalEstado: string;
+  domicilioFiscalCodigoPostal: string;
+  nombreComercial: string;
+  objetoSocial: string;
+  representanteLegalNombre: string;
+  representanteLegalCurp: string;
+  capitalSocial: number;
+  registrosImss: string;
+  registrosInfonavit: string;
+  giroActividadEconomica: string;
+  certificaciones: string[];
 }
 
 export default function ListCompanies() {
   const { data: session } = useSession();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [message, setMessage] = useState<string>("");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
 
   useEffect(() => {
     if (session) {
@@ -53,39 +70,74 @@ export default function ListCompanies() {
       )}
       {session && (
         <div>
-          <h1 className="text-2xl font-bold mb-4">
-            {companies.length > 1 ? "Empresas" : "Empresa"}
-          </h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">
+              {companies.length > 1 ? "Empresas" : "Empresa"}
+            </h1>
+            <div>
+              <Button variant="outline" onClick={() => setViewMode("list")}>Lista</Button>
+              <Button variant="outline" onClick={() => setViewMode("grid")}>Cuadrícula</Button>
+            </div>
+          </div>
           {message && <Alert variant="destructive" className="mb-4">{message}</Alert>}
-          <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:p-6">
-            {companies.length > 0 ? (
-              companies.map((company) => (
-                <div key={company.id} className="relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2">
-                  <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
-                    <span className="sr-only">Ver detalles</span>
-                  </Link>
-                  <div className="p-4 bg-background">
-                    <h3 className="text-xl font-bold">{company.name}</h3>
-                    <p className="text-sm text-muted-foreground">Descripción de la empresa</p>
+          {viewMode === "list" ? (
+            <div className="space-y-4">
+              {companies.length > 0 ? (
+                companies.map((company) => (
+                  <div key={company.id} className="p-4 bg-white rounded-lg shadow">
+                    <Link href={`/companies/${company.id}`}>
+                      <h3 className="text-xl font-bold">{company.name}</h3>
+                    </Link>
+                    <p>Razón Social: {company.razonSocial}</p>
+                    <p>RFC: {company.rfc}</p>
+                    <p>Domicilio Fiscal: {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                    <p>Nombre Comercial: {company.nombreComercial}</p>
+                    <p>Objeto Social: {company.objetoSocial}</p>
+                    <p>Representante Legal: {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
+                    <p>Capital Social: {company.capitalSocial}</p>
+                    <p>Registros IMSS: {company.registrosImss}</p>
+                    <p>Registros Infonavit: {company.registrosInfonavit}</p>
+                    <p>Actividad Económica: {company.giroActividadEconomica}</p>
+                    <p>Certificaciones: {company.certificaciones.join(", ")}</p>
                   </div>
-                  <div className="p-4 bg-muted">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm">
-                        <EyeIcon className="h-4 w-4" />
-                        <span className="sr-only">Ver detalles</span>
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <FilePenIcon className="h-4 w-4" />
-                        <span className="sr-only">Editar</span>
-                      </Button>
+                ))
+              ) : (
+                <p>Ops... No has registrado ninguna empresa aún.</p>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:p-6">
+              {companies.length > 0 ? (
+                companies.map((company) => (
+                  <div key={company.id} className="relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2">
+                    <Link href={`/companies/${company.id}`} className="absolute inset-0 z-10" prefetch={false}>
+                      <span className="sr-only">Ver detalles</span>
+                    </Link>
+                    <div className="p-4 bg-background">
+                      <h3 className="text-xl font-bold">{company.name}</h3>
+                      <p className="text-sm text-muted-foreground">Razón Social: {company.razonSocial}</p>
+                      <p className="text-sm text-muted-foreground">RFC: {company.rfc}</p>
+                      <p className="text-sm text-muted-foreground">Domicilio Fiscal: {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                    </div>
+                    <div className="p-4 bg-muted">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" size="sm">
+                          <EyeIcon className="h-4 w-4" />
+                          <span className="sr-only">Ver detalles</span>
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <FilePenIcon className="h-4 w-4" />
+                          <span className="sr-only">Editar</span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p>Ops... No has registrado ninguna empresa aún.</p>
-            )}
-          </div>
+                ))
+              ) : (
+                <p>Ops... No has registrado ninguna empresa aún.</p>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
