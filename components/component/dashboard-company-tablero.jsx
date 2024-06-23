@@ -93,14 +93,8 @@ export default function DashboardCompany() {
       {session && (
         <div className="flex-1 p-6">
           <header className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold">Dashboard de Empresas</h2>
-            <div className="flex items-center gap-4">
-              <Input className="max-w-xs" placeholder="Buscar empresas..." type="search" />
-              <Button>
-                <FaBuilding className="w-4 h-4 mr-2" />
-                Nueva Empresa
-              </Button>
-            </div>
+            <h2 className="text-2xl font-semibold">Resumen</h2>
+      
           </header>
           <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
             {cardData.map(({ title, description, mainValue, icon }, index) => (
