@@ -1,9 +1,9 @@
-import DashboardEmployedAdmin from '@/components/component/dashboard-employed-admin';
+import EmployedCreate from '@/components/component/employed-create';
 
 const AddEmployed = () => {
   return (
     <>
-    <DashboardEmployedAdmin/>
+    <EmployedCreate/>
     </>
   )
 }
