@@ -82,7 +82,7 @@ export default function DashboardEmployedAdmin() {
     };
   
     try {
-      const response = await fetch('/api/employee', {
+      const response = await fetch('/api/createEmployee', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
