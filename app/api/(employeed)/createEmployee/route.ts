@@ -51,10 +51,7 @@ interface ExtendedSession {
               jobTitle,
               workShift,
               contractType,
-              salary,
-              bonus,
-              vacationDays,
-              sickDays,
+            
           } = body;
   
           // Crear el empleado
@@ -85,10 +82,6 @@ interface ExtendedSession {
                   jobTitle,
                   workShift,
                   contractType,
-                  salary,
-                  bonus,
-                  vacationDays,
-                  sickDays,
               },
           });
   
