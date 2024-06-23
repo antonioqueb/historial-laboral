@@ -72,9 +72,11 @@ model Employee {
   jobTitle             String
   workShift            String
   contractType         String
+  profileImageUrl      String?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 }
+
 
 
 
