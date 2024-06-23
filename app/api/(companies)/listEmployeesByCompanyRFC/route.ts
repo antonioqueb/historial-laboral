@@ -40,14 +40,14 @@ export async function GET(req: Request) {
         name: true,
         role: true,
         department: true,
-        email: true,
-        phoneNumber: true,
-        profileImageUrl: true, // Añadir el campo profileImageUrl
         description: true,
+        companyId: true,
         socialSecurityNumber: true,
         CURP: true,
         RFC: true,
         address: true,
+        phoneNumber: true,
+        email: true,
         birthDate: true,
         hireDate: true,
         emergencyContact: true,
@@ -62,6 +62,7 @@ export async function GET(req: Request) {
         jobTitle: true,
         workShift: true,
         contractType: true,
+        profileImageUrl: true, // Añadir el campo profileImageUrl
         createdAt: true,
         updatedAt: true,
       }
