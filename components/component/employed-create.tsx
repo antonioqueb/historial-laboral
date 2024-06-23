@@ -141,6 +141,7 @@ export default function DashboardEmployedAdmin() {
   };
   
   
+  
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
@@ -510,6 +511,7 @@ export default function DashboardEmployedAdmin() {
               value={formData.salary}
               onChange={handleChange}
               required
+              type="number"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
@@ -523,6 +525,7 @@ export default function DashboardEmployedAdmin() {
               value={formData.bonus}
               onChange={handleChange}
               required
+              type="number"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
@@ -536,6 +539,7 @@ export default function DashboardEmployedAdmin() {
               value={formData.vacationDays}
               onChange={handleChange}
               required
+              type="number"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
@@ -549,6 +553,7 @@ export default function DashboardEmployedAdmin() {
               value={formData.sickDays}
               onChange={handleChange}
               required
+              type="number"
             />
           </div>
         </div>
