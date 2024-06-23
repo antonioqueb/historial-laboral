@@ -1,11 +1,11 @@
 
 import React from 'react'
-import DashboardEmployed from '@/components/component/dashboard-employed-summary'
+import DashboardCompanyDashboard from '@/components/component/dashboard-company-tablero'
 
 const Empleados = () => {
   return (
     <div>
-      <DashboardEmployed />
+      <DashboardCompanyDashboard />
     </div>
   )
 }

@@ -1,3 +1,4 @@
+// app\tablero\empresas\listar\page.jsx
 import React from 'react'
 import DashboardEmployedList from '@/components/component/dashboard-company-list'
 

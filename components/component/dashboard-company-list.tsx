@@ -1,9 +1,8 @@
-'use client';
-// pages/list-companies.tsx
+// components\component\dashboard-company-list.tsx
+"use client";
 import React, { useState, useEffect } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Alert } from "@/components/ui/alert";
 import Link from "next/link";
 
@@ -86,7 +85,7 @@ export default function ListCompanies() {
               {companies.length > 0 ? (
                 companies.map((company) => (
                   <div key={company.id} className="p-4 bg-white rounded-lg shadow">
-                    <Link href={`/companies/${company.id}`}>
+                    <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`}>
                       <h3 className="text-xl font-bold">{company.name}</h3>
                     </Link>
                     <p>Razón Social: {company.razonSocial}</p>
@@ -111,7 +110,7 @@ export default function ListCompanies() {
               {companies.length > 0 ? (
                 companies.map((company) => (
                   <div key={company.id} className="relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2">
-                    <Link href={`/companies/${company.id}`} className="absolute inset-0 z-10" prefetch={false}>
+                    <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`} className="absolute inset-0 z-10" prefetch={false}>
                       <span className="sr-only">Ver detalles</span>
                     </Link>
                     <div className="p-4 bg-background">
