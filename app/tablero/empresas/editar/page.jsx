@@ -1,5 +1,5 @@
 // app\tablero\empresas\editar\page.jsx
-import DashboardCompanydEdit from '@/components/component/dashboard-company-edit';
+import DashboardCompanydEdit from '@/components/component/editCompany';
 
 const AddEmployed = () => {
   return (

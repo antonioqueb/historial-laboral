@@ -2,20 +2,24 @@
 
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
-import { Label } from "../../components/ui/label";
-import { Input } from "../../components/ui/input";
-import { Button } from "../../components/ui/button";
-import { getUserId, createCompany } from "@/utils/fetchData";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { getUserId, getCompanyByRfc, editCompany, getCompaniesRFC } from "@/utils/fetchData";
 
-export default function CreateCompany() {
+export default function EditCompany() {
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [userId, setUserId] = useState("");
+  const searchParams = useSearchParams();
+  const initialRfc = searchParams.get("rfc");
 
   // Nuevos campos
   const [razonSocial, setRazonSocial] = useState("");
-  const [rfc, setRfc] = useState("");
+  const [rfc, setRfc] = useState(initialRfc || "");
   const [domicilioFiscalCalle, setDomicilioFiscalCalle] = useState("");
   const [domicilioFiscalNumero, setDomicilioFiscalNumero] = useState("");
   const [domicilioFiscalColonia, setDomicilioFiscalColonia] = useState("");
@@ -32,6 +36,8 @@ export default function CreateCompany() {
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
 
+  const [companies, setCompanies] = useState<string[]>([]);
+
   // Función para cargar el userId
   const loadUserId = async () => {
     try {
@@ -42,17 +48,59 @@ export default function CreateCompany() {
     }
   };
 
+  // Función para cargar las compañías
+  const loadCompanies = async () => {
+    const data = await getCompaniesRFC();
+    setCompanies(data.rfcs);
+  };
+
+  // Función para cargar los datos de la empresa seleccionada
+  const fetchCompanyData = async (rfc: string) => {
+    try {
+      const data = await getCompanyByRfc(rfc);
+      if (data) {
+        setName(data.name);
+        setRazonSocial(data.razonSocial);
+        setRfc(data.rfc);
+        setDomicilioFiscalCalle(data.domicilioFiscalCalle);
+        setDomicilioFiscalNumero(data.domicilioFiscalNumero);
+        setDomicilioFiscalColonia(data.domicilioFiscalColonia);
+        setDomicilioFiscalMunicipio(data.domicilioFiscalMunicipio);
+        setDomicilioFiscalEstado(data.domicilioFiscalEstado);
+        setDomicilioFiscalCodigoPostal(data.domicilioFiscalCodigoPostal);
+        setNombreComercial(data.nombreComercial);
+        setObjetoSocial(data.objetoSocial);
+        setRepresentanteLegalNombre(data.representanteLegalNombre);
+        setRepresentanteLegalCurp(data.representanteLegalCurp);
+        setCapitalSocial(data.capitalSocial);
+        setRegistrosImss(data.registrosImss);
+        setRegistrosInfonavit(data.registrosInfonavit);
+        setGiroActividadEconomica(data.giroActividadEconomica);
+        setCertificaciones(data.certificaciones.join(", "));
+      } else {
+        setMessage("Failed to fetch company data.");
+      }
+    } catch (error) {
+      setMessage("Failed to fetch company data.");
+    }
+  };
+
   useEffect(() => {
     if (session) {
       loadUserId();
+      loadCompanies();
+
+      if (initialRfc) {
+        fetchCompanyData(initialRfc);
+      }
     }
-  }, [session]);
+  }, [session, initialRfc]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!session) {
-      setMessage("You must be logged in to create a company.");
+      setMessage("You must be logged in to edit a company.");
       return;
     }
 
@@ -83,14 +131,19 @@ export default function CreateCompany() {
       certificaciones: certificaciones.split(',').map(cert => cert.trim())
     };
 
-    const result = await createCompany(data);
+    const result = await editCompany(data);
 
     if (result.company.name) {
-      setMessage(`Company created: ${result.company.name}`);
-      setName("");
+      setMessage(`Company updated: ${result.company.name}`);
     } else {
-      setMessage(result.error ?? "Failed to create company");
+      setMessage(result.error ?? "Failed to update company");
     }
+  };
+
+  const handleCompanySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedRfc = e.target.value;
+    setRfc(selectedRfc);
+    fetchCompanyData(selectedRfc);
   };
 
   return (
@@ -108,7 +161,23 @@ export default function CreateCompany() {
       )}
       {session && (
         <>
-          <h1 className="text-3xl font-bold mb-8">Registrar Empresa</h1>
+          <h1 className="text-3xl font-bold mb-8">Editar Empresa</h1>
+          <div className="mb-4">
+            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+            <select
+              id="companySelect"
+              value={rfc}
+              onChange={handleCompanySelect}
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            >
+              <option value="">Seleccionar...</option>
+              {companies.map((companyRfc) => (
+                <option key={companyRfc} value={companyRfc}>
+                  {companyRfc}
+                </option>
+              ))}
+            </select>
+          </div>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Información General */}
             <div className="space-y-4">
@@ -311,7 +380,10 @@ export default function CreateCompany() {
             </div>
             
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
-              <Button type="submit">Registrar Empresa</Button>
+              <Button type="submit">Editar Empresa</Button>
+              <Link href="/tablero/empresas"  className="ml-2">
+                <Button type="button">Cancelar</Button>
+              </Link>
             </div>
           </form>
           {message && (

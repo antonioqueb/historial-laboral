@@ -2,6 +2,23 @@
 export interface Company {
   id: string;
   razonSocial: string;
+  name: string;
+  rfc: string;
+  domicilioFiscalCalle: string;
+  domicilioFiscalNumero: string;
+  domicilioFiscalColonia: string;
+  domicilioFiscalMunicipio: string;
+  domicilioFiscalEstado: string;
+  domicilioFiscalCodigoPostal: string;
+  nombreComercial: string;
+  objetoSocial: string;
+  representanteLegalNombre: string;
+  representanteLegalCurp: string;
+  capitalSocial: number;
+  registrosImss: string;
+  registrosInfonavit: string;
+  giroActividadEconomica: string;
+  certificaciones: string[];
 }
 
 export interface Employee {
@@ -159,6 +176,44 @@ export async function createCompany(data: any): Promise<{ company: { name: strin
   try {
     const response = await fetch("/api/createCompany", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      const errorData = await response.json();
+      return { company: { name: '' }, error: errorData.error };
+    }
+  } catch (error) {
+    console.error("Error de conexión:", error);
+    return { company: { name: '' }, error: 'Error de conexión' };
+  }
+}
+
+// Función para obtener los datos de una empresa por su RFC
+export async function getCompanyByRfc(rfc: string): Promise<Company | null> {
+  try {
+    const response = await fetch(`/api/getCompany?rfc=${rfc}`);
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error('Failed to fetch company data');
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+// Función para editar una empresa
+export async function editCompany(data: any): Promise<{ company: { name: string }, error?: string }> {
+  try {
+    const response = await fetch("/api/editCompany", {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

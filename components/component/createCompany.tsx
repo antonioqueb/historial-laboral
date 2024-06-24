@@ -1,23 +1,21 @@
-"use client";
+'use client';
+
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { getUserId, createCompany } from "@/utils/fetchData";
 
-export default function EditCompany() {
+export default function CreateCompany() {
   const { data: session } = useSession();
   const [name, setName] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
   const [userId, setUserId] = useState("");
-  const searchParams = useSearchParams();
-  const initialRfc = searchParams.get("rfc");
 
   // Nuevos campos
   const [razonSocial, setRazonSocial] = useState("");
-  const [rfc, setRfc] = useState(initialRfc || "");
+  const [rfc, setRfc] = useState("");
   const [domicilioFiscalCalle, setDomicilioFiscalCalle] = useState("");
   const [domicilioFiscalNumero, setDomicilioFiscalNumero] = useState("");
   const [domicilioFiscalColonia, setDomicilioFiscalColonia] = useState("");
@@ -34,70 +32,27 @@ export default function EditCompany() {
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
 
-  const [companies, setCompanies] = useState<string[]>([]);
+  // Función para cargar el userId
+  const loadUserId = async () => {
+    try {
+      const data = await getUserId();
+      setUserId(data.id);
+    } catch (error) {
+      setMessage("Failed to fetch user ID.");
+    }
+  };
 
   useEffect(() => {
     if (session) {
-      const fetchUserId = async () => {
-        const res = await fetch("/api/getUserId");
-        if (res.ok) {
-          const data = await res.json();
-          setUserId(data.id);
-        } else {
-          setMessage("Failed to fetch user ID.");
-        }
-      };
-      fetchUserId();
-
-      const fetchCompanies = async () => {
-        const res = await fetch("/api/getCompanyRFC");
-        if (res.ok) {
-          const data = await res.json();
-          setCompanies(data.rfcs);
-        } else {
-          setMessage("Failed to fetch companies.");
-        }
-      };
-      fetchCompanies();
-
-      if (initialRfc) {
-        fetchCompanyData(initialRfc);
-      }
+      loadUserId();
     }
-  }, [session, initialRfc]);
-
-  const fetchCompanyData = async (rfc: string) => {
-    const res = await fetch(`/api/getCompany?rfc=${rfc}`);
-    if (res.ok) {
-      const data = await res.json();
-      setName(data.name);
-      setRazonSocial(data.razonSocial);
-      setRfc(data.rfc);
-      setDomicilioFiscalCalle(data.domicilioFiscalCalle);
-      setDomicilioFiscalNumero(data.domicilioFiscalNumero);
-      setDomicilioFiscalColonia(data.domicilioFiscalColonia);
-      setDomicilioFiscalMunicipio(data.domicilioFiscalMunicipio);
-      setDomicilioFiscalEstado(data.domicilioFiscalEstado);
-      setDomicilioFiscalCodigoPostal(data.domicilioFiscalCodigoPostal);
-      setNombreComercial(data.nombreComercial);
-      setObjetoSocial(data.objetoSocial);
-      setRepresentanteLegalNombre(data.representanteLegalNombre);
-      setRepresentanteLegalCurp(data.representanteLegalCurp);
-      setCapitalSocial(data.capitalSocial);
-      setRegistrosImss(data.registrosImss);
-      setRegistrosInfonavit(data.registrosInfonavit);
-      setGiroActividadEconomica(data.giroActividadEconomica);
-      setCertificaciones(data.certificaciones.join(", "));
-    } else {
-      setMessage("Failed to fetch company data.");
-    }
-  };
+  }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!session) {
-      setMessage("You must be logged in to edit a company.");
+      setMessage("You must be logged in to create a company.");
       return;
     }
 
@@ -106,47 +61,36 @@ export default function EditCompany() {
       return;
     }
 
-    const res = await fetch("/api/editCompany", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        userId,
-        razonSocial,
-        rfc,
-        domicilioFiscalCalle,
-        domicilioFiscalNumero,
-        domicilioFiscalColonia,
-        domicilioFiscalMunicipio,
-        domicilioFiscalEstado,
-        domicilioFiscalCodigoPostal,
-        nombreComercial,
-        objetoSocial,
-        representanteLegalNombre,
-        representanteLegalCurp,
-        capitalSocial,
-        registrosImss,
-        registrosInfonavit,
-        giroActividadEconomica,
-        certificaciones: certificaciones.split(',').map(cert => cert.trim())
-      }),
-    });
+    const data = {
+      name,
+      userId,
+      razonSocial,
+      rfc,
+      domicilioFiscalCalle,
+      domicilioFiscalNumero,
+      domicilioFiscalColonia,
+      domicilioFiscalMunicipio,
+      domicilioFiscalEstado,
+      domicilioFiscalCodigoPostal,
+      nombreComercial,
+      objetoSocial,
+      representanteLegalNombre,
+      representanteLegalCurp,
+      capitalSocial,
+      registrosImss,
+      registrosInfonavit,
+      giroActividadEconomica,
+      certificaciones: certificaciones.split(',').map(cert => cert.trim())
+    };
 
-    if (res.ok) {
-      const data = await res.json();
-      setMessage(`Company updated: ${data.company.name}`);
+    const result = await createCompany(data);
+
+    if (result.company.name) {
+      setMessage(`Company created: ${result.company.name}`);
+      setName("");
     } else {
-      const errorData = await res.json();
-      setMessage(`Failed to update company: ${errorData.error}`);
+      setMessage(result.error ?? "Failed to create company");
     }
-  };
-
-  const handleCompanySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedRfc = e.target.value;
-    setRfc(selectedRfc);
-    fetchCompanyData(selectedRfc);
   };
 
   return (
@@ -164,23 +108,7 @@ export default function EditCompany() {
       )}
       {session && (
         <>
-          <h1 className="text-3xl font-bold mb-8">Editar Empresa</h1>
-          <div className="mb-4">
-            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
-            <select
-              id="companySelect"
-              value={rfc}
-              onChange={handleCompanySelect}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option value="">Seleccionar...</option>
-              {companies.map((companyRfc) => (
-                <option key={companyRfc} value={companyRfc}>
-                  {companyRfc}
-                </option>
-              ))}
-            </select>
-          </div>
+          <h1 className="text-3xl font-bold mb-8">Registrar Empresa</h1>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Información General */}
             <div className="space-y-4">
@@ -383,10 +311,7 @@ export default function EditCompany() {
             </div>
             
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
-              <Button type="submit">Editar Empresa</Button>
-              <Link href="/tablero/empresas"  className="ml-2">
-                <Button type="button">Cancelar</Button>
-              </Link>
+              <Button type="submit">Registrar Empresa</Button>
             </div>
           </form>
           {message && (
