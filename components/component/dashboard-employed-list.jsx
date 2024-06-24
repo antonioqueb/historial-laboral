@@ -51,16 +51,7 @@ export default function DashboardEmployedList() {
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Empleados</h1>
-        <div className="flex items-center gap-4">
-          <div className="relative w-full max-w-md">
-            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400 w-5 h-5" />
-            <Input
-              className="pl-10 pr-4 py-2 rounded-md bg-white shadow-sm dark:bg-zinc-800 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-full"
-              placeholder="Buscar empleados..."
-              type="search"
-            />
-          </div>
-        </div>
+      
       </div>
       <div className="mb-4">
         <Label htmlFor="companySelect">Seleccionar Empresa</Label>
