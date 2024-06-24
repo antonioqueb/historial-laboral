@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -92,12 +91,17 @@ export default function DashboardEmployedEdit() {
     if (employeeId) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`http://192.168.1.69:108/api/listAllEmployees`);
+          const res = await fetch('http://192.168.1.69:108/api/listAllEmployees');
           if (res.ok) {
             const data = await res.json();
-            const employee = data.employees.find((emp: Employee) => emp.id === employeeId);
+            const employee = data.employees.find((emp: any) => emp.id === employeeId);
             if (employee) {
-              setFormData({ ...employee, profileImage: null });
+              setFormData({
+                ...employee,
+                birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+                hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+                profileImage: null,
+              });
             }
           } else {
             setError('Failed to fetch employee data');
@@ -130,16 +134,9 @@ export default function DashboardEmployedEdit() {
     setError(null);
     setSuccess(null);
 
-    const formattedData = {
-      ...formData,
-      birthDate: formData.birthDate ? new Date(formData.birthDate).toISOString() : null,
-      hireDate: formData.hireDate ? new Date(formData.hireDate).toISOString() : null,
-      company: undefined  // Elimina el campo 'company' del objeto a enviar
-    };
-
     const form = new FormData();
-    Object.keys(formattedData).forEach((key) => {
-      const value = formattedData[key as keyof typeof formattedData];
+    Object.keys(formData).forEach((key) => {
+      const value = formData[key as keyof typeof formData];
       if (value !== null && value !== undefined && value !== '') {
         form.append(key, value);
       }
@@ -174,7 +171,7 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empleado
           </Label>
           <Select
-            value={employeeId ?? undefined}
+              value={employeeId ?? undefined}
             onValueChange={(value) => setEmployeeId(value)}
             required
           >
