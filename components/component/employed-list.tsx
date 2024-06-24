@@ -3,50 +3,41 @@
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import { getCompaniesRFC, getEmployeesByCompany } from "@/utils/fetchData";
+import { getEmployeesByCompany, getCompaniesRFC, Employee } from "@/utils/fetchData";
 
-// Definición de tipos para los datos esperados
-interface Employee {
-  id: string;
-  name: string;
-  profileImageUrl: string;
-  role: string;
-  description: string;
-  department: string;
-  company: {
-    rfc: string;
-  };
-}
-
-export default function EmployedList() {
+export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [companies, setCompanies] = useState<string[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
 
-  // Función para cargar las compañías
-  const loadCompanies = async () => {
-    const data = await getCompaniesRFC();
-    setCompanies(data.rfcs);
-    if (data.rfcs.length > 0) {
-      setSelectedCompany(data.rfcs[0]); // Selecciona la primera compañía por defecto
-    }
-  };
-
-  // Función para cargar los empleados
-  const loadEmployees = async (company: string) => {
-    const filteredEmployees = await getEmployeesByCompany(company);
-    setEmployees(filteredEmployees);
-  };
-
-  // Cargar las compañías al montar el componente
   useEffect(() => {
-    loadCompanies();
+    const fetchCompanies = async () => {
+      try {
+        const data = await getCompaniesRFC();
+        setCompanies(data.rfcs);
+        if (data.rfcs.length > 0) {
+          setSelectedCompany(data.rfcs[0]); // Selecciona la primera compañía por defecto
+        }
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+      }
+    };
+
+    fetchCompanies();
   }, []);
 
-  // Cargar los empleados cuando se selecciona una compañía
   useEffect(() => {
     if (selectedCompany) {
-      loadEmployees(selectedCompany);
+      const loadEmployees = async () => {
+        try {
+          const filteredEmployees = await getEmployeesByCompany(selectedCompany);
+          setEmployees(filteredEmployees);
+        } catch (error) {
+          console.error("Error fetching employees:", error);
+        }
+      };
+
+      loadEmployees();
     }
   }, [selectedCompany]);
 
