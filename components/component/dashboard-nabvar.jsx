@@ -32,12 +32,9 @@ useEffect(() => {
     // Sección para el path '/tablero/empleados'
     if (pathname.startsWith('/tablero/empleados')) {
       setMenuOptions([
-        { label: 'Resumen', href: '/tablero/empleados'},
+        { label: 'Empleados', href: '/tablero/empleados'},
         { label: 'Crear', href: '/tablero/empleados/crear' },
         { label: 'Editar', href: '/tablero/empleados/editar' },
-        { label: 'Listar', href: '/tablero/empleados/listar' },
-        { label: 'Valoración', href: '/tablero/empleados/valoracion' },
-
       ]);
     } 
 
