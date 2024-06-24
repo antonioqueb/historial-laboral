@@ -15,15 +15,22 @@ interface ExtendedSession {
 const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
+  console.log("Starting GET request");
+
   const session = await getServerSession(authOptions) as ExtendedSession | null;
+  console.log("Session:", session);
+
   if (!session || !session.user || !session.user.id) {
+    console.log("Unauthorized access attempt");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const url = new URL(req.url);
   const companyRFC = url.searchParams.get("rfc");
+  console.log("Company RFC:", companyRFC);
 
   if (!companyRFC) {
+    console.log("RFC is missing in request");
     return NextResponse.json({ error: "RFC is required" }, { status: 400 });
   }
 
@@ -67,8 +74,11 @@ export async function GET(req: Request) {
       }
     });
 
+    console.log("Employees data:", employees);
+
     return NextResponse.json({ employees }, { status: 200 });
   } catch (error) {
+    console.error("Error fetching employees:", error);
     return NextResponse.json({ error: (error as any).message }, { status: 500 });
   }
 }
