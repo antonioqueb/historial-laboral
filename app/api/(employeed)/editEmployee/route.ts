@@ -55,11 +55,11 @@ export async function PATCH(req: Request) {
       updateData.profileImageUrl = imageUrl;
     }
 
-    // Convertir fechas a ISO 8601
-    if (updateData.birthDate) {
+    // Convertir fechas a ISO 8601 asegurando que son strings
+    if (typeof updateData.birthDate === 'string' && updateData.birthDate) {
       updateData.birthDate = new Date(updateData.birthDate).toISOString();
     }
-    if (updateData.hireDate) {
+    if (typeof updateData.hireDate === 'string' && updateData.hireDate) {
       updateData.hireDate = new Date(updateData.hireDate).toISOString();
     }
 
