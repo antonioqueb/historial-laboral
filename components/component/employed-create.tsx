@@ -136,36 +136,23 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
-  return (
-    <div className="w-full mx-auto px-4 md:px-6 py-12">
-      <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">Administrar Empleados</h1>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="name">
-              Nombre
-            </Label>
-            <Input
-              className="col-span-3"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
+
+return (
+  <div className="w-full mx-auto px-4 md:px-6 py-12">
+    <div className="flex flex-col md:flex-row items-center justify-between mb-6">
+      <h1 className="text-2xl font-bold mb-4 md:mb-0">Administrar Empleados</h1>
+    </div>
+    <form onSubmit={handleSubmit}>
+      <div className="grid gap-6 md:grid-cols-2 py-4">
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="name">Nombre</Label>
+            <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="role">
-              Rol
-            </Label>
-            <Select
-              value={formData.role}
-              onValueChange={(value) => setFormData({ ...formData, role: value })}
-              required
-            >
-              <SelectTrigger className="col-span-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="role">Rol</Label>
+            <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })} required>
+              <SelectTrigger>
                 <SelectValue placeholder="Seleccionar rol" />
               </SelectTrigger>
               <SelectContent>
@@ -176,16 +163,10 @@ export default function DashboardEmployedAdmin() {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="department">
-              Departamento
-            </Label>
-            <Select
-              value={formData.department}
-              onValueChange={(value) => setFormData({ ...formData, department: value })}
-              required
-            >
-              <SelectTrigger className="col-span-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="department">Departamento</Label>
+            <Select value={formData.department} onValueChange={(value) => setFormData({ ...formData, department: value })} required>
+              <SelectTrigger>
                 <SelectValue placeholder="Seleccionar departamento" />
               </SelectTrigger>
               <SelectContent>
@@ -196,30 +177,14 @@ export default function DashboardEmployedAdmin() {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="description">
-              Descripción
-            </Label>
-            <Textarea
-              className="col-span-3"
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Ingrese una breve descripción del empleado"
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="description">Descripción</Label>
+            <Textarea id="description" name="description" value={formData.description} onChange={handleChange} placeholder="Ingrese una breve descripción del empleado" required />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="companyId">
-              Empresa
-            </Label>
-            <Select
-              value={formData.companyId}
-              onValueChange={handleSelectChange}
-              required
-            >
-              <SelectTrigger className="col-span-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="companyId">Empresa</Label>
+            <Select value={formData.companyId} onValueChange={handleSelectChange} required>
+              <SelectTrigger>
                 <SelectValue placeholder="Seleccionar empresa" />
               </SelectTrigger>
               <SelectContent>
@@ -231,285 +196,100 @@ export default function DashboardEmployedAdmin() {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="socialSecurityNumber">
-              Número de Seguridad Social
-            </Label>
-            <Input
-              className="col-span-3"
-              id="socialSecurityNumber"
-              name="socialSecurityNumber"
-              value={formData.socialSecurityNumber}
-              onChange={handleChange}
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
+            <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="CURP">
-              CURP
-            </Label>
-            <Input
-              className="col-span-3"
-              id="CURP"
-              name="CURP"
-              value={formData.CURP}
-              onChange={handleChange}
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="CURP">CURP</Label>
+            <Input id="CURP" name="CURP" value={formData.CURP} onChange={handleChange} required />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="RFC">
-              RFC
-            </Label>
-            <Input
-              className="col-span-3"
-              id="RFC"
-              name="RFC"
-              value={formData.RFC}
-              onChange={handleChange}
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="RFC">RFC</Label>
+            <Input id="RFC" name="RFC" value={formData.RFC} onChange={handleChange} required />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="address">
-              Dirección
-            </Label>
-            <Input
-              className="col-span-3"
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="phoneNumber">
-              Número de Teléfono
-            </Label>
-            <Input
-              className="col-span-3"
-              id="phoneNumber"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="email">
-              Correo Electrónico
-            </Label>
-            <Input
-              className="col-span-3"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="birthDate">
-              Fecha de Nacimiento
-            </Label>
-            <Input
-              type="date"
-              className="col-span-3"
-              id="birthDate"
-              name="birthDate"
-              value={formData.birthDate}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="hireDate">
-              Fecha de Contratación
-            </Label>
-            <Input
-              type="date"
-              className="col-span-3"
-              id="hireDate"
-              name="hireDate"
-              value={formData.hireDate}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="emergencyContact">
-              Contacto de Emergencia
-            </Label>
-            <Input
-              className="col-span-3"
-              id="emergencyContact"
-              name="emergencyContact"
-              value={formData.emergencyContact}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="emergencyPhone">
-              Teléfono de Emergencia
-            </Label>
-            <Input
-              className="col-span-3"
-              id="emergencyPhone"
-              name="emergencyPhone"
-              value={formData.emergencyPhone}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="bankAccountNumber">
-              Número de Cuenta Bancaria
-            </Label>
-            <Input
-              className="col-span-3"
-              id="bankAccountNumber"
-              name="bankAccountNumber"
-              value={formData.bankAccountNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="clabeNumber">
-              CLABE
-            </Label>
-            <Input
-              className="col-span-3"
-              id="clabeNumber"
-              name="clabeNumber"
-              value={formData.clabeNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="maritalStatus">
-              Estado Civil
-            </Label>
-            <Input
-              className="col-span-3"
-              id="maritalStatus"
-              name="maritalStatus"
-              value={formData.maritalStatus}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="nationality">
-              Nacionalidad
-            </Label>
-            <Input
-              className="col-span-3"
-              id="nationality"
-              name="nationality"
-              value={formData.nationality}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="educationLevel">
-              Nivel Educativo
-            </Label>
-            <Input
-              className="col-span-3"
-              id="educationLevel"
-              name="educationLevel"
-              value={formData.educationLevel}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="gender">
-              Género
-            </Label>
-            <Input
-              className="col-span-3"
-              id="gender"
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="bloodType">
-              Tipo de Sangre
-            </Label>
-            <Input
-              className="col-span-3"
-              id="bloodType"
-              name="bloodType"
-              value={formData.bloodType}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="jobTitle">
-              Título del Trabajo
-            </Label>
-            <Input
-              className="col-span-3"
-              id="jobTitle"
-              name="jobTitle"
-              value={formData.jobTitle}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="workShift">
-              Turno de Trabajo
-            </Label>
-            <Input
-              className="col-span-3"
-              id="workShift"
-              name="workShift"
-              value={formData.workShift}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="contractType">
-              Tipo de Contrato
-            </Label>
-            <Input
-              className="col-span-3"
-              id="contractType"
-              name="contractType"
-              value={formData.contractType}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
-            <Label className="text-right md:text-left md:col-span-1" htmlFor="profileImage">
-              Foto de Perfil
-            </Label>
-            <Input
-              type="file"
-              className="col-span-3"
-              id="profileImage"
-              name="profileImage"
-              onChange={handleFileChange}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="address">Dirección</Label>
+            <Input id="address" name="address" value={formData.address} onChange={handleChange} required />
           </div>
         </div>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        {success && <div className="text-green-500 mb-4">{success}</div>}
-        <Button type="submit">Agregar</Button>
-      </form>
-    </div>
-  );
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="phoneNumber">Número de Teléfono</Label>
+            <Input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="email">Correo Electrónico</Label>
+            <Input id="email" name="email" value={formData.email} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
+            <Input type="date" id="birthDate" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="hireDate">Fecha de Contratación</Label>
+            <Input type="date" id="hireDate" name="hireDate" value={formData.hireDate} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="emergencyContact">Contacto de Emergencia</Label>
+            <Input id="emergencyContact" name="emergencyContact" value={formData.emergencyContact} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="emergencyPhone">Teléfono de Emergencia</Label>
+            <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="bankAccountNumber">Número de Cuenta Bancaria</Label>
+            <Input id="bankAccountNumber" name="bankAccountNumber" value={formData.bankAccountNumber} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="clabeNumber">CLABE</Label>
+            <Input id="clabeNumber" name="clabeNumber" value={formData.clabeNumber} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="maritalStatus">Estado Civil</Label>
+            <Input id="maritalStatus" name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="nationality">Nacionalidad</Label>
+            <Input id="nationality" name="nationality" value={formData.nationality} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="educationLevel">Nivel Educativo</Label>
+            <Input id="educationLevel" name="educationLevel" value={formData.educationLevel} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="gender">Género</Label>
+            <Input id="gender" name="gender" value={formData.gender} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="bloodType">Tipo de Sangre</Label>
+            <Input id="bloodType" name="bloodType" value={formData.bloodType} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="jobTitle">Título del Trabajo</Label>
+            <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
+
+
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="workShift">Turno de Trabajo</Label>
+            <Input id="workShift" name="workShift" value={formData.workShift} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="contractType">Tipo de Contrato</Label>
+            <Input id="contractType" name="contractType" value={formData.contractType} onChange={handleChange} required />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <Label htmlFor="profileImage">Foto de Perfil</Label>
+            <Input type="file" id="profileImage" name="profileImage" onChange={handleFileChange} />
+          </div>
+        </div>
+      </div>
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+      {success && <div className="text-green-500 mb-4">{success}</div>}
+      <Button type="submit">Agregar</Button>
+    </form>
+  </div>
+);
 }
