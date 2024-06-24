@@ -384,7 +384,7 @@ export default function EditCompany() {
             
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
               <Button type="submit">Editar Empresa</Button>
-              <Link href="#">
+              <Link href="/tablero/empresas">
                 <Button type="button">Cancelar</Button>
               </Link>
             </div>
