@@ -76,7 +76,7 @@ export default function EmployedList() {
           <div key={employee.id} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden">
             <div className="aspect-square">
               <Image
-                alt={`Foto de ${employee.name} ${employee.profileImageUrl}`}
+                alt={`Foto de ${employee.name}`}
                 className="w-full h-full object-cover"
                 height={400}
                 src={employee.profileImageUrl ? employee.profileImageUrl : "/placeholder.svg"} // Usar la URL de la imagen o un placeholder
