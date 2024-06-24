@@ -26,10 +26,11 @@ export default function DashboardEmployedList() {
   useEffect(() => {
     if (selectedCompany) {
       async function fetchEmployees() {
-        const response = await fetch(`/api/listAllEmployees`);
+        const response = await fetch("http://192.168.1.69:108/api/listAllEmployees");
         const data = await response.json();
-    
-        setEmployees(data.employees);
+
+        const filteredEmployees = data.employees.filter(employee => employee.company.rfc === selectedCompany);
+        setEmployees(filteredEmployees);
       }
 
       fetchEmployees();
