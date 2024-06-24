@@ -5,11 +5,12 @@ import { useSession, signIn } from "next-auth/react";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
+import { getUserId, createCompany } from "@/utils/fetchData";
 
 export default function CreateCompany() {
   const { data: session } = useSession();
   const [name, setName] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
   const [userId, setUserId] = useState("");
 
   // Nuevos campos
@@ -31,18 +32,19 @@ export default function CreateCompany() {
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
 
+  // Función para cargar el userId
+  const loadUserId = async () => {
+    try {
+      const data = await getUserId();
+      setUserId(data.id);
+    } catch (error) {
+      setMessage("Failed to fetch user ID.");
+    }
+  };
+
   useEffect(() => {
     if (session) {
-      const fetchUserId = async () => {
-        const res = await fetch("http://192.168.1.69:108/api/getUserId");
-        if (res.ok) {
-          const data = await res.json();
-          setUserId(data.id);
-        } else {
-          setMessage("Failed to fetch user ID.");
-        }
-      };
-      fetchUserId();
+      loadUserId();
     }
   }, [session]);
 
@@ -59,41 +61,35 @@ export default function CreateCompany() {
       return;
     }
 
-    const res = await fetch("/api/createCompany", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        userId,
-        razonSocial,
-        rfc,
-        domicilioFiscalCalle,
-        domicilioFiscalNumero,
-        domicilioFiscalColonia,
-        domicilioFiscalMunicipio,
-        domicilioFiscalEstado,
-        domicilioFiscalCodigoPostal,
-        nombreComercial,
-        objetoSocial,
-        representanteLegalNombre,
-        representanteLegalCurp,
-        capitalSocial,
-        registrosImss,
-        registrosInfonavit,
-        giroActividadEconomica,
-        certificaciones: certificaciones.split(',').map(cert => cert.trim())
-      }),
-    });
+    const data = {
+      name,
+      userId,
+      razonSocial,
+      rfc,
+      domicilioFiscalCalle,
+      domicilioFiscalNumero,
+      domicilioFiscalColonia,
+      domicilioFiscalMunicipio,
+      domicilioFiscalEstado,
+      domicilioFiscalCodigoPostal,
+      nombreComercial,
+      objetoSocial,
+      representanteLegalNombre,
+      representanteLegalCurp,
+      capitalSocial,
+      registrosImss,
+      registrosInfonavit,
+      giroActividadEconomica,
+      certificaciones: certificaciones.split(',').map(cert => cert.trim())
+    };
 
-    if (res.ok) {
-      const data = await res.json();
-      setMessage(`Company created: ${data.company.name}`);
+    const result = await createCompany(data);
+
+    if (result.company.name) {
+      setMessage(`Company created: ${result.company.name}`);
       setName("");
     } else {
-      const errorData = await res.json();
-      setMessage(`Failed to create company: ${errorData.error}`);
+      setMessage(result.error ?? "Failed to create company");
     }
   };
 

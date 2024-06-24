@@ -138,3 +138,41 @@ export async function editEmployee(form: FormData): Promise<{ success: boolean; 
     return { success: false, error: 'Error de conexión' };
   }
 }
+
+// Función para obtener el userId
+export async function getUserId(): Promise<{ id: string }> {
+  try {
+    const response = await fetch("http://192.168.1.69:108/api/getUserId");
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error('Failed to fetch user ID');
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch user ID');
+  }
+}
+
+// Función para crear una compañía
+export async function createCompany(data: any): Promise<{ company: { name: string }, error?: string }> {
+  try {
+    const response = await fetch("/api/createCompany", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      const errorData = await response.json();
+      return { company: { name: '' }, error: errorData.error };
+    }
+  } catch (error) {
+    console.error("Error de conexión:", error);
+    return { company: { name: '' }, error: 'Error de conexión' };
+  }
+}
