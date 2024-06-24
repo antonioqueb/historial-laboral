@@ -329,8 +329,9 @@ export default function DashboardEmployedEdit() {
           </div>
           {error && <div className="text-red-500 mb-4">{error}</div>}
           {success && <div className="text-green-500 mb-4">{success}</div>}
+
           <Button type="submit">Actualizar</Button>
-          <Link href="#">
+          <Link href="/tablero/empleados" className="ml-2">
             <Button type="button">Cancelar</Button>
           </Link>
         </form>
