@@ -63,6 +63,9 @@ export async function PATCH(req: Request) {
       updateData.hireDate = new Date(updateData.hireDate).toISOString();
     }
 
+    // Eliminar campos que no deberían ser actualizados
+    delete updateData.company;
+
     const updatedEmployee = await prisma.employee.update({
       where: { id: id as string },
       data: updateData,
