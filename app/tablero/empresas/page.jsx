@@ -1,13 +1,15 @@
-
+// app\tablero\empresas\listar\page.jsx
 import React from 'react'
-import DashboardCompanyDashboard from '@/components/component/dashboard-company-tablero'
+import DashboardEmployedList from '@/components/component/dashboard-company-list'
 
-const Empleados = () => {
+
+const EmployedList = () => {
   return (
     <div>
-      <DashboardCompanyDashboard />
+        <DashboardEmployedList />
+      
     </div>
   )
 }
 
-export default Empleados
+export default EmployedList
