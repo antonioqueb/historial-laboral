@@ -16,6 +16,10 @@ interface Company {
 interface Employee {
   id: string;
   name: string;
+  role: string;
+  department: string;
+  email: string;
+  phoneNumber: string;
 }
 
 export default function DashboardEmployedEdit() {
@@ -56,7 +60,6 @@ export default function DashboardEmployedEdit() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -75,7 +78,7 @@ export default function DashboardEmployedEdit() {
 
     const fetchEmployees = async () => {
       try {
-        const res = await fetch('/api/listEmployees');
+        const res = await fetch('http://192.168.1.69:108/api/listAllEmployees');
         if (res.ok) {
           const data = await res.json();
           setEmployees(data.employees);
@@ -93,10 +96,15 @@ export default function DashboardEmployedEdit() {
     if (employeeId) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`/api/employeed/getEmployee?id=${employeeId}`);
+          const res = await fetch(`http://192.168.1.69:108/api/listEmployeesByCompanyRFC?rfc=QUCR960921P5Ad`);
           if (res.ok) {
             const data = await res.json();
-            setFormData({ ...data.employee, profileImage: null });
+            const selectedEmployee = data.employees.find((employee: Employee) => employee.id === employeeId);
+            if (selectedEmployee) {
+              setFormData({ ...formData, ...selectedEmployee, profileImage: null });
+            } else {
+              setError('Employee not found');
+            }
           } else {
             setError('Failed to fetch employee data');
           }
@@ -165,7 +173,7 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empleado
           </Label>
           <Select
-              value={employeeId ?? undefined}
+            value={employeeId ?? undefined}
             onValueChange={(value) => setEmployeeId(value)}
             required
           >
