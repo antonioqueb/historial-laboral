@@ -41,6 +41,7 @@ useEffect(() => {
     // Sección para el path '/tablero/empresas/listar'
     else if (pathname.startsWith('/tablero/empresas')) {
       setMenuOptions([
+        { label: 'Empresas', href: '/tablero/empresas' },
         { label: 'Registrar', href: '/tablero/empresas/crear' },
         { label: 'Editar', href: '/tablero/empresas/editar' }
       ]);
