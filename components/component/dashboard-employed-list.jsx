@@ -1,11 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
-import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select";
 import Image from "next/image";
 
 export default function DashboardEmployedList() {
@@ -19,6 +15,9 @@ export default function DashboardEmployedList() {
         const response = await fetch("/api/getCompanyRFC");
         const data = await response.json();
         setCompanies(data.rfcs);
+        if (data.rfcs.length > 0) {
+          setSelectedCompany(data.rfcs[0]); // Selecciona la primera compañía por defecto
+        }
       } catch (error) {
         console.error("Error fetching companies:", error);
       }
@@ -51,7 +50,6 @@ export default function DashboardEmployedList() {
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Empleados</h1>
-      
       </div>
       <div className="mb-4">
         <Label htmlFor="companySelect">Seleccionar Empresa</Label>
