@@ -74,7 +74,7 @@ export default function ListCompanies() {
             <h1 className="text-2xl font-bold">
               {companies.length > 1 ? "Empresas" : "Empresa"}
             </h1>
-            <div>
+            <div className="gap-4">
               <Button variant="outline" onClick={() => setViewMode("list")}>Lista</Button>
               <Button variant="outline" onClick={() => setViewMode("grid")}>Cuadrícula</Button>
             </div>
