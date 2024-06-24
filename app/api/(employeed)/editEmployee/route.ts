@@ -48,11 +48,16 @@ export async function PATCH(req: Request) {
       console.log("Image URL from upload:", imageUrl);
     }
 
-    const updateData = Object.fromEntries(formData.entries());
+    const updateData: Record<string, any> = Object.fromEntries(formData.entries());
     delete updateData.id; // Remove id from update data as it should not be updated
 
     if (imageUrl) {
       updateData.profileImageUrl = imageUrl;
+    }
+
+    // Remove profileImage if it is empty or invalid
+    if (!updateData.profileImage || Object.keys(updateData.profileImage).length === 0) {
+      delete updateData.profileImage;
     }
 
     // Convertir fechas a ISO 8601 asegurando que son strings
