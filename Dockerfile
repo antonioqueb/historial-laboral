@@ -1,9 +1,11 @@
 # Etapa base
 FROM node:20.14.0-bullseye AS base
 
+# Instalar dependencias del sistema necesarias para sharp
+RUN apt-get update && apt-get install -y libc6 libvips-dev
+
 # Instalar dependencias solo cuando sea necesario
 FROM base AS deps
-RUN apt-get update && apt-get install -y libc6
 WORKDIR /app
 
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
@@ -14,13 +16,13 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-# Instalar sharp
-RUN yarn add sharp
-
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Instalar sharp en la etapa de construcción
+RUN yarn add sharp
 
 # Crear el directorio .next/cache con los permisos adecuados
 RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
