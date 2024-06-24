@@ -10,6 +10,7 @@ const nextConfig = {
                 pathname: '/uploads/**',
             },
         ],
+        unoptimized: true, // Deshabilitar la optimización de imágenes de Next.js
     },
 };
 

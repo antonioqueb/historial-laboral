@@ -134,6 +134,7 @@ export default function DashboardEmployedList() {
                   objectFit: "cover",
                 }}
                 width={400}
+                unoptimized
               />
             </div>
             <div className="p-4 space-y-2">
