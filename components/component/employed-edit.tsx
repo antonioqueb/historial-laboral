@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import Link from 'next/link';
 
 interface Company {
   id: string;
@@ -329,6 +330,9 @@ export default function DashboardEmployedEdit() {
           {error && <div className="text-red-500 mb-4">{error}</div>}
           {success && <div className="text-green-500 mb-4">{success}</div>}
           <Button type="submit">Actualizar</Button>
+          <Link href="#">
+            <Button type="button">Cancelar</Button>
+          </Link>
         </form>
       )}
     </div>

@@ -5,6 +5,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function EditCompany() {
   const { data: session } = useSession();
@@ -383,6 +384,9 @@ export default function EditCompany() {
             
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
               <Button type="submit">Editar Empresa</Button>
+              <Link href="#">
+                <Button type="button">Cancelar</Button>
+              </Link>
             </div>
           </form>
           {message && (
