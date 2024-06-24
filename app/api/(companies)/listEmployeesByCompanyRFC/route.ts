@@ -76,7 +76,14 @@ export async function GET(req: Request) {
 
     console.log("Employees data:", employees);
 
-    return NextResponse.json({ employees }, { status: 200 });
+    // Disable caching by adding cache-control headers
+    const headers = new Headers();
+    headers.append('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    headers.append('Pragma', 'no-cache');
+    headers.append('Expires', '0');
+    headers.append('Surrogate-Control', 'no-store');
+
+    return new NextResponse(JSON.stringify({ employees }), { headers });
   } catch (error) {
     console.error("Error fetching employees:", error);
     return NextResponse.json({ error: (error as any).message }, { status: 500 });
