@@ -60,48 +60,6 @@ export default function DashboardEmployedList() {
               type="search"
             />
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="flex items-center gap-2" variant="outline">
-                <FilterIcon className="w-5 h-5" />
-                Filtros
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[300px] p-4 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name-filter">Nombre</Label>
-                <Input className="w-full" id="name-filter" placeholder="Filtrar por nombre" type="text" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="role-filter">Cargo</Label>
-                <Select className="w-full" id="role-filter">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Filtrar por cargo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="manager">Manager</SelectItem>
-                    <SelectItem value="developer">Desarrollador</SelectItem>
-                    <SelectItem value="designer">Diseñador</SelectItem>
-                    <SelectItem value="hr">Recursos Humanos</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="department-filter">Departamento</Label>
-                <Select className="w-full" id="department-filter">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Filtrar por departamento" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="engineering">Ingeniería</SelectItem>
-                    <SelectItem value="design">Diseño</SelectItem>
-                    <SelectItem value="hr">Recursos Humanos</SelectItem>
-                    <SelectItem value="marketing">Marketing</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
       <div className="mb-4">

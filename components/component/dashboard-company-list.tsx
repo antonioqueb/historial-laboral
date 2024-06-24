@@ -5,6 +5,7 @@ import { useSession, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Company {
   id: string;
@@ -33,6 +34,7 @@ export default function ListCompanies() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [message, setMessage] = useState<string>("");
   const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
+  const pathname = usePathname();
 
   useEffect(() => {
     if (session) {
@@ -65,7 +67,8 @@ export default function ListCompanies() {
       {!session && (
         <div className="flex flex-col items-center justify-center h-full">
           <Alert variant="destructive">You are not signed in</Alert>
-          <Button onClick={() => signIn()} className="mt-4">Sign in</Button>
+         Cop
+          <Button onClick={() => signIn()} className={``}>Sign in</Button>
         </div>
       )}
       {session && (
