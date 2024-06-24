@@ -28,7 +28,6 @@ export async function GET(req: Request) {
   }
 
   try {
-    // Obtener los empleados de la empresa por RFC
     const employees = await prisma.employee.findMany({
       where: {
         company: {
@@ -62,7 +61,7 @@ export async function GET(req: Request) {
         jobTitle: true,
         workShift: true,
         contractType: true,
-        profileImageUrl: true, // Añadir el campo profileImageUrl
+        profileImageUrl: true,
         createdAt: true,
         updatedAt: true,
       }
