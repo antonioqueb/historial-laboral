@@ -16,31 +16,6 @@ interface Company {
 interface Employee {
   id: string;
   name: string;
-  role: string;
-  department: string;
-  description: string;
-  companyId: string;
-  socialSecurityNumber: string;
-  CURP: string;
-  RFC: string;
-  address: string;
-  phoneNumber: string;
-  email: string;
-  birthDate: string;
-  hireDate: string;
-  emergencyContact: string;
-  emergencyPhone: string;
-  bankAccountNumber: string;
-  clabeNumber: string;
-  maritalStatus: string;
-  nationality: string;
-  educationLevel: string;
-  gender: string;
-  bloodType: string;
-  jobTitle: string;
-  workShift: string;
-  contractType: string;
-  profileImageUrl: string | null;
 }
 
 export default function DashboardEmployedEdit() {
@@ -75,7 +50,7 @@ export default function DashboardEmployedEdit() {
     jobTitle: '',
     workShift: '',
     contractType: '',
-    profileImageUrl: null as File | null,
+    profileImage: null as File | null,
   });
 
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -113,26 +88,40 @@ export default function DashboardEmployedEdit() {
 
     fetchCompanies();
     fetchEmployees();
-  }, []);
 
-  const handleSelectChange = (value: string) => {
-    setEmployeeId(value);
-    const selectedEmployee = employees.find(employee => employee.id === value);
-    if (selectedEmployee) {
-      setFormData({
-        ...selectedEmployee,
-        profileImageUrl: null,
-      });
+    if (employeeId) {
+      const fetchEmployee = async () => {
+        try {
+          const res = await fetch(`http://192.168.1.69:108/api/listAllEmployees`);
+          if (res.ok) {
+            const data = await res.json();
+            const employee = data.employees.find((emp: Employee) => emp.id === employeeId);
+            if (employee) {
+              setFormData({ ...employee, profileImage: null });
+            }
+          } else {
+            setError('Failed to fetch employee data');
+          }
+        } catch (err) {
+          setError('Failed to fetch employee data');
+        }
+      };
+
+      fetchEmployee();
     }
-  };
+  }, [employeeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleSelectChange = (value: string) => {
+    setFormData({ ...formData, companyId: value });
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFormData({ ...formData, profileImageUrl: e.target.files[0] });
+      setFormData({ ...formData, profileImage: e.target.files[0] });
     }
   };
 
@@ -141,9 +130,16 @@ export default function DashboardEmployedEdit() {
     setError(null);
     setSuccess(null);
 
+    const formattedData = {
+      ...formData,
+      birthDate: formData.birthDate ? new Date(formData.birthDate).toISOString() : null,
+      hireDate: formData.hireDate ? new Date(formData.hireDate).toISOString() : null,
+      company: undefined  // Elimina el campo 'company' del objeto a enviar
+    };
+
     const form = new FormData();
-    Object.keys(formData).forEach((key) => {
-      const value = formData[key as keyof typeof formData];
+    Object.keys(formattedData).forEach((key) => {
+      const value = formattedData[key as keyof typeof formattedData];
       if (value !== null && value !== undefined && value !== '') {
         form.append(key, value);
       }
@@ -179,7 +175,7 @@ export default function DashboardEmployedEdit() {
           </Label>
           <Select
             value={employeeId ?? undefined}
-            onValueChange={(value) => handleSelectChange(value)}
+            onValueChange={(value) => setEmployeeId(value)}
             required
           >
             <SelectTrigger>
@@ -214,27 +210,41 @@ export default function DashboardEmployedEdit() {
               <Label className="text-right md:text-left md:col-span-1" htmlFor="role">
                 Rol
               </Label>
-              <Input
-                className="col-span-3"
-                id="role"
-                name="role"
+              <Select
                 value={formData.role}
-                onChange={handleChange}
+                onValueChange={(value) => setFormData({ ...formData, role: value })}
                 required
-              />
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Seleccionar rol" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="manager">Gerente</SelectItem>
+                  <SelectItem value="developer">Desarrollador</SelectItem>
+                  <SelectItem value="designer">Diseñador</SelectItem>
+                  <SelectItem value="hr">Recursos Humanos</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
               <Label className="text-right md:text-left md:col-span-1" htmlFor="department">
                 Departamento
               </Label>
-              <Input
-                className="col-span-3"
-                id="department"
-                name="department"
+              <Select
                 value={formData.department}
-                onChange={handleChange}
+                onValueChange={(value) => setFormData({ ...formData, department: value })}
                 required
-              />
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Seleccionar departamento" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="engineering">Ingeniería</SelectItem>
+                  <SelectItem value="design">Diseño</SelectItem>
+                  <SelectItem value="hr">Recursos Humanos</SelectItem>
+                  <SelectItem value="marketing">Mercadotecnia</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
               <Label className="text-right md:text-left md:col-span-1" htmlFor="description">
@@ -254,14 +264,22 @@ export default function DashboardEmployedEdit() {
               <Label className="text-right md:text-left md:col-span-1" htmlFor="companyId">
                 Empresa
               </Label>
-              <Input
-                className="col-span-3"
-                id="companyId"
-                name="companyId"
+              <Select
                 value={formData.companyId}
-                onChange={handleChange}
+                onValueChange={handleSelectChange}
                 required
-              />
+              >
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Seleccionar empresa" />
+                </SelectTrigger>
+                <SelectContent>
+                  {companies.map((company) => (
+                    <SelectItem key={company.id} value={company.id}>
+                      {company.razonSocial}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
               <Label className="text-right md:text-left md:col-span-1" htmlFor="socialSecurityNumber">
