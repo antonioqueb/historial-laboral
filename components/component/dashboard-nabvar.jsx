@@ -103,10 +103,7 @@ useEffect(() => {
         </nav>
       </div>
       <div className="flex items-center gap-4">
-        <Button className="mr-4 dark:bg-zinc-950" variant="outline">
-          <CrownIcon className="h-4 w-4 mr-2 " />
-          Cuenta Premium
-        </Button>
+       
         <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
