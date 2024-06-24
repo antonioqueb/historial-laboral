@@ -87,19 +87,19 @@ export default function ListCompanies() {
                   <div key={company.id} className="p-4 bg-white rounded-lg shadow-md flex flex-col sm:flex-row">
                     <div className="flex-grow">
                       <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`}>
-                        <h3 className="text-xl font-bold">{company.name}</h3>
+                        <h3 className="text-xl font-bold mb-2">{company.name}</h3>
                       </Link>
-                      <p>Razón Social: {company.razonSocial}</p>
-                      <p>RFC: {company.rfc}</p>
-                      <p>Domicilio Fiscal: {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
-                      <p>Nombre Comercial: {company.nombreComercial}</p>
-                      <p>Objeto Social: {company.objetoSocial}</p>
-                      <p>Representante Legal: {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
-                      <p>Capital Social: {company.capitalSocial}</p>
-                      <p>Registros IMSS: {company.registrosImss}</p>
-                      <p>Registros Infonavit: {company.registrosInfonavit}</p>
-                      <p>Actividad Económica: {company.giroActividadEconomica}</p>
-                      <p>Certificaciones: {company.certificaciones.join(", ")}</p>
+                      <p className="mb-1"><span className="font-semibold">Razón Social:</span> {company.razonSocial}</p>
+                      <p className="mb-1"><span className="font-semibold">RFC:</span> {company.rfc}</p>
+                      <p className="mb-1"><span className="font-semibold">Domicilio Fiscal:</span> {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                      <p className="mb-1"><span className="font-semibold">Nombre Comercial:</span> {company.nombreComercial}</p>
+                      <p className="mb-1"><span className="font-semibold">Objeto Social:</span> {company.objetoSocial}</p>
+                      <p className="mb-1"><span className="font-semibold">Representante Legal:</span> {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
+                      <p className="mb-1"><span className="font-semibold">Capital Social:</span> {company.capitalSocial}</p>
+                      <p className="mb-1"><span className="font-semibold">Registros IMSS:</span> {company.registrosImss}</p>
+                      <p className="mb-1"><span className="font-semibold">Registros Infonavit:</span> {company.registrosInfonavit}</p>
+                      <p className="mb-1"><span className="font-semibold">Actividad Económica:</span> {company.giroActividadEconomica}</p>
+                      <p className="mb-1"><span className="font-semibold">Certificaciones:</span> {company.certificaciones.join(", ")}</p>
                     </div>
                   </div>
                 ))
@@ -111,27 +111,25 @@ export default function ListCompanies() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {companies.length > 0 ? (
                 companies.map((company) => (
-                  <div key={company.id} className="relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-md group hover:shadow-lg hover:-translate-y-1">
+                  <div key={company.id} className="relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-md group hover:shadow-lg hover:-translate-y-1 flex flex-col justify-between h-full">
                     <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`} className="absolute inset-0 z-10" prefetch={false}>
                       <span className="sr-only">Ver detalles</span>
                     </Link>
-                    <div className="p-4 bg-white">
-                      <h3 className="text-xl font-bold">{company.name}</h3>
-                      <p className="text-sm">Razón Social: {company.razonSocial}</p>
-                      <p className="text-sm">RFC: {company.rfc}</p>
-                      <p className="text-sm">Domicilio Fiscal: {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                    <div className="p-4 bg-white flex-grow">
+                      <h3 className="text-xl font-bold mb-2">{company.name}</h3>
+                      <p className="text-sm mb-1">{company.razonSocial}</p>
+                      <p className="text-sm mb-1">{company.rfc}</p>
+                      <p className="text-sm mb-1">{company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
                     </div>
-                    <div className="p-4 bg-gray-100">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="sm">
-                          <EyeIcon className="h-4 w-4" />
-                          <span className="sr-only">Ver detalles</span>
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          <FilePenIcon className="h-4 w-4" />
-                          <span className="sr-only">Editar</span>
-                        </Button>
-                      </div>
+                    <div className="p-4 bg-gray-100 flex justify-end gap-2">
+                      <Button variant="outline" size="sm">
+                        <EyeIcon className="h-4 w-4" />
+                        <span className="sr-only">Ver detalles</span>
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <FilePenIcon className="h-4 w-4" />
+                        <span className="sr-only">Editar</span>
+                      </Button>
                     </div>
                   </div>
                 ))
