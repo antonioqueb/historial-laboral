@@ -165,7 +165,7 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empleado
           </Label>
           <Select
-            value={employeeId}
+              value={employeeId ?? undefined}
             onValueChange={(value) => setEmployeeId(value)}
             required
           >
