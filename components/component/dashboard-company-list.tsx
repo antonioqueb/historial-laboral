@@ -84,21 +84,23 @@ export default function ListCompanies() {
             <div className="space-y-4">
               {companies.length > 0 ? (
                 companies.map((company) => (
-                  <div key={company.id} className="p-4 bg-white rounded-lg shadow">
-                    <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`}>
-                      <h3 className="text-xl font-bold">{company.name}</h3>
-                    </Link>
-                    <p>Razón Social: {company.razonSocial}</p>
-                    <p>RFC: {company.rfc}</p>
-                    <p>Domicilio Fiscal: {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
-                    <p>Nombre Comercial: {company.nombreComercial}</p>
-                    <p>Objeto Social: {company.objetoSocial}</p>
-                    <p>Representante Legal: {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
-                    <p>Capital Social: {company.capitalSocial}</p>
-                    <p>Registros IMSS: {company.registrosImss}</p>
-                    <p>Registros Infonavit: {company.registrosInfonavit}</p>
-                    <p>Actividad Económica: {company.giroActividadEconomica}</p>
-                    <p>Certificaciones: {company.certificaciones.join(", ")}</p>
+                  <div key={company.id} className="p-4 bg-white rounded-lg shadow-md flex flex-col sm:flex-row">
+                    <div className="flex-grow">
+                      <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`}>
+                        <h3 className="text-xl font-bold">{company.name}</h3>
+                      </Link>
+                      <p>Razón Social: {company.razonSocial}</p>
+                      <p>RFC: {company.rfc}</p>
+                      <p>Domicilio Fiscal: {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                      <p>Nombre Comercial: {company.nombreComercial}</p>
+                      <p>Objeto Social: {company.objetoSocial}</p>
+                      <p>Representante Legal: {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
+                      <p>Capital Social: {company.capitalSocial}</p>
+                      <p>Registros IMSS: {company.registrosImss}</p>
+                      <p>Registros Infonavit: {company.registrosInfonavit}</p>
+                      <p>Actividad Económica: {company.giroActividadEconomica}</p>
+                      <p>Certificaciones: {company.certificaciones.join(", ")}</p>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -106,20 +108,20 @@ export default function ListCompanies() {
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:p-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {companies.length > 0 ? (
                 companies.map((company) => (
-                  <div key={company.id} className="relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-lg group hover:shadow-xl hover:-translate-y-2">
+                  <div key={company.id} className="relative overflow-hidden transition-transform duration-300 ease-in-out rounded-lg shadow-md group hover:shadow-lg hover:-translate-y-1">
                     <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`} className="absolute inset-0 z-10" prefetch={false}>
                       <span className="sr-only">Ver detalles</span>
                     </Link>
-                    <div className="p-4 bg-background">
+                    <div className="p-4 bg-white">
                       <h3 className="text-xl font-bold">{company.name}</h3>
-                      <p className="text-sm text-muted-foreground">Razón Social: {company.razonSocial}</p>
-                      <p className="text-sm text-muted-foreground">RFC: {company.rfc}</p>
-                      <p className="text-sm text-muted-foreground">Domicilio Fiscal: {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                      <p className="text-sm">Razón Social: {company.razonSocial}</p>
+                      <p className="text-sm">RFC: {company.rfc}</p>
+                      <p className="text-sm">Domicilio Fiscal: {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
                     </div>
-                    <div className="p-4 bg-muted">
+                    <div className="p-4 bg-gray-100">
                       <div className="flex justify-end gap-2">
                         <Button variant="outline" size="sm">
                           <EyeIcon className="h-4 w-4" />
