@@ -44,8 +44,8 @@ export default function DashboardEmployedEdit() {
     jobTitle: '',
     workShift: '',
     contractType: '',
+    profileImage: null as File | null,
   });
-  
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -95,76 +95,29 @@ export default function DashboardEmployedEdit() {
     setFormData({ ...formData, companyId: value });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFormData({ ...formData, profileImage: e.target.files[0] });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
-    const {
-      id,
-      name,
-      role,
-      department,
-      description,
-      companyId,
-      socialSecurityNumber,
-      CURP,
-      RFC,
-      address,
-      phoneNumber,
-      email,
-      birthDate,
-      hireDate,
-      emergencyContact,
-      emergencyPhone,
-      bankAccountNumber,
-      clabeNumber,
-      maritalStatus,
-      nationality,
-      educationLevel,
-      gender,
-      bloodType,
-      jobTitle,
-      workShift,
-      contractType
-    } = formData;
-
-    const data = {
-      id,
-      name,
-      role,
-      department,
-      description,
-      companyId,
-      socialSecurityNumber,
-      CURP,
-      RFC,
-      address,
-      phoneNumber,
-      email,
-      birthDate: new Date(birthDate),
-      hireDate: new Date(hireDate),
-      emergencyContact,
-      emergencyPhone,
-      bankAccountNumber,
-      clabeNumber,
-      maritalStatus,
-      nationality,
-      educationLevel,
-      gender,
-      bloodType,
-      jobTitle,
-      workShift,
-      contractType
-    };
+    const form = new FormData();
+    Object.keys(formData).forEach((key) => {
+      const value = formData[key as keyof typeof formData];
+      if (value !== null && value !== undefined && value !== '') {
+        form.append(key, value);
+      }
+    });
 
     try {
       const response = await fetch('/api/editEmployee', {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: form,
       });
 
       if (response.ok) {
@@ -536,7 +489,18 @@ export default function DashboardEmployedEdit() {
               required
             />
           </div>
-         
+          <div className="grid grid-cols-1 md:grid-cols-4 items-center gap-4">
+            <Label className="text-right md:text-left md:col-span-1" htmlFor="profileImage">
+              Foto de Perfil
+            </Label>
+            <Input
+              type="file"
+              className="col-span-3"
+              id="profileImage"
+              name="profileImage"
+              onChange={handleFileChange}
+            />
+          </div>
         </div>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         {success && <div className="text-green-500 mb-4">{success}</div>}
