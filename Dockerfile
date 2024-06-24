@@ -14,10 +14,16 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
+# Instalar sharp
+RUN yarn add sharp
+
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Crear el directorio .next/cache con los permisos adecuados
+RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 
 # Ejecutar prisma generate antes de la construcción
 RUN npx prisma generate
@@ -33,6 +39,9 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+
+# Cambiar los permisos del directorio de caché en el contenedor final
+RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 
 USER nextjs
 
