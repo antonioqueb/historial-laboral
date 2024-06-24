@@ -55,6 +55,14 @@ export async function PATCH(req: Request) {
       updateData.profileImageUrl = imageUrl;
     }
 
+    // Convertir fechas a ISO 8601
+    if (updateData.birthDate) {
+      updateData.birthDate = new Date(updateData.birthDate).toISOString();
+    }
+    if (updateData.hireDate) {
+      updateData.hireDate = new Date(updateData.hireDate).toISOString();
+    }
+
     const updatedEmployee = await prisma.employee.update({
       where: { id: id as string },
       data: updateData,
