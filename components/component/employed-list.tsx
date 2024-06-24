@@ -3,46 +3,50 @@
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { getCompaniesRFC, getEmployeesByCompany } from "@/utils/fetchData";
 
-export default function DashboardEmployedList() {
-  const [employees, setEmployees] = useState([]);
-  const [companies, setCompanies] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState("");
+// Definición de tipos para los datos esperados
+interface Employee {
+  id: string;
+  name: string;
+  profileImageUrl: string;
+  role: string;
+  description: string;
+  department: string;
+  company: {
+    rfc: string;
+  };
+}
 
-  useEffect(() => {
-    async function fetchCompanies() {
-      try {
-        const response = await fetch("/api/getCompanyRFC");
-        const data = await response.json();
-        setCompanies(data.rfcs);
-        if (data.rfcs.length > 0) {
-          setSelectedCompany(data.rfcs[0]); // Selecciona la primera compañía por defecto
-        }
-      } catch (error) {
-        console.error("Error fetching companies:", error);
-      }
+export default function EmployedList() {
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [companies, setCompanies] = useState<string[]>([]);
+  const [selectedCompany, setSelectedCompany] = useState<string>("");
+
+  // Función para cargar las compañías
+  const loadCompanies = async () => {
+    const data = await getCompaniesRFC();
+    setCompanies(data.rfcs);
+    if (data.rfcs.length > 0) {
+      setSelectedCompany(data.rfcs[0]); // Selecciona la primera compañía por defecto
     }
+  };
 
-    fetchCompanies();
+  // Función para cargar los empleados
+  const loadEmployees = async (company: string) => {
+    const filteredEmployees = await getEmployeesByCompany(company);
+    setEmployees(filteredEmployees);
+  };
+
+  // Cargar las compañías al montar el componente
+  useEffect(() => {
+    loadCompanies();
   }, []);
 
+  // Cargar los empleados cuando se selecciona una compañía
   useEffect(() => {
     if (selectedCompany) {
-      async function fetchEmployees() {
-        try {
-          const response = await fetch("http://192.168.1.69:108/api/listAllEmployees");
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          const filteredEmployees = data.employees.filter(employee => employee.company.rfc === selectedCompany);
-          setEmployees(filteredEmployees);
-        } catch (error) {
-          console.error("Error fetching employees:", error);
-        }
-      }
-
-      fetchEmployees();
+      loadEmployees(selectedCompany);
     }
   }, [selectedCompany]);
 
@@ -94,44 +98,5 @@ export default function DashboardEmployedList() {
         ))}
       </div>
     </div>
-  );
-}
-
-function FilterIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-    </svg>
-  );
-}
-
-function SearchIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
   );
 }

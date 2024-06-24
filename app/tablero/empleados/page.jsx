@@ -1,6 +1,6 @@
 
 import React from 'react'
-import DashboardEmployedList from '@/components/component/dashboard-employed-list'
+import DashboardEmployedList from '@/components/component/employed-list'
 
 const Empleados = () => {
   return (
