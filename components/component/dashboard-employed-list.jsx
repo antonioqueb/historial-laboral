@@ -15,9 +15,13 @@ export default function DashboardEmployedList() {
 
   useEffect(() => {
     async function fetchCompanies() {
-      const response = await fetch("/api/getCompanyRFC");
-      const data = await response.json();
-      setCompanies(data.rfcs);
+      try {
+        const response = await fetch("/api/getCompanyRFC");
+        const data = await response.json();
+        setCompanies(data.rfcs);
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+      }
     }
 
     fetchCompanies();
@@ -26,11 +30,17 @@ export default function DashboardEmployedList() {
   useEffect(() => {
     if (selectedCompany) {
       async function fetchEmployees() {
-        const response = await fetch("http://192.168.1.69:108/api/listAllEmployees");
-        const data = await response.json();
-
-        const filteredEmployees = data.employees.filter(employee => employee.company.rfc === selectedCompany);
-        setEmployees(filteredEmployees);
+        try {
+          const response = await fetch("http://192.168.1.69:108/api/listAllEmployees");
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          const filteredEmployees = data.employees.filter(employee => employee.company.rfc === selectedCompany);
+          setEmployees(filteredEmployees);
+        } catch (error) {
+          console.error("Error fetching employees:", error);
+        }
       }
 
       fetchEmployees();
@@ -118,7 +128,7 @@ export default function DashboardEmployedList() {
                 alt={`Foto de ${employee.name}`}
                 className="w-full h-full object-cover"
                 height={400}
-                src={employee.profileImageUrl || "/placeholder.svg"} // Usar la URL de la imagen o un placeholder
+                src={employee.profileImageUrl ? employee.profileImageUrl : "/placeholder.svg"} // Usar la URL de la imagen o un placeholder
                 style={{
                   aspectRatio: "400/400",
                   objectFit: "cover",
