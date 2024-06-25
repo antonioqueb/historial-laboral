@@ -98,13 +98,12 @@ export async function getEmployeesByCompany(selectedCompanyRfc: string): Promise
     }
     const data = await response.json();
     console.log("All employees data:", data.employees);
-    return data.employees.filter((employee: Employee) => employee.company?.rfc === selectedCompanyRfc);
+    return data.employees.filter((employee: Employee) => employee.company.rfc === selectedCompanyRfc);
   } catch (error) {
     console.error("Error al obtener los empleados:", error);
     return [];
   }
 }
-
 
 
 // Función para obtener la lista de compañías
