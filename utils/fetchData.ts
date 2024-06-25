@@ -56,6 +56,10 @@ export interface Employee {
   profileImageUrl?: string;
   createdAt: Date;
   updatedAt: Date;
+  company: { // Agregar la propiedad company con su estructura
+    name: string;
+    rfc: string;
+  };
   reviewsReceived?: Review[];
 }
 
@@ -72,6 +76,7 @@ export interface Review {
   updatedAt: Date;
 }
 
+
 // Función para obtener la lista de compañías por RFC
 export async function getCompaniesRFC(): Promise<{ rfcs: string[] }> {
   try {
@@ -85,19 +90,21 @@ export async function getCompaniesRFC(): Promise<{ rfcs: string[] }> {
 }
 
 // Función para obtener los empleados filtrados por la compañía seleccionada
-export async function getEmployeesByCompany(selectedCompanyId: string): Promise<Employee[]> {
+export async function getEmployeesByCompany(selectedCompanyRfc: string): Promise<Employee[]> {
   try {
     const response = await fetch(`/api/listAllEmployees`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    return data.employees.filter((employee: Employee) => employee.companyId === selectedCompanyId);
+    console.log("All employees data:", data.employees);
+    return data.employees.filter((employee: Employee) => employee.company?.rfc === selectedCompanyRfc);
   } catch (error) {
     console.error("Error al obtener los empleados:", error);
     return [];
   }
 }
+
 
 
 // Función para obtener la lista de compañías
