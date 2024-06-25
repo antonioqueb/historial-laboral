@@ -17,7 +17,7 @@ export default function DashboardEmployedList() {
         console.log("Companies data:", data);
         setCompanies(data.companies);
         if (data.companies.length > 0) {
-          setSelectedCompany(data.companies[0].id); // Selecciona el primer companyId por defecto
+          setSelectedCompany(data.companies[0].id); // Selecciona el primer companyId por defecto...
           console.log("Selected company set to:", data.companies[0].id);
         }
       } catch (error) {
