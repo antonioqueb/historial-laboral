@@ -3,22 +3,22 @@
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import { getEmployeesByCompany, getCompaniesRFC, Employee } from "@/utils/fetchData";
+import { getEmployeesByCompany, getCompaniesList, Employee, Company } from "@/utils/fetchData";
 
 export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [companies, setCompanies] = useState<string[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
 
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const data = await getCompaniesRFC();
+        const data = await getCompaniesList();
         console.log("Companies data:", data);
-        setCompanies(data.rfcs);
-        if (data.rfcs.length > 0) {
-          setSelectedCompany(data.rfcs[0]); // Selecciona la primera compañía por defecto
-          console.log("Selected company set to:", data.rfcs[0]);
+        setCompanies(data.companies);
+        if (data.companies.length > 0) {
+          setSelectedCompany(data.companies[0].id); // Selecciona el primer companyId por defecto
+          console.log("Selected company set to:", data.companies[0].id);
         }
       } catch (error) {
         console.error("Error fetching companies:", error);
@@ -32,7 +32,7 @@ export default function DashboardEmployedList() {
     if (selectedCompany) {
       const loadEmployees = async () => {
         try {
-          console.log("Fetching employees for company RFC:", selectedCompany);
+          console.log("Fetching employees for company ID:", selectedCompany);
           const filteredEmployees = await getEmployeesByCompany(selectedCompany);
           console.log("Filtered employees:", filteredEmployees);
           setEmployees(filteredEmployees);
@@ -59,9 +59,9 @@ export default function DashboardEmployedList() {
           className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         >
           <option value="">Seleccionar...</option>
-          {companies.map((companyRfc) => (
-            <option key={companyRfc} value={companyRfc}>
-              {companyRfc}
+          {companies.map((company) => (
+            <option key={company.id} value={company.id}>
+              {company.razonSocial}
             </option>
           ))}
         </select>
