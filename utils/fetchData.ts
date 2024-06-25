@@ -284,3 +284,16 @@ export async function createReview(reviewData: any): Promise<{ success: boolean;
     return { success: false, error: 'Error de conexión' };
   }
 }
+// Para obtener reseñas por NSS.
+export async function getReviewsByNSS(nss: string): Promise<{ reviews: Review[] }> {
+  try {
+    const response = await fetch(`/api/getReviewsByNSS?nss=${nss}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error al obtener las reseñas:", error);
+    return { reviews: [] };
+  }
+}
