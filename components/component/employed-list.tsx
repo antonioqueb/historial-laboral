@@ -1,3 +1,4 @@
+// components\component\employed-list.tsx
 'use client';
 
 import { useState, useEffect } from "react";
@@ -7,16 +8,17 @@ import { getEmployeesByCompany, getCompaniesRFC, Employee } from "@/utils/fetchD
 
 export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [companies, setCompanies] = useState<string[]>([]);
+  const [companies, setCompanies] = useState<{ rfc: string, id: string }[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
 
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
         const data = await getCompaniesRFC();
-        setCompanies(data.rfcs);
-        if (data.rfcs.length > 0) {
-          setSelectedCompany(data.rfcs[0]); // Selecciona la primera compañía por defecto
+        const companiesWithIds = data.rfcs.map((rfc: string, index: number) => ({ rfc, id: `company-id-${index}` }));
+        setCompanies(companiesWithIds);
+        if (companiesWithIds.length > 0) {
+          setSelectedCompany(companiesWithIds[0].id); // Selecciona la primera compañía por defecto
         }
       } catch (error) {
         console.error("Error fetching companies:", error);
@@ -55,9 +57,9 @@ export default function DashboardEmployedList() {
           className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         >
           <option value="">Seleccionar...</option>
-          {companies.map((companyRfc) => (
-            <option key={companyRfc} value={companyRfc}>
-              {companyRfc}
+          {companies.map((company) => (
+            <option key={company.id} value={company.id}>
+              {company.rfc}
             </option>
           ))}
         </select>
