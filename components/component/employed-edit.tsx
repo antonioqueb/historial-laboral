@@ -7,7 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
-import { getCompaniesList, getEmployeesList, getEmployeeById, editEmployee, Company, Employee } from "@/utils/fetchData";
+
+interface Company {
+  id: string;
+  razonSocial: string;
+}
+
+interface Employee {
+  id: string;
+  name: string;
+}
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
@@ -49,31 +58,52 @@ export default function DashboardEmployedEdit() {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCompanies = async () => {
       try {
-        const companiesData = await getCompaniesList();
-        setCompanies(companiesData.companies);
-
-        const employeesData = await getEmployeesList();
-        setEmployees(employeesData.employees);
+        const res = await fetch('/api/listCompanies');
+        if (res.ok) {
+          const data = await res.json();
+          setCompanies(data.companies);
+        } else {
+          setError('Failed to fetch companies');
+        }
       } catch (err) {
-        setError('Failed to fetch data');
+        setError('Failed to fetch companies');
       }
     };
 
-    fetchData();
+    const fetchEmployees = async () => {
+      try {
+        const res = await fetch('http://192.168.1.69:108/api/listAllEmployees');
+        if (res.ok) {
+          const data = await res.json();
+          setEmployees(data.employees);
+        } else {
+          setError('Failed to fetch employees');
+        }
+      } catch (err) {
+        setError('Failed to fetch employees');
+      }
+    };
+
+    fetchCompanies();
+    fetchEmployees();
 
     if (employeeId) {
-      const fetchEmployeeData = async () => {
+      const fetchEmployee = async () => {
         try {
-          const employee = await getEmployeeById(employeeId);
-          if (employee) {
-            setFormData({
-              ...employee,
-              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
-              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
-              profileImage: null,
-            });
+          const res = await fetch('http://192.168.1.69:108/api/listAllEmployees');
+          if (res.ok) {
+            const data = await res.json();
+            const employee = data.employees.find((emp: any) => emp.id === employeeId);
+            if (employee) {
+              setFormData({
+                ...employee,
+                birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+                hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+                profileImage: null,
+              });
+            }
           } else {
             setError('Failed to fetch employee data');
           }
@@ -82,7 +112,7 @@ export default function DashboardEmployedEdit() {
         }
       };
 
-      fetchEmployeeData();
+      fetchEmployee();
     }
   }, [employeeId]);
 
@@ -114,12 +144,17 @@ export default function DashboardEmployedEdit() {
     });
 
     try {
-      const result = await editEmployee(form);
-      if (result.success) {
+      const response = await fetch('/api/editEmployee', {
+        method: 'PATCH',
+        body: form,
+      });
+
+      if (response.ok) {
         setSuccess('Empleado actualizado exitosamente');
         router.push('/tablero/empleados/editar'); // Redireccionar a la lista de empleados
       } else {
-        setError(result.error || 'Error al actualizar el empleado');
+        const data = await response.json();
+        setError(data.error || 'Error al actualizar el empleado');
       }
     } catch (err) {
       setError('Error de conexión');
@@ -254,7 +289,7 @@ export default function DashboardEmployedEdit() {
                 <Label htmlFor="clabeNumber">CLABE</Label>
                 <Input id="clabeNumber" name="clabeNumber" value={formData.clabeNumber} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items_center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="maritalStatus">Estado Civil</Label>
                 <Input id="maritalStatus" name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} required />
               </div>
@@ -262,31 +297,31 @@ export default function DashboardEmployedEdit() {
                 <Label htmlFor="nationality">Nacionalidad</Label>
                 <Input id="nationality" name="nationality" value={formData.nationality} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items_center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="educationLevel">Nivel Educativo</Label>
                 <Input id="educationLevel" name="educationLevel" value={formData.educationLevel} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items_center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="gender">Género</Label>
                 <Input id="gender" name="gender" value={formData.gender} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items_center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="bloodType">Tipo de Sangre</Label>
                 <Input id="bloodType" name="bloodType" value={formData.bloodType} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items_center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="jobTitle">Título del Trabajo</Label>
                 <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items_center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="workShift">Turno de Trabajo</Label>
                 <Input id="workShift" name="workShift" value={formData.workShift} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items_center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="contractType">Tipo de Contrato</Label>
                 <Input id="contractType" name="contractType" value={formData.contractType} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items_center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="profileImage">Foto de Perfil</Label>
                 <Input type="file" id="profileImage" name="profileImage" onChange={handleFileChange} />
               </div>
@@ -303,4 +338,5 @@ export default function DashboardEmployedEdit() {
       )}
     </div>
   );
+  
 }
