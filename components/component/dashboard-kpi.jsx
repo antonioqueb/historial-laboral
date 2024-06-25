@@ -146,7 +146,7 @@ export default function Component() {
   return (
     <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
       {cardData.map(({ title, description, mainValue, subValue, icon, stars }, index) => (
-        <Card key={index} className="min-h-[500px] lg:min-h-[850px]">
+        <Card key={index} className="min-h-[500px] lg:min-h-[650px]">
           <div className="flex flex-col justify-between h-full">
             <CardHeader>
               <CardTitle>{title}</CardTitle>
