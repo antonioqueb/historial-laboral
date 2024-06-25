@@ -7,7 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
-import { getCompaniesList, getEmployeesList, getEmployeeById, editEmployee, Employee, Company} from "@/utils/fetchData";
+
+interface Company {
+  id: string;
+  razonSocial: string;
+}
+
+interface Employee {
+  id: string;
+  name: string;
+}
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
@@ -49,38 +58,61 @@ export default function DashboardEmployedEdit() {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCompanies = async () => {
       try {
-        const companiesData = await getCompaniesList();
-        setCompanies(companiesData.companies);
-
-        const employeesData = await getEmployeesList();
-        setEmployees(employeesData.employees);
+        const res = await fetch('/api/listCompanies');
+        if (res.ok) {
+          const data = await res.json();
+          setCompanies(data.companies);
+        } else {
+          setError('Failed to fetch companies');
+        }
       } catch (err) {
-        setError('Failed to fetch data');
+        setError('Failed to fetch companies');
       }
     };
 
-    fetchData();
+    const fetchEmployees = async () => {
+      try {
+        const res = await fetch('http://192.168.1.69:108/api/listAllEmployees');
+        if (res.ok) {
+          const data = await res.json();
+          setEmployees(data.employees);
+        } else {
+          setError('Failed to fetch employees');
+        }
+      } catch (err) {
+        setError('Failed to fetch employees');
+      }
+    };
+
+    fetchCompanies();
+    fetchEmployees();
 
     if (employeeId) {
-      const fetchEmployeeData = async () => {
+      const fetchEmployee = async () => {
         try {
-          const employeeData = await getEmployeeById(employeeId);
-          if (employeeData) {
-            setFormData({
-              ...employeeData,
-              birthDate: employeeData.birthDate ? new Date(employeeData.birthDate).toISOString().split('T')[0] : '',
-              hireDate: employeeData.hireDate ? new Date(employeeData.hireDate).toISOString().split('T')[0] : '',
-              profileImage: null,
-            });
+          const res = await fetch('http://192.168.1.69:108/api/listAllEmployees');
+          if (res.ok) {
+            const data = await res.json();
+            const employee = data.employees.find((emp: any) => emp.id === employeeId);
+            if (employee) {
+              setFormData({
+                ...employee,
+                birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+                hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+                profileImage: null,
+              });
+            }
+          } else {
+            setError('Failed to fetch employee data');
           }
         } catch (err) {
           setError('Failed to fetch employee data');
         }
       };
 
-      fetchEmployeeData();
+      fetchEmployee();
     }
   }, [employeeId]);
 
@@ -112,13 +144,17 @@ export default function DashboardEmployedEdit() {
     });
 
     try {
-      const result = await editEmployee(form);
+      const response = await fetch('/api/editEmployee', {
+        method: 'PATCH',
+        body: form,
+      });
 
-      if (result.success) {
+      if (response.ok) {
         setSuccess('Empleado actualizado exitosamente');
         router.push('/tablero/empleados/editar'); // Redireccionar a la lista de empleados
       } else {
-        setError(result.error || 'Error al actualizar el empleado');
+        const data = await response.json();
+        setError(data.error || 'Error al actualizar el empleado');
       }
     } catch (err) {
       setError('Error de conexión');
@@ -302,4 +338,5 @@ export default function DashboardEmployedEdit() {
       )}
     </div>
   );
+  
 }
