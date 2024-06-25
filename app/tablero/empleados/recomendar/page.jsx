@@ -1,11 +1,11 @@
-import employedReview from '@/components/component/employedReview';
+import EmployedReview from '@/components/component/employedReview';
 
-const EmployedReview = () => {
+const EmployedReviewComponent = () => {
   return (
     <>
-    <employedReview/>
+    <EmployedReview/>
     </>
   )
 }
 
-export default EmployedReview
+export default EmployedReviewComponent
