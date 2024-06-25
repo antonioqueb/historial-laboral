@@ -35,6 +35,7 @@ useEffect(() => {
         { label: 'Empleados', href: '/tablero/empleados'},
         { label: 'Crear', href: '/tablero/empleados/crear' },
         { label: 'Editar', href: '/tablero/empleados/editar' },
+        { label: 'Recomendar', href: '/tablero/empleados/recomendar'}
       ]);
     } 
 
