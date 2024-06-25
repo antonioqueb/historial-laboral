@@ -14,15 +14,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Obtener el userId utilizando la función getUserId
-    let userId: string;
-    try {
-        const userIdResponse = await getUserId();
-        userId = userIdResponse.id;
-    } catch (error) {
-        return NextResponse.json({ error: "Failed to fetch user ID" }, { status: 500 });
-    }
-
     const {
         employeeId,
         companyId,
@@ -30,8 +21,13 @@ export async function POST(req: Request) {
         description,
         rating,
         positive,
-        documentation
+        documentation,
+        userId // Asegúrate de recibir el userId desde la solicitud
     } = await req.json();
+
+    if (!userId) {
+        return NextResponse.json({ error: "Failed to fetch user ID" }, { status: 500 });
+    }
 
     // Validar que la compañía del usuario que hace la petición sea la misma que está dejando la review
     const userCompany = await prisma.company.findFirst({

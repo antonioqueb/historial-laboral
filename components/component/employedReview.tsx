@@ -7,8 +7,18 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link'; // Asegúrate de importar Link
-import { createReview, getCompaniesList, getEmployeesByCompany, Company, Employee } from '@/utils/fetchData';
+import { createReview, getCompaniesList, getEmployeesByCompany, getUserId, Employee, Company } from '@/utils/fetchData';
 
+interface ReviewData {
+  employeeId: string;
+  companyId: string;
+  title: string;
+  description: string;
+  rating: number;
+  positive: boolean;
+  documentation: string;
+  userId?: string; // Propiedad opcional
+}
 
 export default function DashboardEmployedReview() {
   const router = useRouter();
@@ -16,7 +26,7 @@ export default function DashboardEmployedReview() {
   const [selectedEmployee, setSelectedEmployee] = useState<string | null>(null);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [reviewData, setReviewData] = useState({
+  const [reviewData, setReviewData] = useState<ReviewData>({
     employeeId: '',
     companyId: '',
     title: '',
@@ -71,7 +81,12 @@ export default function DashboardEmployedReview() {
     console.log('Submitting review:', reviewData);
 
     try {
-      const result = await createReview(reviewData);
+      const userIdResponse = await getUserId();
+      console.log('Fetched user ID:', userIdResponse.id);
+
+      const updatedReviewData = { ...reviewData, userId: userIdResponse.id }; // Actualiza reviewData con userId
+
+      const result = await createReview(updatedReviewData);
       if (result.success) {
         console.log('Review created successfully');
         setSuccess('Reseña creada exitosamente');

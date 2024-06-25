@@ -72,6 +72,7 @@ export interface Review {
   rating: number;
   positive: boolean;
   documentation?: string;
+  userId?: string; // Propiedad opcional
   createdAt: Date;
   updatedAt: Date;
 }
