@@ -1,7 +1,5 @@
 // components\ResponseSearch.jsx
 
-import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-import Link from "next/link";
 import { AiFillStar, AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 
 export default function ResponseSearch({ reviews }) {
