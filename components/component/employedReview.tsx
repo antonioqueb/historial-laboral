@@ -7,17 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link'; // Asegúrate de importar Link
-import { createReview, getCompaniesList, getEmployeesByCompany } from '@/utils/fetchData';
+import { createReview, getCompaniesList, getEmployeesByCompany, Company, Employee } from '@/utils/fetchData';
 
-interface Company {
-  id: string;
-  razonSocial: string;
-}
-
-interface Employee {
-  id: string;
-  name: string;
-}
 
 export default function DashboardEmployedReview() {
   const router = useRouter();
@@ -41,8 +32,10 @@ export default function DashboardEmployedReview() {
     const fetchCompanies = async () => {
       try {
         const companiesData = await getCompaniesList();
+        console.log('Fetched companies:', companiesData.companies);
         setCompanies(companiesData.companies);
       } catch (err) {
+        console.error('Failed to fetch companies:', err);
         setError('Failed to fetch companies');
       }
     };
@@ -55,8 +48,10 @@ export default function DashboardEmployedReview() {
       const fetchEmployees = async () => {
         try {
           const employeesData = await getEmployeesByCompany(selectedCompany);
+          console.log('Fetched employees:', employeesData);
           setEmployees(employeesData);
         } catch (err) {
+          console.error('Failed to fetch employees:', err);
           setError('Failed to fetch employees');
         }
       };
@@ -73,16 +68,20 @@ export default function DashboardEmployedReview() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    console.log('Submitting review:', reviewData);
 
     try {
       const result = await createReview(reviewData);
       if (result.success) {
+        console.log('Review created successfully');
         setSuccess('Reseña creada exitosamente');
         router.push('/tablero/empleados/reseñas'); // Redireccionar a la lista de reseñas
       } else {
+        console.error('Error creating review:', result.error);
         setError(result.error ?? 'Error desconocido');
       }
     } catch (err) {
+      console.error('Connection error:', err);
       setError('Error de conexión');
     }
   };
@@ -97,7 +96,7 @@ export default function DashboardEmployedReview() {
           <div>
             <div className="grid grid-cols-1 gap-4 items-center mb-4">
               <Label htmlFor="companyId">Seleccionar Empresa</Label>
-              <Select value={selectedCompany ?? ''} onValueChange={(value) => { setSelectedCompany(value); setReviewData({ ...reviewData, companyId: value }); }} required>
+              <Select value={selectedCompany ?? ''} onValueChange={(value) => { setSelectedCompany(value); setReviewData({ ...reviewData, companyId: value }); console.log('Selected company:', value); }} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar empresa" />
                 </SelectTrigger>
@@ -113,7 +112,7 @@ export default function DashboardEmployedReview() {
             {selectedCompany && (
               <div className="grid grid-cols-1 gap-4 items-center mb-4">
                 <Label htmlFor="employeeId">Seleccionar Empleado</Label>
-                <Select value={selectedEmployee ?? ''} onValueChange={(value) => { setSelectedEmployee(value); setReviewData({ ...reviewData, employeeId: value }); }} required>
+                <Select value={selectedEmployee ?? ''} onValueChange={(value) => { setSelectedEmployee(value); setReviewData({ ...reviewData, employeeId: value }); console.log('Selected employee:', value); }} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar empleado" />
                   </SelectTrigger>
@@ -143,7 +142,7 @@ export default function DashboardEmployedReview() {
                 </div>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
                   <Label htmlFor="positive">Positiva</Label>
-                  <Select value={reviewData.positive.toString()} onValueChange={(value) => setReviewData({ ...reviewData, positive: value === 'true' })} required>
+                  <Select value={reviewData.positive.toString()} onValueChange={(value) => { setReviewData({ ...reviewData, positive: value === 'true' }); console.log('Selected positive:', value); }} required>
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccionar tipo de reseña" />
                     </SelectTrigger>
