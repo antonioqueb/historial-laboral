@@ -1,29 +1,8 @@
-import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
+'use client';
 
-// Datos
-const cardData = [
-  {
-    title: "Total de Empleados",
-    description: "Número actual de empleados",
-    mainValue: "1,137",
-    subValue: "En todos los departamentos",
-    icon: UsersIcon,
-  },
-  {
-    title: "Calificación Promedio",
-    description: "Basado en revisiones de todos los empleados de todas tus empresas",
-    mainValue: "4.8",
-    stars: 4,
-    icon: GaugeIcon,
-  },
-  {
-    title: "Informes Negativos",
-    description: "Empleados con revisiones negativas",
-    mainValue: "124",
-    subValue: "Necesita mejorar",
-    icon: ThumbsDownIcon,
-  }
-];
+import { useState, useEffect } from 'react';
+import { getEmployeesList, getCompaniesList } from '@/utils/fetchData';
+import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
 
 // Iconos
 function GaugeIcon(props) {
@@ -118,6 +97,53 @@ const StarIcons = ({ count }) => (
 );
 
 export default function Component() {
+  const [employees, setEmployees] = useState([]);
+  const [companies, setCompanies] = useState([]);
+  
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const employeesData = await getEmployeesList();
+        const companiesData = await getCompaniesList();
+        setEmployees(employeesData.employees);
+        setCompanies(companiesData.companies);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  // Calcula los valores principales de las tarjetas basado en los datos obtenidos
+  const totalEmployees = employees.length;
+  const averageRating = employees.reduce((acc, employee) => acc + (employee.reviewsReceived?.reduce((acc, review) => acc + review.rating, 0) || 0), 0) / (employees.reduce((acc, employee) => acc + (employee.reviewsReceived?.length || 0), 0) || 1);
+  const negativeReports = employees.filter(employee => employee.reviewsReceived?.some(review => !review.positive)).length;
+
+  const cardData = [
+    {
+      title: "Total de Empleados",
+      description: "Número actual de empleados",
+      mainValue: totalEmployees.toString(),
+      subValue: "En todos los departamentos",
+      icon: UsersIcon,
+    },
+    {
+      title: "Calificación Promedio",
+      description: "Basado en revisiones de todos los empleados de todas tus empresas",
+      mainValue: averageRating.toFixed(1),
+      stars: Math.round(averageRating),
+      icon: GaugeIcon,
+    },
+    {
+      title: "Informes Negativos",
+      description: "Empleados con revisiones negativas",
+      mainValue: negativeReports.toString(),
+      subValue: "Necesita mejorar",
+      icon: ThumbsDownIcon,
+    }
+  ];
+
   return (
     <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 p-5">
       {cardData.map(({ title, description, mainValue, subValue, icon, stars }, index) => (
