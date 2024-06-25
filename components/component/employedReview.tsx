@@ -71,7 +71,11 @@ export default function DashboardEmployedReview() {
   }, [selectedCompany]);
 
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setReviewData({ ...reviewData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setReviewData((prevData) => ({
+      ...prevData,
+      [name]: name === 'rating' ? parseInt(value) : value, // Convertir rating a número
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -153,7 +157,7 @@ export default function DashboardEmployedReview() {
                 </div>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
                   <Label htmlFor="rating">Calificación</Label>
-                  <Input type="number" id="rating" name="rating" value={reviewData.rating} onChange={handleReviewChange} required min="0" max="5" />
+                  <Input type="number" id="rating" name="rating" value={reviewData.rating.toString()} onChange={handleReviewChange} required min="0" max="5" />
                 </div>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
                   <Label htmlFor="positive">Positiva</Label>
