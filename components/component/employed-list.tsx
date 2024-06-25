@@ -15,10 +15,12 @@ export default function DashboardEmployedList() {
     const fetchCompanies = async () => {
       try {
         const data = await getCompaniesRFC();
+        console.log("Companies data:", data);
         const companiesWithIds = data.rfcs.map((rfc: string, index: number) => ({ rfc, id: `company-id-${index}` }));
         setCompanies(companiesWithIds);
         if (companiesWithIds.length > 0) {
           setSelectedCompany(companiesWithIds[0].id); // Selecciona la primera compañía por defecto
+          console.log("Selected company set to:", companiesWithIds[0].id);
         }
       } catch (error) {
         console.error("Error fetching companies:", error);
@@ -32,7 +34,9 @@ export default function DashboardEmployedList() {
     if (selectedCompany) {
       const loadEmployees = async () => {
         try {
+          console.log("Fetching employees for company ID:", selectedCompany);
           const filteredEmployees = await getEmployeesByCompany(selectedCompany);
+          console.log("Filtered employees:", filteredEmployees);
           setEmployees(filteredEmployees);
         } catch (error) {
           console.error("Error fetching employees:", error);
