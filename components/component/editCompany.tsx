@@ -59,24 +59,24 @@ export default function EditCompany() {
     try {
       const data = await getCompanyByRfc(rfc);
       if (data) {
-        setName(data.name);
-        setRazonSocial(data.razonSocial);
-        setRfc(data.rfc);
-        setDomicilioFiscalCalle(data.domicilioFiscalCalle);
-        setDomicilioFiscalNumero(data.domicilioFiscalNumero);
-        setDomicilioFiscalColonia(data.domicilioFiscalColonia);
-        setDomicilioFiscalMunicipio(data.domicilioFiscalMunicipio);
-        setDomicilioFiscalEstado(data.domicilioFiscalEstado);
-        setDomicilioFiscalCodigoPostal(data.domicilioFiscalCodigoPostal);
-        setNombreComercial(data.nombreComercial);
-        setObjetoSocial(data.objetoSocial);
-        setRepresentanteLegalNombre(data.representanteLegalNombre);
-        setRepresentanteLegalCurp(data.representanteLegalCurp);
-        setCapitalSocial(data.capitalSocial);
-        setRegistrosImss(data.registrosImss);
-        setRegistrosInfonavit(data.registrosInfonavit);
-        setGiroActividadEconomica(data.giroActividadEconomica);
-        setCertificaciones(data.certificaciones.join(", "));
+        setName(data.name || "");
+        setRazonSocial(data.razonSocial || "");
+        setRfc(data.rfc || "");
+        setDomicilioFiscalCalle(data.domicilioFiscalCalle || "");
+        setDomicilioFiscalNumero(data.domicilioFiscalNumero || "");
+        setDomicilioFiscalColonia(data.domicilioFiscalColonia || "");
+        setDomicilioFiscalMunicipio(data.domicilioFiscalMunicipio || "");
+        setDomicilioFiscalEstado(data.domicilioFiscalEstado || "");
+        setDomicilioFiscalCodigoPostal(data.domicilioFiscalCodigoPostal || "");
+        setNombreComercial(data.nombreComercial || "");
+        setObjetoSocial(data.objetoSocial || "");
+        setRepresentanteLegalNombre(data.representanteLegalNombre || "");
+        setRepresentanteLegalCurp(data.representanteLegalCurp || "");
+        setCapitalSocial(data.capitalSocial || 0.0);
+        setRegistrosImss(data.registrosImss || "");
+        setRegistrosInfonavit(data.registrosInfonavit || "");
+        setGiroActividadEconomica(data.giroActividadEconomica || "");
+        setCertificaciones(data.certificaciones ? data.certificaciones.join(", ") : "");
       } else {
         setMessage("Failed to fetch company data.");
       }

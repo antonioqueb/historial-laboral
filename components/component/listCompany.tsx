@@ -1,4 +1,3 @@
-// components\component\dashboard-company-list.tsx
 'use client';
 
 import React, { useState, useEffect } from "react";
@@ -9,9 +8,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getCompaniesList, getUserId } from "@/utils/fetchData";
 
-interface Company {
+export interface Company {
   id: string;
   name: string;
+  userId: string;
   razonSocial: string;
   rfc: string;
   domicilioFiscalCalle: string;
@@ -20,18 +20,66 @@ interface Company {
   domicilioFiscalMunicipio: string;
   domicilioFiscalEstado: string;
   domicilioFiscalCodigoPostal: string;
-  nombreComercial: string;
+  nombreComercial?: string;
   objetoSocial: string;
   representanteLegalNombre: string;
   representanteLegalCurp: string;
   capitalSocial: number;
-  registrosImss: string;
-  registrosInfonavit: string;
+  registrosImss?: string;
+  registrosInfonavit?: string;
   giroActividadEconomica: string;
   certificaciones: string[];
+  employees?: Employee[];
+  reviewsGiven?: Review[];
 }
 
-export default function ListCompanies() {
+export interface Employee {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  description: string;
+  companyId: string;
+  socialSecurityNumber: string;
+  CURP: string;
+  RFC: string;
+  address: string;
+  phoneNumber: string;
+  email: string;
+  birthDate: Date;
+  hireDate: Date;
+  emergencyContact: string;
+  emergencyPhone: string;
+  bankAccountNumber: string;
+  clabeNumber: string;
+  maritalStatus: string;
+  nationality: string;
+  educationLevel: string;
+  gender: string;
+  bloodType: string;
+  jobTitle: string;
+  workShift: string;
+  contractType: string;
+  profileImageUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  reviewsReceived?: Review[];
+}
+
+export interface Review {
+  id: string;
+  employeeId: string;
+  companyId: string;
+  title: string;
+  description: string;
+  rating: number;
+  positive: boolean;
+  documentation?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export default function ListCompany() {
   const { data: session } = useSession();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [message, setMessage] = useState<string>("");
@@ -157,7 +205,7 @@ function FilePenIcon(props: React.SVGProps<SVGSVGElement>) {
       strokeLinejoin="round"
     >
       <path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v10" />
-      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+      <path d="M14 2v4 a2 2 0 0 0 2 2h4" />
       <path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z" />
     </svg>
   );

@@ -1,8 +1,9 @@
 // Definición de tipos para los datos esperados
 export interface Company {
   id: string;
-  razonSocial: string;
   name: string;
+  userId: string;
+  razonSocial: string;
   rfc: string;
   domicilioFiscalCalle: string;
   domicilioFiscalNumero: string;
@@ -10,47 +11,63 @@ export interface Company {
   domicilioFiscalMunicipio: string;
   domicilioFiscalEstado: string;
   domicilioFiscalCodigoPostal: string;
-  nombreComercial: string;
+  nombreComercial?: string;
   objetoSocial: string;
   representanteLegalNombre: string;
   representanteLegalCurp: string;
   capitalSocial: number;
-  registrosImss: string;
-  registrosInfonavit: string;
+  registrosImss?: string;
+  registrosInfonavit?: string;
   giroActividadEconomica: string;
   certificaciones: string[];
+  employees?: Employee[];
+  reviewsGiven?: Review[];
 }
 
 export interface Employee {
   id: string;
   name: string;
-  role?: string;
-  department?: string;
-  description?: string;
-  company?: { rfc: string };
-  companyId?: string;
-  socialSecurityNumber?: string;
-  CURP?: string;
-  RFC?: string;
-  address?: string;
-  phoneNumber?: string;
-  email?: string;
-  birthDate?: string;
-  hireDate?: string;
-  emergencyContact?: string;
-  emergencyPhone?: string;
-  bankAccountNumber?: string;
-  clabeNumber?: string;
-  maritalStatus?: string;
-  nationality?: string;
-  educationLevel?: string;
-  gender?: string;
-  bloodType?: string;
-  jobTitle?: string;
-  workShift?: string;
-  contractType?: string;
-  profileImage?: string;
-  profileImageUrl?: string; // Asegúrate de incluir esta propiedad
+  role: string;
+  department: string;
+  description: string;
+  companyId: string;
+  socialSecurityNumber: string;
+  CURP: string;
+  RFC: string;
+  address: string;
+  phoneNumber: string;
+  email: string;
+  birthDate: Date;
+  hireDate: Date;
+  emergencyContact: string;
+  emergencyPhone: string;
+  bankAccountNumber: string;
+  clabeNumber: string;
+  maritalStatus: string;
+  nationality: string;
+  educationLevel: string;
+  gender: string;
+  bloodType: string;
+  jobTitle: string;
+  workShift: string;
+  contractType: string;
+  profileImageUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  reviewsReceived?: Review[];
+}
+
+export interface Review {
+  id: string;
+  employeeId: string;
+  companyId: string;
+  title: string;
+  description: string;
+  rating: number;
+  positive: boolean;
+  documentation?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Función para obtener la lista de compañías por RFC
@@ -73,7 +90,7 @@ export async function getEmployeesByCompany(selectedCompany: string): Promise<Em
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    return data.employees.filter((employee: Employee) => employee.company?.rfc === selectedCompany);
+    return data.employees.filter((employee: Employee) => employee.companyId === selectedCompany);
   } catch (error) {
     console.error("Error al obtener los empleados:", error);
     return [];

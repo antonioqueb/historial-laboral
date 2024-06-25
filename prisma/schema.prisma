@@ -40,8 +40,8 @@ model Company {
   registrosInfonavit     String?  @default("")
   giroActividadEconomica String   @default("")
   certificaciones        String[] @default([])
+  reviewsGiven           Review[] // Relación con las reviews que esta compañía ha dado
 }
-
 
 
 model Employee {
@@ -75,6 +75,22 @@ model Employee {
   profileImageUrl      String?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+  reviewsReceived      Review[] // Relación con las reviews que ha recibido este empleado
 }
 
+
+model Review {
+  id            String    @id @default(cuid())
+  employeeId    String
+  employee      Employee  @relation(fields: [employeeId], references: [id])
+  companyId     String
+  company       Company   @relation(fields: [companyId], references: [id])
+  title         String
+  description   String
+  rating        Int       @default(0) // Puedes ajustar el valor por defecto según sea necesario
+  positive      Boolean   @default(true)
+  documentation String?   // Enlace o ruta a la documentación de respaldo
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
 
