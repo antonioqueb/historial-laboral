@@ -14,7 +14,13 @@ export async function GET(req: Request) {
   try {
     const employee = await prisma.employee.findUnique({
       where: { socialSecurityNumber: nss },
-      include: { reviewsReceived: true }
+      include: {
+        reviewsReceived: {
+          include: {
+            company: true, // Incluir la información de la empresa en la reseña
+          }
+        }
+      }
     });
 
     if (!employee) {
