@@ -257,3 +257,27 @@ export async function editCompany(data: any): Promise<{ company: { name: string 
     return { company: { name: '' }, error: 'Error de conexión' };
   }
 }
+
+
+// Función para crear una reseña
+export async function createReview(reviewData: any): Promise<{ success: boolean; error?: string }> {
+  try {
+    const response = await fetch('/api/createReviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reviewData),
+    });
+
+    if (response.ok) {
+      return { success: true };
+    } else {
+      const data = await response.json();
+      return { success: false, error: data.error || 'Error al crear la reseña' };
+    }
+  } catch (error) {
+    console.error("Error de conexión:", error);
+    return { success: false, error: 'Error de conexión' };
+  }
+}
