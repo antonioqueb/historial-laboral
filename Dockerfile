@@ -19,12 +19,13 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-
 # Create the .next/cache directory with the appropriate permissions
 RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 
 # Ejecutar prisma generate antes de la construcción
+COPY prisma ./prisma
 RUN npx prisma generate
+RUN npx prisma migrate dev --name init --create-only --force
 RUN yarn build
 
 FROM base AS runner
@@ -37,6 +38,7 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/prisma ./prisma
 
 USER nextjs
 
