@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     container_name: postgres
     ports:
-      - "5434:5432"
+      - "5434:5432" # Mapea el puerto 5432 del contenedor al puerto 5434 en la máquina host
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -24,8 +24,8 @@ services:
     ports:
       - "3010:3000"
     environment:
-      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5434/${POSTGRES_DB}"
-      DIRECT_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5434/${POSTGRES_DB}"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
+      DIRECT_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
       postgres:
         condition: service_healthy
