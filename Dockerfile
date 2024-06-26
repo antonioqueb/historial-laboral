@@ -22,12 +22,11 @@ COPY . .
 # Instalar prisma/client
 RUN npm install @prisma/client
 
-# Create the .next/cache directory with the appropriate permissions
+# Crear el directorio .next/cache con los permisos adecuados
 RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 
 # Ejecutar prisma generate antes de la construcción
 COPY prisma ./prisma
-RUN npx prisma generate
 RUN yarn build
 
 FROM base AS runner
@@ -41,6 +40,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules ./node_modules
 
 USER nextjs
 
