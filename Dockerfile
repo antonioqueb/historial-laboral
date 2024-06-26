@@ -25,8 +25,11 @@ RUN npm install @prisma/client
 # Crear el directorio .next/cache con los permisos adecuados
 RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 
-# Ejecutar prisma generate antes de la construcción
+# Asegurar que prisma tiene los permisos correctos
 COPY prisma ./prisma
+RUN chown -R nextjs:nodejs /app/prisma
+
+# Ejecutar prisma generate antes de la construcción
 RUN npx prisma generate
 
 RUN yarn build
