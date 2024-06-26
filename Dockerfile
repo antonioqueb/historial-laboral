@@ -19,12 +19,13 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Create the .next/cache directory with the appropriate permissions
+# Crear el directorio .next/cache con los permisos adecuados
 RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 
-# Ejecutar prisma generate antes de la construcción
+# Ejecutar prisma init, sleep, prisma generate y sleep antes de la construcción
 COPY prisma ./prisma
-RUN npx prisma generate
+RUN npx prisma init && sleep 10
+RUN npx prisma generate && sleep 10
 
 RUN yarn build
 
@@ -48,4 +49,4 @@ ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
 # Ejecutar migraciones antes de iniciar el servidor
-CMD npx prisma migrate dev --name init --create-only && node server.js
+CMD sleep 10 && npx prisma migrate deploy && sleep 10 && node server.js
