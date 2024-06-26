@@ -26,8 +26,6 @@ RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 COPY prisma ./prisma
 RUN npx prisma generate
 
-# Esperar 15 segundos antes de ejecutar la migración
-RUN sleep 25 && npx prisma migrate dev --name init --create-only
 RUN yarn build
 
 FROM base AS runner
@@ -49,4 +47,5 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "server.js"]
+# Ejecutar migraciones antes de iniciar el servidor
+CMD npx prisma migrate dev --name init --create-only && node server.js
