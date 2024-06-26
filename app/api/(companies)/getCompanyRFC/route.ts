@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { Company, Employee } from "@/utils/fetchData";
 
 // Define the type for the session with the user ID
 interface ExtendedSession {
@@ -29,9 +30,13 @@ export async function GET(req: Request) {
             where: { userId: userId },
             select: { rfc: true } // Seleccionar solo el campo RFC
         });
+        type Company = {
+            rfc: string;
+            // Otros campos que tenga la interfaz de Company
+          };
 
         // Extraer solo los RFCs de las empresas
-        const rfcs = companies.map(company => company.rfc);
+        const rfcs = companies.map((company: Company) => company.rfc);
 
         return NextResponse.json({ rfcs }, { status: 200 });
     } catch (error) {
