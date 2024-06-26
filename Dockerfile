@@ -19,6 +19,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Instalar prisma/client
+RUN npm install @prisma/client
+
 # Create the .next/cache directory with the appropriate permissions
 RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 
