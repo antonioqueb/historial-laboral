@@ -44,8 +44,8 @@ COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules ./node_modules
 
-# Asegurar que nextjs tiene permisos correctos
-RUN chown -R nextjs:nodejs /app
+# Asegurar que nextjs tiene permisos correctos en directorios críticos
+RUN chown -R nextjs:nodejs /app/public /app/.next /app/prisma /app/node_modules
 
 USER nextjs
 
