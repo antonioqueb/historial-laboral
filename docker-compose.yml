@@ -21,6 +21,8 @@ services:
   historial-laboral-service:
     container_name: historial-laboral-image
     build: .
+    volumes:
+      - ./prisma:/app/prisma # Mapear la carpeta prisma
     ports:
       - "3010:3000"
     environment:
