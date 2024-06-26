@@ -19,9 +19,12 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Crear el directorio .next/cache con los permisos adecuados
+# Create the .next/cache directory with the appropriate permissions
 RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 
+# Ejecutar prisma generate antes de la construcción
+COPY prisma ./prisma
+RUN npx prisma generate
 RUN yarn build
 
 FROM base AS runner
@@ -34,6 +37,7 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/prisma ./prisma
 
 USER nextjs
 
@@ -42,4 +46,4 @@ EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD node server.js
+CMD ["node", "server.js"]
