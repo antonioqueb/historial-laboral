@@ -25,7 +25,7 @@ RUN mkdir -p /app/.next/cache && chmod -R 777 /app/.next/cache
 # Ejecutar prisma generate antes de la construcción
 COPY prisma ./prisma
 RUN npx prisma generate
-RUN npx prisma migrate dev --name init --create-only --force
+RUN npx prisma migrate dev --name init --create-only
 RUN yarn build
 
 FROM base AS runner
