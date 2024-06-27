@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaStore } from "react-icons/fa";
 import { FaIdCard } from "react-icons/fa";
-import { FaSlidersH } from "react-icons/fa";
 import { FaChartSimple } from "react-icons/fa6";
 
 export default function DashboardSidebar() {
