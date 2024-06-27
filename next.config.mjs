@@ -5,7 +5,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'historiallaboral.com',
+                hostname: 'cdn.historiallaboral.com',
                 port: '80',
                 pathname: '/uploads/**',
             },
