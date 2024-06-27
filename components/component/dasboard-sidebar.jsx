@@ -38,7 +38,7 @@ export default function DashboardSidebar() {
         </button>
       </div>
       <nav className="flex-1 overflow-y-auto">
-        <ul className="grid gap-1 p-4">
+        <ul className="grid gap-8 p-4">
         <li>
             <Link
               className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
@@ -63,14 +63,7 @@ export default function DashboardSidebar() {
               Empleados
             </Link>
           </li>
-          <li>
-            <Link
-              className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero/ajustes', '/tablero/ajustes/empresa']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
-              href="/tablero/ajustes">
-              <FaSlidersH className="h-6 w-6 md:h-8 md:w-8" />
-              Ajustes
-            </Link>
-          </li>
+      
         </ul>
       </nav>
     </div>
