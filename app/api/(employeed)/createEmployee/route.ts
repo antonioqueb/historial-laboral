@@ -35,7 +35,7 @@ export async function POST(req: Request) {
       uploadForm.append("image", image);
       uploadForm.append("nss", nss);
 
-      const response = await fetch("http://192.168.1.69:3008/upload", {
+      const response = await fetch(`${process.env.LOCAL_IP}/upload`, {
         method: "POST",
         body: uploadForm,
       });
