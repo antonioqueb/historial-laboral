@@ -19,7 +19,7 @@ export default function DashboardSidebar() {
   };
 
   return (
-    <div className={`fixed inset-y-0 left-0 z-50 flex flex-col h-screen max-w-[280px] bg-white dark:bg-zinc-900 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+    <div className={`fixed inset-y-0 left-0 z-50 flex flex-col h-screen max-w-[280px]  dark:bg-zinc-900 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
       <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-200 dark:border-zinc-800">
         <Link className="ml-3 flex items-center gap-2 font-semibold text-lg md:text-xl" href="/">
           <MountainIcon className="h-8 w-8 md:h-10 md:w-10" />
@@ -38,7 +38,7 @@ export default function DashboardSidebar() {
         </button>
       </div>
       <nav className="flex-1 overflow-y-auto">
-        <ul className="grid gap-8 p-4">
+        <ul className="grid gap-4 p-4">
         <li>
             <Link
               className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
