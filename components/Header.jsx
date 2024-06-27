@@ -33,7 +33,6 @@ export default function Header() {
           <div className="flex items-center gap-2">
             {imageError || !session.user.image ? (
               <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
-                {getFirstNameAndSurname(session.user.name)}
               </div>
             ) : (
               <Image
@@ -45,7 +44,6 @@ export default function Header() {
                 onError={handleImageError}
               />
             )}
-            <span className="dark:text-zinc-100">{getFirstNameAndSurname(session.user.name)}</span>
           </div>
         ) : (
           <div className="flex items-center gap-2">
