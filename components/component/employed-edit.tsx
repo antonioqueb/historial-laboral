@@ -74,7 +74,7 @@ export default function DashboardEmployedEdit() {
 
     const fetchEmployees = async () => {
       try {
-        const res = await fetch('http://192.168.1.69:108/api/listAllEmployees');
+        const res = await fetch('https://historiallaboral.com/api/listAllEmployees');
         if (res.ok) {
           const data = await res.json();
           setEmployees(data.employees);
@@ -92,7 +92,7 @@ export default function DashboardEmployedEdit() {
     if (employeeId) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch('http://192.168.1.69:108/api/listAllEmployees');
+          const res = await fetch('https://historiallaboral.com/api/listAllEmployees');
           if (res.ok) {
             const data = await res.json();
             const employee = data.employees.find((emp: any) => emp.id === employeeId);

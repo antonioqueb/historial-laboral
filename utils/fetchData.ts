@@ -188,7 +188,7 @@ export async function editEmployee(form: FormData): Promise<{ success: boolean; 
 // Función para obtener el userId
 export async function getUserId(): Promise<{ id: string }> {
   try {
-    const response = await fetch("http://192.168.1.69:108/api/getUserId");
+    const response = await fetch("https://historiallaboral.com/api/getUserId");
     if (response.ok) {
       return await response.json();
     } else {

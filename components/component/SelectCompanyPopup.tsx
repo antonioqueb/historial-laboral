@@ -23,7 +23,7 @@ export function SelectCompanyPopup() {
   React.useEffect(() => {
     const fetchCompanyRFCs = async () => {
       try {
-        const res = await fetch('http://192.168.1.69:108/api/getCompanyRFC');
+        const res = await fetch('https://historiallaboral.com/api/getCompanyRFC');
         console.log('Response:', res);
         if (!res.ok) {
           throw new Error(`Failed to fetch company RFCs, status: ${res.status}`);

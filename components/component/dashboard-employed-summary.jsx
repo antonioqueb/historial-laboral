@@ -19,7 +19,7 @@ export default function DashboardCompany() {
   useEffect(() => {
     if (session) {
       const fetchCompanies = async () => {
-        const res = await fetch("http://192.168.1.69:108/api/listCompanies");
+        const res = await fetch("https://historiallaboral.com/api/listCompanies");
         if (res.ok) {
           const data = await res.json();
           setCompanies(data.companies);
