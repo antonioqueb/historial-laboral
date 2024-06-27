@@ -95,7 +95,7 @@ export default function DashboardEmployedReview() {
       if (result.success) {
         console.log('Review created successfully');
         setSuccess('Reseña creada exitosamente');
-        router.push('/tablero/empleados/reseñas'); // Redireccionar a la lista de reseñas
+        router.push('/tablero/empleados/'); // Redireccionar a la lista de reseñas
       } else {
         console.error('Error creating review:', result.error);
         setError(result.error ?? 'Error desconocido');
