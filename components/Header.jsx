@@ -25,7 +25,7 @@ export default function Header() {
   return (
     <header className="flex h-16 w-full items-center justify-between px-4 md:px-6">
       <Link className="flex items-center gap-2" href="/">
-        <h2>Historial Laboral</h2>
+        <h2 className="font-extrabold text-2xl">Historial Laboral</h2>
       </Link>
       <div className="flex items-center gap-4">
         {session ? (
