@@ -17,42 +17,46 @@ export default function ResponseSearch({ reviews }) {
     <TooltipProvider>
       <div className="w-full mt-6"> {/* Añadir margen superior */}
         <section className="p-4 w-full bg-white dark:bg-zinc-800 shadow-lg rounded-lg">
-          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-wrap gap-6">
             {reviews.map(({ id, title, description, rating, positive, documentation, company, createdAt }) => (
-              <Card key={id} className="hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200">
-                <CardHeader className="flex items-center justify-between p-4">
-                  <CardTitle className="text-xl font-semibold">
-                    {title}
-                  </CardTitle>
-                  <div className="flex items-center">
-                    {[...Array(rating)].map((_, index) => (
-                      <AiFillStar key={index} className="text-yellow-500" />
-                    ))}
+              <Card key={id} className="flex w-full hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200">
+                <div className="flex w-full">
+                  <div className="flex flex-col justify-between w-full p-4">
+                    <CardHeader className="flex items-center justify-between p-0">
+                      <CardTitle className="text-xl font-semibold">
+                        {title}
+                      </CardTitle>
+                      <div className="flex items-center">
+                        {[...Array(rating)].map((_, index) => (
+                          <AiFillStar key={index} className="text-yellow-500" />
+                        ))}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-0 mt-2">
+                      <CardDescription className="text-sm text-zinc-600 dark:text-zinc-400">
+                        {description}
+                      </CardDescription>
+                      <div className="flex items-center mt-2">
+                        <Tooltip content={positive ? "Positiva" : "Negativa"}>
+                          {positive ? (
+                            <AiOutlineCheckCircle className="text-green-500 mr-1" />
+                          ) : (
+                            <AiOutlineCloseCircle className="text-red-500 mr-1" />
+                          )}
+                        </Tooltip>
+                        <span className="text-sm">Positiva: {positive ? "Sí" : "No"}</span>
+                      </div>
+                      <p className="text-sm mt-2">Documentación: {documentation}</p>
+                      <p className="text-sm mt-2">Empresa: {company.name}</p>
+                      <p className="text-sm mt-2">Fecha: {new Date(createdAt).toLocaleDateString()}</p>
+                    </CardContent>
+                    <CardFooter className="p-0 mt-4">
+                      <Badge variant={positive ? "solid" : "outline"} className={positive ? "bg-green-500" : "bg-red-500"}>
+                        {positive ? "Recomendado" : "No Recomendado"}
+                      </Badge>
+                    </CardFooter>
                   </div>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <CardDescription className="text-sm text-zinc-600 dark:text-zinc-400">
-                    {description}
-                  </CardDescription>
-                  <div className="flex items-center mt-2">
-                    <Tooltip content={positive ? "Positiva" : "Negativa"}>
-                      {positive ? (
-                        <AiOutlineCheckCircle className="text-green-500 mr-1" />
-                      ) : (
-                        <AiOutlineCloseCircle className="text-red-500 mr-1" />
-                      )}
-                    </Tooltip>
-                    <span className="text-sm">Positiva: {positive ? "Sí" : "No"}</span>
-                  </div>
-                  <p className="text-sm mt-2">Documentación: {documentation}</p>
-                  <p className="text-sm mt-2">Empresa: {company.name}</p>
-                  <p className="text-sm mt-2">Fecha: {new Date(createdAt).toLocaleDateString()}</p>
-                </CardContent>
-                <CardFooter className="p-4">
-                  <Badge variant={positive ? "solid" : "outline"} className={positive ? "bg-green-500" : "bg-red-500"}>
-                    {positive ? "Recomendado" : "No Recomendado"}
-                  </Badge>
-                </CardFooter>
+                </div>
               </Card>
             ))}
           </div>
