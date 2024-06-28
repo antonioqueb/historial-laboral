@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { getUserId } from "@/utils/fetchData"; // Asegúrate de ajustar la ruta de acuerdo a tu estructura
 
 const prisma = new PrismaClient();
 
