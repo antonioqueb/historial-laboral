@@ -18,7 +18,7 @@ export default function Component() {
   useEffect(() => {
     if (status === 'authenticated') {
       // router.push('/tablero');
-      console.log('Authenticated');	
+      console.log('Authenticated');  
     }
   }, [status, router]);
 
@@ -37,7 +37,7 @@ export default function Component() {
   };
 
   return (
-    <main className="flex flex-col items-center lg:py-12 justify-center h-screen bg-zinc-100 dark:bg-zinc-900 w-full">
+    <main className="flex flex-col items-center lg:py-12 justify-center min-h-screen bg-zinc-100 dark:bg-zinc-900 w-full">
       <div className="container max-w-7xl px-4 md:px-6">
         <div className="space-y-6">
           <div className="text-center">
