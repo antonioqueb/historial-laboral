@@ -18,11 +18,11 @@ export default function Login() {
   return (
     <div className="flex justify-center items-center h-screen w-full ">
       {status === 'loading' ? (
-        <p>Loading...</p>
+        <p className="px-6 py-4">Loading....</p>
       ) : (
         <Button 
           onClick={() => signIn("keycloak")} 
-          className="px-6 py-4 bg-primary font-bold rounded-md shadow-md hover:bg-primary/90"
+          className="px-6 py-4 text-lg bg-primary text-white font-bold rounded-md shadow-md hover:bg-primary/98"
         >
           Comenzar
         </Button>

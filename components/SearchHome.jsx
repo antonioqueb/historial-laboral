@@ -1,6 +1,7 @@
-// components\SearchHome.jsx
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ResponseSearch from "@/components/ResponseSearch";
@@ -10,6 +11,14 @@ export default function Component() {
   const [nss, setNss] = useState("");
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState("");
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/tablero');
+    }
+  }, [status, router]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
