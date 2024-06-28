@@ -59,6 +59,7 @@ export default function Component() {
             {error && <p className="text-red-500 mt-2">{error}</p>}
           </div>
           <ResponseSearch reviews={reviews} />
+          
         </div>
       </div>
     </main>
