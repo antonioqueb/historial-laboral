@@ -19,8 +19,8 @@ export default function ResponseSearch({ reviews }) {
         <section className="p-4 w-full bg-white dark:bg-zinc-800 shadow-lg rounded-lg">
           <div className="flex flex-wrap gap-6">
             {reviews.map(({ id, title, description, rating, positive, documentation, company, createdAt }) => (
-              <Card key={id} className="w-full lg:w-[calc(33.33%-1.5rem)] hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200">
-                <div className="flex flex-col lg:flex-row w-full">
+              <Card key={id} className="flex w-full hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200">
+                <div className="flex w-full">
                   <div className="flex flex-col justify-between w-full p-4">
                     <CardHeader className="flex items-center justify-between p-0">
                       <CardTitle className="text-xl font-semibold">
