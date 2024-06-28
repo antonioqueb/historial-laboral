@@ -11,6 +11,7 @@ export default function Component() {
   const [nss, setNss] = useState("");
   const [reviews, setReviews] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -23,11 +24,14 @@ export default function Component() {
   const handleSearch = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const data = await getReviewsByNSS(nss);
       setReviews(data.reviews);
     } catch (err) {
       setError("Error al obtener las reseñas");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,14 +56,13 @@ export default function Component() {
                   onChange={(e) => setNss(e.target.value)}
                 />
               </div>
-              <Button className="shrink-0 text-lg" type="submit">
-                Buscar
+              <Button className="shrink-0 text-lg" type="submit" disabled={loading}>
+                {loading ? 'Buscando...' : 'Buscar'}
               </Button>
             </form>
             {error && <p className="text-red-500 mt-2">{error}</p>}
           </div>
           <ResponseSearch reviews={reviews} />
-          
         </div>
       </div>
     </main>

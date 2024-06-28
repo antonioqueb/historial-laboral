@@ -1,6 +1,6 @@
 import { AiFillStar, AiOutlineCheckCircle, AiOutlineCloseCircle } from 'react-icons/ai';
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipProvider } from "@/components/ui/tooltip"; // Importa TooltipProvider
+import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import {
   Card,
   CardContent,
@@ -8,14 +8,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
 export default function ResponseSearch({ reviews }) {
-  if (!reviews.length) return null; // No mostrar nada si no hay reseñas
+  if (!reviews || !reviews.length) return null; // No mostrar nada si no hay reseñas
 
   return (
     <TooltipProvider>
-      <div className="flex items-center justify-center bg-zinc-100 dark:bg-zinc-900 min-h-screen p-4">
+      <div className="flex items-center justify-center bg-zinc-100 dark:bg-zinc-900 p-4 w-full">
         <section className="p-6 max-w-7xl w-full bg-white dark:bg-zinc-800 shadow-lg rounded-lg">
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {reviews.map(({ id, title, description, rating, positive, documentation, company, createdAt }) => (
