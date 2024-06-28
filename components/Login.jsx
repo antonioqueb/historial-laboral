@@ -24,7 +24,7 @@ export default function Login() {
           onClick={() => signIn("keycloak")} 
           className="px-6 py-4 bg-primary text-black rounded-md shadow-md hover:bg-primary/90"
         >
-          Iniciar Sesión con Keycloak
+          Comenzar
         </Button>
       )}
     </div>

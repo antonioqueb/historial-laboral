@@ -6,6 +6,8 @@ import ModeToggle from "./ModeToggle";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
+import Login from '@/components/Login';
+
 
 export default function Header() {
   const [imageError, setImageError] = useState(false);
@@ -25,7 +27,7 @@ export default function Header() {
   return (
     <header className="flex h-16 w-full items-center justify-between px-4 md:px-6">
       <Link className="flex items-center gap-2" href="/">
-        <h2 className="font-bold text-xl lg:text-4xl">Historial Laboral</h2>
+        <h2 className="font-bold text-xl lg:text-2xl">Historial Laboral</h2>
       </Link>
       <div className="flex items-center gap-4">
         {session ? (
@@ -54,9 +56,10 @@ export default function Header() {
         {!session && (
           <>
       
-            <Button>
+            {/* <Button>
               <Link href="/login">Comenzar</Link>
-            </Button>
+            </Button> */}
+            <Login />
           </>
         )}
       </div>
