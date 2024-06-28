@@ -22,7 +22,7 @@ export default function Login() {
       ) : (
         <Button 
           onClick={() => signIn("keycloak")} 
-          className="px-6 py-4 bg-primary text-black rounded-md shadow-md hover:bg-primary/90"
+          className="px-6 py-4 bg-primary font-bold rounded-md shadow-md hover:bg-primary/90"
         >
           Comenzar
         </Button>
