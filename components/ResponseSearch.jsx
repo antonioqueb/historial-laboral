@@ -17,7 +17,7 @@ export default function ResponseSearch({ reviews }) {
     <TooltipProvider>
       <div className="flex items-center justify-center bg-zinc-100 dark:bg-zinc-900 p-4 w-full">
         <section className="p-6 max-w-7xl w-full bg-white dark:bg-zinc-800 shadow-lg rounded-lg">
-          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
             {reviews.map(({ id, title, description, rating, positive, documentation, company, createdAt }) => (
               <Card key={id} className="hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200">
                 <CardHeader className="flex items-center justify-between p-4">
