@@ -17,16 +17,15 @@ export default function Header() {
     setImageError(true);
   };
 
-  const getFirstNameAndSurname = (name) => {
-    const names = name.split(' ');
-    return `${names[0]} ${names[1]}`;
-  };
+  // const getFirstNameAndSurname = (name) => {
+  //   const names = name.split(' ');
+  //   return `${names[0]} ${names[1]}`;
+  // };
 
   return (
     <header className="flex h-16 w-full items-center justify-between px-4 md:px-6">
       <Link className="flex items-center gap-2" href="/">
-        <MountainIcon className="h-6 w-6" />
-        <span className="sr-only">Historial Laboral</span>
+        <H2>Historial Laboral</H2>
       </Link>
       <div className="flex items-center gap-4">
         {session ? (
@@ -46,12 +45,7 @@ export default function Header() {
             )}
           </div>
         ) : (
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
-              NA
-            </div>
-            <span className="dark:text-zinc-100">Usuario</span>
-          </div>
+          null
         )}
 
         <Button className="rounded-full" size="icon" variant="ghost">
@@ -59,11 +53,9 @@ export default function Header() {
         </Button>
         {!session && (
           <>
-            <Button variant="outline">
-              <Link href="/registrarse">Registrate</Link>
-            </Button>
+      
             <Button>
-              <Link href="/login">Iniciar Sesión</Link>
+              <Link href="/login">Comenzar</Link>
             </Button>
           </>
         )}
@@ -72,40 +64,3 @@ export default function Header() {
   );
 }
 
-function MoonIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-    </svg>
-  );
-}
-
-function MountainIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
-    </svg>
-  );
-}
