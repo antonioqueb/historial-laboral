@@ -98,6 +98,8 @@ const StarIcons = ({ count }) => (
 export default function Component() {
   const [employees, setEmployees] = useState([]);
   const [companies, setCompanies] = useState([]);
+
+  
   
   useEffect(() => {
     async function fetchData() {

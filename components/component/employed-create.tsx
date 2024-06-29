@@ -295,7 +295,8 @@ export default function DashboardEmployedAdmin() {
         </div>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         {success && <div className="text-green-500 mb-4">{success}</div>}
-        <Button type="submit">Agregar</Button>
+        
+        <Button type="submit">Crear</Button>
       </form>
     </div>
   );
