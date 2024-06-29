@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 import Link from "next/link";
@@ -111,11 +111,10 @@ export default function ListCompany() {
   }, [session]);
 
   return (
-    <div className="min-h-screen p-6 bg-white dark:bg-zinc-900">
+    <div className="min-h-screen p-6 bg-white">
       {!session && (
         <div className="flex flex-col items-center justify-center h-full">
           <Alert variant="destructive">You are not signed in</Alert>
-          <Button onClick={() => signIn()} className={``}>Sign in</Button>
         </div>
       )}
       {session && (
