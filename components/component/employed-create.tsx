@@ -296,7 +296,7 @@ export default function DashboardEmployedAdmin() {
         {error && <div className="text-red-500 mb-4">{error}</div>}
         {success && <div className="text-green-500 mb-4">{success}</div>}
 
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-4">
           <Button type="submit">Crear</Button>
         </div>
       </form>
