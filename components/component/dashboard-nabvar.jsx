@@ -129,7 +129,6 @@ useEffect(() => {
                 <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
                   NA
                 </div>
-                <span className="dark:text-zinc-100">Usuario</span>
               </div>
             )}
           </DropdownMenuTrigger>
