@@ -107,88 +107,86 @@ export default function DashboardEmployedReview() {
   };
 
   return (
-    <div className="w-full mx-auto px-4 md:px-6 py-12">
-      <div className="flex flex-col md:flex-row items-start justify-start mb-6">
+    <div className="w-full h-full mx-auto px-4 md:px-6 py-12">
+      <div className="flex flex-col md:flex-row items-start justify-between mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Dejar una Reseña</h1>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div className="grid gap-6 md:grid-cols-2 py-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="flex flex-col gap-4">
           <div>
-            <div className="grid grid-cols-1 gap-4 items-center mb-4">
-              <Label htmlFor="companyId">Seleccionar Empresa</Label>
-              <Select value={selectedCompany ?? ''} onValueChange={(value) => { setSelectedCompany(value); setReviewData({ ...reviewData, companyId: value }); console.log('Selected company:', value); }} required>
+            <Label htmlFor="companyId">Seleccionar Empresa</Label>
+            <Select value={selectedCompany ?? ''} onValueChange={(value) => { setSelectedCompany(value); setReviewData({ ...reviewData, companyId: value }); console.log('Selected company:', value); }} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar empresa" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.id}>
+                    {company.razonSocial}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          {selectedCompany && (
+            <div>
+              <Label htmlFor="employeeId">Seleccionar Empleado</Label>
+              <Select value={selectedEmployee ?? ''} onValueChange={(value) => { setSelectedEmployee(value); setReviewData({ ...reviewData, employeeId: value }); console.log('Selected employee:', value); }} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar empresa" />
+                  <SelectValue placeholder="Seleccionar empleado" />
                 </SelectTrigger>
                 <SelectContent>
-                  {companies.map((company) => (
-                    <SelectItem key={company.id} value={company.id}>
-                      {company.razonSocial}
+                  {employees.map((employee) => (
+                    <SelectItem key={employee.id} value={employee.id}>
+                      {employee.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            {selectedCompany && (
-              <div className="grid grid-cols-1 gap-4 items-center mb-4">
-                <Label htmlFor="employeeId">Seleccionar Empleado</Label>
-                <Select value={selectedEmployee ?? ''} onValueChange={(value) => { setSelectedEmployee(value); setReviewData({ ...reviewData, employeeId: value }); console.log('Selected employee:', value); }} required>
+          )}
+          {selectedEmployee && (
+            <>
+              <div>
+                <Label htmlFor="title">Título</Label>
+                <Input id="title" name="title" value={reviewData.title} onChange={handleReviewChange} required />
+              </div>
+              <div>
+                <Label htmlFor="description">Descripción</Label>
+                <Textarea id="description" name="description" value={reviewData.description} onChange={handleReviewChange} required />
+              </div>
+              <div>
+                <Label htmlFor="rating">Calificación</Label>
+                <Input type="number" id="rating" name="rating" value={reviewData.rating.toString()} onChange={handleReviewChange} required min="0" max="5" />
+              </div>
+              <div>
+                <Label htmlFor="positive">Positiva</Label>
+                <Select value={reviewData.positive.toString()} onValueChange={(value) => { setReviewData({ ...reviewData, positive: value === 'true' }); console.log('Selected positive:', value); }} required>
                   <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar empleado" />
+                    <SelectValue placeholder="Seleccionar tipo de reseña" />
                   </SelectTrigger>
                   <SelectContent>
-                    {employees.map((employee) => (
-                      <SelectItem key={employee.id} value={employee.id}>
-                        {employee.name}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="true">Positiva</SelectItem>
+                    <SelectItem value="false">Negativa</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-            )}
-            {selectedEmployee && (
-              <>
-                <div className="grid grid-cols-1 gap-4 items-center mb-4">
-                  <Label htmlFor="title">Título</Label>
-                  <Input id="title" name="title" value={reviewData.title} onChange={handleReviewChange} required />
-                </div>
-                <div className="grid grid-cols-1 gap-4 items-center mb-4">
-                  <Label htmlFor="description">Descripción</Label>
-                  <Textarea id="description" name="description" value={reviewData.description} onChange={handleReviewChange} required />
-                </div>
-                <div className="grid grid-cols-1 gap-4 items-center mb-4">
-                  <Label htmlFor="rating">Calificación</Label>
-                  <Input type="number" id="rating" name="rating" value={reviewData.rating.toString()} onChange={handleReviewChange} required min="0" max="5" />
-                </div>
-                <div className="grid grid-cols-1 gap-4 items-center mb-4">
-                  <Label htmlFor="positive">Positiva</Label>
-                  <Select value={reviewData.positive.toString()} onValueChange={(value) => { setReviewData({ ...reviewData, positive: value === 'true' }); console.log('Selected positive:', value); }} required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar tipo de reseña" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="true">Positiva</SelectItem>
-                      <SelectItem value="false">Negativa</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-1 gap-4 items-center mb-4">
-                  <Label htmlFor="documentation">Documentación</Label>
-                  <Input id="documentation" name="documentation" value={reviewData.documentation} onChange={handleReviewChange} />
-                </div>
-              </>
-            )}
-          </div>
+              <div>
+                <Label htmlFor="documentation">Documentación</Label>
+                <Input id="documentation" name="documentation" value={reviewData.documentation} onChange={handleReviewChange} />
+              </div>
+            </>
+          )}
         </div>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        {success && <div className="text-green-500 mb-4">{success}</div>}
-        <div className="flex justify-end">  
+      </form>
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+      {success && <div className="text-green-500 mb-4">{success}</div>}
+      <div className="flex justify-end">  
         <Button type="submit">Dejar Reseña</Button>
         <Link href="/tablero/empleados" className="ml-2">
           <Button type="button">Cancelar</Button>
         </Link>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
