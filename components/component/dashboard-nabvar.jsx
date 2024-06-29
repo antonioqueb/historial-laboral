@@ -28,7 +28,7 @@ export default function DashboardNavbar() {
 
 
 useEffect(() => {
-    // Sección para el path '/tablero/empleados'
+    // Sección para el path '/tablero/empleados'....
     if (pathname.startsWith('/tablero/empleados')) {
       setMenuOptions([
         { label: 'Empleados', href: '/tablero/empleados'},
