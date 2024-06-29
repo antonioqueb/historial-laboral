@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu } from '@/components/ui/dropdown-menu';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -111,21 +110,20 @@ useEffect(() => {
             {session ? (
               <div className="flex items-center gap-2">
                 {imageError || !session.user.image ? (
-                  <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
+                  <div className="w-10 h-10 flex items-center justify-center bg-zinc-400 rounded-full text-xl text-white">
                     {getFirstNameAndSurname(session.user.name)}
                   </div>
                 ) : (
                   <Image
                     src={session.user.image}
                     alt="Avatar"
-                    width={40}
-                    height={40}
+                    width={36}
+                    height={36}
                     className="rounded-full"
                     onError={handleImageError}
                   />
                 )}
-                <span className="dark:text-zinc-100">{getFirstNameAndSurname(session.user.name)}</span>
-              </div>
+\              </div>
             ) : (
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
@@ -162,23 +160,6 @@ useEffect(() => {
   );
 }
 
-function BriefcaseIcon(props) {
-  return (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 20V4a2 0 0 0-2-2h-4a2 0 0 0-2 2v16" />
-      <rect width="20" height="14" x="2" y="6" rx="2" />
-    </svg>
-  );
-}
-
-function CrownIcon(props) {
-  return (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z" />
-      <path d="M5 21h14" />
-    </svg>
-  );
-}
 
 function LogOutIcon(props) {
   return (

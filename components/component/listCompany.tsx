@@ -111,7 +111,7 @@ export default function ListCompany() {
   }, [session]);
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-6 bg-white dark:bg-zinc-900">
       {!session && (
         <div className="flex flex-col items-center justify-center h-full">
           <Alert variant="destructive">You are not signed in</Alert>
@@ -121,7 +121,7 @@ export default function ListCompany() {
       {session && (
         <div>
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
               {companies.length > 1 ? "Empresas" : "Empresa"}
             </h1>
             <div>
@@ -134,27 +134,27 @@ export default function ListCompany() {
             <div className="space-y-4">
               {companies.length > 0 ? (
                 companies.map((company) => (
-                  <div key={company.id} className="p-4 bg-white rounded-lg shadow-md flex flex-col sm:flex-row">
+                  <div key={company.id} className="p-4 bg-white dark:bg-zinc-800 rounded-lg shadow-md flex flex-col sm:flex-row">
                     <div className="flex-grow">
                       <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`}>
-                        <h3 className="text-xl font-bold mb-2">{company.name}</h3>
+                        <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">{company.name}</h3>
                       </Link>
-                      <p className="mb-1"><span className="font-semibold">Razón Social:</span> {company.razonSocial}</p>
-                      <p className="mb-1"><span className="font-semibold">RFC:</span> {company.rfc}</p>
-                      <p className="mb-1"><span className="font-semibold">Domicilio Fiscal:</span> {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
-                      <p className="mb-1"><span className="font-semibold">Nombre Comercial:</span> {company.nombreComercial}</p>
-                      <p className="mb-1"><span className="font-semibold">Objeto Social:</span> {company.objetoSocial}</p>
-                      <p className="mb-1"><span className="font-semibold">Representante Legal:</span> {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
-                      <p className="mb-1"><span className="font-semibold">Capital Social:</span> {company.capitalSocial}</p>
-                      <p className="mb-1"><span className="font-semibold">Registros IMSS:</span> {company.registrosImss}</p>
-                      <p className="mb-1"><span className="font-semibold">Registros Infonavit:</span> {company.registrosInfonavit}</p>
-                      <p className="mb-1"><span className="font-semibold">Actividad Económica:</span> {company.giroActividadEconomica}</p>
-                      <p className="mb-1"><span className="font-semibold">Certificaciones:</span> {company.certificaciones.join(", ")}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Razón Social:</span> {company.razonSocial}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">RFC:</span> {company.rfc}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Domicilio Fiscal:</span> {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Nombre Comercial:</span> {company.nombreComercial}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Objeto Social:</span> {company.objetoSocial}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Representante Legal:</span> {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Capital Social:</span> {company.capitalSocial}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Registros IMSS:</span> {company.registrosImss}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Registros Infonavit:</span> {company.registrosInfonavit}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Actividad Económica:</span> {company.giroActividadEconomica}</p>
+                      <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Certificaciones:</span> {company.certificaciones.join(", ")}</p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p>Ops... No has registrado ninguna empresa aún.</p>
+                <p className="text-zinc-900 dark:text-zinc-100">Ops... No has registrado ninguna empresa aún.</p>
               )}
             </div>
           ) : (
@@ -165,13 +165,13 @@ export default function ListCompany() {
                     <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`} className="absolute inset-0 z-10" prefetch={false}>
                       <span className="sr-only">Ver detalles</span>
                     </Link>
-                    <div className="p-4 bg-white flex-grow">
-                      <h3 className="text-xl font-bold mb-2">{company.name}</h3>
-                      <p className="text-sm mb-1">{company.razonSocial}</p>
-                      <p className="text-sm mb-1">{company.rfc}</p>
-                      <p className="text-sm mb-1">{company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+                    <div className="p-4 bg-white dark:bg-zinc-800 flex-grow">
+                      <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">{company.name}</h3>
+                      <p className="text-sm mb-1 text-zinc-700 dark:text-zinc-300">{company.razonSocial}</p>
+                      <p className="text-sm mb-1 text-zinc-700 dark:text-zinc-300">{company.rfc}</p>
+                      <p className="text-sm mb-1 text-zinc-700 dark:text-zinc-300">{company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
                     </div>
-                    <div className="p-4 bg-gray-100 flex justify-end gap-2">
+                    <div className="p-4 bg-gray-100 dark:bg-zinc-700 flex justify-end gap-2">
                       <Button variant="outline" size="sm">
                         <FilePenIcon className="h-4 w-4" />
                         <span className="sr-only">Editar</span>
@@ -180,7 +180,7 @@ export default function ListCompany() {
                   </div>
                 ))
               ) : (
-                <p>Ops... No has registrado ninguna empresa aún.</p>
+                <p className="text-zinc-900 dark:text-zinc-100">Ops... No has registrado ninguna empresa aún.</p>
               )}
             </div>
           )}
