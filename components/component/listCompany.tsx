@@ -111,7 +111,7 @@ export default function ListCompany() {
   }, [session]);
 
   return (
-    <div className="min-h-screen p-6 bg-white">
+    <div className="min-h-screen p-6">
       {!session && (
         <div className="flex flex-col items-center justify-center h-full">
           <Alert variant="destructive">You are not signed in</Alert>
