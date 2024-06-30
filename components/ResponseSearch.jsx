@@ -28,9 +28,9 @@ export default function ResponseSearch({ reviews }) {
                       </CardTitle>
                       <div className="flex items-center mt-2 md:mt-0">
                         {[...Array(rating)].map((_, index) => (
-                          <AiFillStar key={index} className="text-yellow-500 text-xl" />
+                          <AiFillStar key={index} className="text-yellow-500" />
                         ))}
-                      </div>1
+                      </div>
                     </CardHeader>
                     <CardContent className="p-0 mt-2">
                       <CardDescription className="text-sm text-zinc-600 dark:text-zinc-400">
