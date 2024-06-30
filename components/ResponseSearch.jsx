@@ -46,7 +46,7 @@ export default function ResponseSearch({ reviews }) {
                           )}
                         </Tooltip>
                       </div>
-                      <p className="text-sm mt-2">{company.name}</p>
+                      <p className="text-sm font-semibold mt-2">{company.name}</p>
                       <p className="text-sm mt-2">{new Date(createdAt).toLocaleDateString()}</p>
                     </CardContent>
                     <CardFooter className="p-0 mt-4">
