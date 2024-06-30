@@ -1,5 +1,5 @@
 import React from 'react';
-import DasboardSidebar from '@/components/component/dasboard-sidebar'; // Asegúrate de que la ruta sea correcta
+import DasboardSidebar from '@/components/component/dasboard-sidebar';   // Asegúrate de que la ruta sea correcta
 import DashboardNabvar from '@/components/component/dashboard-nabvar';
 import { authOptions } from '../api/(auth)/auth/[...nextauth]/authOptions';
 import { getServerSession } from 'next-auth';
