@@ -50,7 +50,7 @@ export default function ResponseSearch({ reviews }) {
                       <p className="text-sm mt-2">{new Date(createdAt).toLocaleDateString()}</p>
                     </CardContent>
                     <CardFooter className="p-0 mt-4">
-                      <Badge variant={positive ? "solid" : "outline"} className={positive ? "bg-green-500" : "bg-red-500"}>
+                      <Badge variant={positive ? "solid" : "outline"} className={positive ? "bg-green-600" : "bg-red-600"}>
                         {positive ? "Recomendado" : "No Recomendado"}
                       </Badge>
                     </CardFooter>
