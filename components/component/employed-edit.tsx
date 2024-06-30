@@ -163,8 +163,8 @@ export default function DashboardEmployedEdit() {
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
-      <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">Administrar Empleados</h1>
+      <div className="flex flex-col md:flex-row items-start justify-start mb-6">
+        <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
       {!employeeId ? (
         <div>
@@ -329,11 +329,12 @@ export default function DashboardEmployedEdit() {
           </div>
           {error && <div className="text-red-500 mb-4">{error}</div>}
           {success && <div className="text-green-500 mb-4">{success}</div>}
-
+          <div className="flex justify-end mt-4">           
           <Button type="submit">Actualizar</Button>
           <Link href="/tablero/empleados" className="ml-2">
             <Button type="button">Cancelar</Button>
           </Link>
+          </div>
         </form>
       )}
     </div>
