@@ -41,7 +41,7 @@ export default function Component() {
       <div className="container max-w-7xl px-4 md:px-6">
         <div className="space-y-6">
           <div className="text-center">
-            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl 2xl:text-9xl pt-24">HISTORIAL LABORAL</h1>
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl 2xl:text-9xl pt-24">Historial Laboral</h1>
             <p className="mt-3 text-xl text-zinc-500 dark:text-zinc-400 2xl:text-2xl">
               Encuentra el antecedente laboral de tus candidatos a través de su NSS.
             </p>
