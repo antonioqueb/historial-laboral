@@ -16,7 +16,6 @@ export default function ResponseSearch({ reviews }) {
   return (
     <TooltipProvider>
       <div className="w-full mt-6">
-        {/* Añadir margen superior */}
         <section className="p-4 w-full bg-white dark:bg-zinc-800 shadow-lg rounded-lg">
           <div className="flex flex-wrap gap-6">
             {reviews.map(({ id, title, description, rating, positive, company, createdAt }) => (
@@ -38,17 +37,17 @@ export default function ResponseSearch({ reviews }) {
                         {description}
                       </CardDescription>
                       <div className="flex items-center mt-2">
+                      <span className="text-sm">Positiva: {positive ? "Sí" : "No"}</span>
                         <Tooltip content={positive ? "Positiva" : "Negativa"}>
                           {positive ? (
-                            <AiOutlineCheckCircle className="text-green-500 mr-1" />
+                            <AiOutlineCheckCircle className="text-green-500 ml-1" />
                           ) : (
-                            <AiOutlineCloseCircle className="text-red-500 mr-1" />
+                            <AiOutlineCloseCircle className="text-red-500 ml-1" />
                           )}
                         </Tooltip>
-                        <span className="text-sm">Positiva: {positive ? "Sí" : "No"}</span>
                       </div>
-                      <p className="text-sm mt-2">Empresa: {company.name}</p>
-                      <p className="text-sm mt-2">Fecha: {new Date(createdAt).toLocaleDateString()}</p>
+                      <p className="text-sm mt-2">{company.name}</p>
+                      <p className="text-sm mt-2">{new Date(createdAt).toLocaleDateString()}</p>
                     </CardContent>
                     <CardFooter className="p-0 mt-4">
                       <Badge variant={positive ? "solid" : "outline"} className={positive ? "bg-green-500" : "bg-red-500"}>
