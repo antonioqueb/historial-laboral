@@ -28,38 +28,38 @@ export default function DashboardNavbar() {
   }, []);
 
   useEffect(() => {
-    if (pathname.startsWith('/dashboard/empleados')) {
+    if (pathname.startsWith('/tablero/empleados')) {
       setMenuOptions([
-        { label: 'Resumen', href: '/dashboard/empleados'},
-        { label: 'Administrar', href: '/dashboard/empleados/administrar' },
-        { label: 'Listar', href: '/dashboard/empleados/lista' },
-        { label: 'Historial', href: '/dashboard/empleados/historial' },
+        { label: 'Resumen', href: '/tablero/empleados'},
+        { label: 'Administrar', href: '/tablero/empleados/crear' },
+        { label: 'Listar', href: '/tablero/empleados/listar' },
+        { label: 'Historial', href: '/tablero/empleados/editar' },
       ]);
-    } else if (pathname.startsWith('/dashboard/ajustes')) {
+    } else if (pathname.startsWith('/tablero/ajustes')) {
       setMenuOptions([
-        { label: 'General', href: '/dashboard/ajustes' },
-        { label: 'Empresa', href: '/dashboard/ajustes/empresa' },
+        { label: 'General', href: '/tablero/ajustes' },
+        { label: 'Empresa', href: '/tablero/ajustes/empresa' },
       ]);
-    } else if (pathname.startsWith('/dashboard/menciones')) {
+    } else if (pathname.startsWith('/tablero/menciones')) {
       setMenuOptions([
-        { label: 'Moderar', href: '/dashboard/menciones' },
-        // { label: 'Buscar', href: '/dashboard/menciones/buscar' },
-        // { label: 'Informes', href: '/dashboard/menciones/informes' },
+        { label: 'Moderar', href: '/tablero/menciones' },
+        // { label: 'Buscar', href: '/tablero/menciones/buscar' },
+        // { label: 'Informes', href: '/tablero/menciones/informes' },
       ]);
-    } else if (pathname.startsWith('/dashboard/notificaciones')) {
+    } else if (pathname.startsWith('/tablero/notificaciones')) {
       setMenuOptions([
-        { label: 'Ajustes', href: '/dashboard/notificaciones' },
-        // { label: 'Categoría', href: '/dashboard/notificaciones/categorias' },
-        // { label: 'Historial', href: '/dashboard/notificaciones/historial' },
+        { label: 'Ajustes', href: '/tablero/notificaciones' },
+        // { label: 'Categoría', href: '/tablero/notificaciones/categorias' },
+        // { label: 'Historial', href: '/tablero/notificaciones/historial' },
       ]);
-    } else if (pathname.startsWith('/dashboard/reportes')) {
+    } else if (pathname.startsWith('/tablero/reportes')) {
       setMenuOptions([
-        { label: 'Generar Reporte', href: '/dashboard/reportes' }
+        { label: 'Generar Reporte', href: '/tablero/reportes' }
       ]);
-    } else if (pathname.startsWith('/dashboard')) {
+    } else if (pathname.startsWith('/tablero')) {
       setMenuOptions([
-        { label: 'Resumen', href: '/dashboard' },
-        { label: 'Análisis de Datos', href: '/dashboard/analisis' },
+        { label: 'Resumen', href: '/tablero' },
+        { label: 'Análisis de Datos', href: '/tablero/analisis' },
       ]);
     } else {
       setMenuOptions([
