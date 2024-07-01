@@ -67,7 +67,7 @@ export default function DashboardSidebar() {
       </div>
 
       {/* Bottom navigation for mobile */}
-      <div className="fixed inset-x-0 bottom-0 z-50 flex justify-around bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 md:hidden">
+      <div className="fixed inset-x-0 mt-10 bottom-0 z-50 flex justify-around bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 md:hidden">
         <Link href="/tablero" className={`flex flex-col items-center py-2 ${isActive(['/tablero']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
           <FaChartSimple className="h-6 w-6" />
           <span className="text-sm">Tablero</span>
