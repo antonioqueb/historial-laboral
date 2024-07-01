@@ -16,7 +16,8 @@ export default function DashboardSidebar() {
   };
 
   return (
-    <div className="fixed inset-y-0 left-0 z-50 flex flex-col min-h-screen max-w-[280px] dark:bg-zinc-900 transition-transform transform md:relative">
+    <>
+    <div className="fixed inset-y-0 left-0 z-50 flex flex-col min-h-screen lg:max-w-[280px] dark:bg-zinc-900 transition-transform transform md:relative">
       {/* Sidebar for desktop */}
       <div className={`fixed inset-y-0 left-0 z-50 flex flex-col min-h-screen max-w-[280px] dark:bg-zinc-900 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:relative`}>
         <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-200 dark:border-zinc-800">
@@ -64,8 +65,10 @@ export default function DashboardSidebar() {
           </ul>
         </nav>
       </div>
-      {/* Bottom navigation for mobile */}
-      <div className="fixed inset-x-0 bottom-0 z-50 flex justify-around bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 md:hidden">
+      
+    </div>
+    {/* Bottom navigation for mobile */}
+    <div className="fixed w-full inset-x-0 bottom-0 z-50 flex justify-around bg-white dark:bg-zinc-900 dark:border-zinc-800 md:hidden">
         <Link href="/tablero" className={`flex flex-col items-center py-2 ${isActive(['/tablero']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
           <FaChartSimple className="h-6 w-6" />
           <span className="text-sm">Tablero</span>
@@ -79,7 +82,7 @@ export default function DashboardSidebar() {
           <span className="text-sm">Empleados</span>
         </Link>
       </div>
-    </div>
+    </>
   );
 }
 
