@@ -97,7 +97,7 @@ export default function Component() {
   ];
 
   return (
-    <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-5">
+    <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-5 mb-14">
       {cardData.map(({ title, description, mainValue, subValue, icon }, index) => (
         <Card key={index} className="min-h-[500px] lg:min-h-[550px]">
           <div className="flex flex-col justify-between h-full">

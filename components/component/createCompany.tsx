@@ -94,7 +94,7 @@ export default function CreateCompany() {
   };
 
   return (
-    <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
+    <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8 mb-14">
       {!session && (
         <div className="text-center">
           <p className="text-lg font-medium text-black">You are not signed in</p>

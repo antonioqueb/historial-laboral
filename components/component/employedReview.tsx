@@ -107,7 +107,7 @@ export default function DashboardEmployedReview() {
   };
 
   return (
-    <div className="w-full mx-auto px-4 md:px-6 py-12">
+    <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
       <div className="flex flex-col md:flex-row items-start justify-between mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Dejar una Reseña</h1>
       </div>

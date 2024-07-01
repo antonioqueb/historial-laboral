@@ -46,7 +46,7 @@ export default function DashboardEmployedList() {
   }, [selectedCompany]);
 
   return (
-    <div className="w-full mx-auto px-4 md:px-6 py-12">
+    <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Empleados</h1>
       </div>

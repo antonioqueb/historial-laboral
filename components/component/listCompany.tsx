@@ -119,7 +119,7 @@ export default function ListCompany() {
       )}
       {session && (
         <div>
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-14">
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
               {companies.length > 1 ? "Empresas" : "Empresa"}
             </h1>
