@@ -36,7 +36,7 @@ export default function DashboardSidebar() {
             )}
           </button>
         </div>
-        <nav className="flex-1 overflow-y-auto">
+        <nav className="flex-1">
           <ul className="grid gap-4 p-4">
             <li>
               <Link
@@ -65,24 +65,9 @@ export default function DashboardSidebar() {
           </ul>
         </nav>
       </div>
-
-      {/* Bottom navigation for mobile */}
-      <div className="fixed inset-x-0 mt-10 bottom-0 z-50 flex justify-around bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 md:hidden">
-        <Link href="/tablero" className={`flex flex-col items-center py-2 ${isActive(['/tablero']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
-          <FaChartSimple className="h-6 w-6" />
-          <span className="text-sm">Tablero</span>
-        </Link>
-        <Link href="/tablero/empresas" className={`flex flex-col items-center py-2 ${isActive(['/tablero/empresas/crear', '/tablero/empresas/listar']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
-          <FaStore className="h-6 w-6" />
-          <span className="text-sm">Empresa</span>
-        </Link>
-        <Link href="/tablero/empleados" className={`flex flex-col items-center py-2 ${isActive(['/tablero/empleados', '/tablero/empleados/administrar', '/tablero/empleados/lista', '/tablero/empleados/historial']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
-          <FaIdCard className="h-6 w-6" />
-          <span className="text-sm">Empleados</span>
-        </Link>
-      </div>
     </div>
-  );
+  ); 
+  
 }
 
 function MountainIcon(props) {
