@@ -8,6 +8,8 @@ import ModeToggle from '@/components/ModeToggle';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { FaBars } from "react-icons/fa";
+import { RiArrowDownWideLine } from "react-icons/ri";
+
 
 export default function DashboardNavbar() {
   const { data: session } = useSession();
@@ -103,10 +105,10 @@ export default function DashboardNavbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center justify-center w-10 h-10 rounded-full">
-                <FaBars className="w-6 h-6 text-zinc-700 dark:text-zinc-100" />
+                <RiArrowDownWideLine className="w-6 h-6 text-zinc-700 dark:text-zinc-100" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent classNam="mx-4">
               {menuOptions.map((option, index) => (
                 <DropdownMenuItem key={index}>
                   <Link href={option.href} className="w-full">
