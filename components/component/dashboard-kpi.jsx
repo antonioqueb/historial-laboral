@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { getEmployeesList, getCompaniesList, getUserId } from '@/utils/fetchData';
 import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
