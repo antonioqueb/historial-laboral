@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaStore } from "react-icons/fa";
-import { FaIdCard } from "react-icons/fa";
+import { FaStore, FaIdCard } from "react-icons/fa";
 import { FaChartSimple } from "react-icons/fa6";
 
 export default function DashboardSidebar() {
@@ -18,53 +17,70 @@ export default function DashboardSidebar() {
   };
 
   return (
-    <div className={`fixed inset-y-0 left-0 z-50 flex flex-col h-screen max-w-[280px]  dark:bg-zinc-900 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
-      <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-200 dark:border-zinc-800">
-        <Link className="ml-3 flex items-center gap-2 font-semibold text-lg md:text-xl" href="/">
-          <MountainIcon className="h-8 w-8 md:h-10 md:w-10" />
-          {/* <span className="sr-only">Acme Inc</span> */}
-        </Link>
-        <button className="md:hidden" onClick={toggleSidebar}>
-          {isOpen ? (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
-            </svg>
-          )}
-        </button>
+    <div className="md:relative md:w-64">
+      {/* Sidebar for desktop */}
+      <div className={`fixed inset-y-0 left-0 z-50 flex flex-col h-screen max-w-[280px] dark:bg-zinc-900 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:relative`}>
+        <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-200 dark:border-zinc-800">
+          <Link className="ml-3 flex items-center gap-2 font-semibold text-lg md:text-xl" href="/">
+            <MountainIcon className="h-8 w-8 md:h-10 md:w-10" />
+          </Link>
+          <button className="md:hidden" onClick={toggleSidebar}>
+            {isOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            )}
+          </button>
+        </div>
+        <nav className="flex-1 overflow-y-auto">
+          <ul className="grid gap-4 p-4">
+            <li>
+              <Link
+                className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
+                href="/tablero">
+                <FaChartSimple className="h-6 w-6 md:h-8 md:w-8" />
+                Tablero
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero/empresas/crear', '/tablero/empresas/listar']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
+                href="/tablero/empresas">
+                <FaStore className="h-6 w-6 md:h-8 md:w-8" />
+                Empresa
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero/empleados', '/tablero/empleados/administrar', '/tablero/empleados/lista', '/tablero/empleados/historial']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
+                href="/tablero/empleados">
+                <FaIdCard className="h-6 w-6 md:h-8 md:w-8" />
+                Empleados
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
-      <nav className="flex-1 overflow-y-auto">
-        <ul className="grid gap-4 p-4">
-        <li>
-            <Link
-              className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
-              href="/tablero">
-              <FaChartSimple className="h-6 w-6 md:h-8 md:w-8" />
-              Tablero
-            </Link>
-          </li>
-          <li>
-            <Link
-              className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero/empresas/crear', '/tablero/empresas/listar']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
-              href="/tablero/empresas">
-              <FaStore className="h-6 w-6 md:h-8 md:w-8" />
-              Empresa
-            </Link>
-          </li>
-          <li>
-            <Link
-              className={`flex items-center gap-4 rounded-md px-4 py-3 text-lg font-medium transition-colors ${isActive(['/tablero/empleados', '/tablero/empleados/administrar', '/tablero/empleados/lista', '/tablero/empleados/historial']) ? 'text-primary bg-primary/10' : 'text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50'}`}
-              href="/tablero/empleados">
-              <FaIdCard className="h-6 w-6 md:h-8 md:w-8" />
-              Empleados
-            </Link>
-          </li>
-      
-        </ul>
-      </nav>
+
+      {/* Bottom navigation for mobile */}
+      <div className="fixed inset-x-0 bottom-0 z-50 flex justify-around bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 md:hidden">
+        <Link href="/tablero" className={`flex flex-col items-center py-2 ${isActive(['/tablero']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
+          <FaChartSimple className="h-6 w-6" />
+          <span className="text-sm">Tablero</span>
+        </Link>
+        <Link href="/tablero/empresas" className={`flex flex-col items-center py-2 ${isActive(['/tablero/empresas/crear', '/tablero/empresas/listar']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
+          <FaStore className="h-6 w-6" />
+          <span className="text-sm">Empresa</span>
+        </Link>
+        <Link href="/tablero/empleados" className={`flex flex-col items-center py-2 ${isActive(['/tablero/empleados', '/tablero/empleados/administrar', '/tablero/empleados/lista', '/tablero/empleados/historial']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
+          <FaIdCard className="h-6 w-6" />
+          <span className="text-sm">Empleados</span>
+        </Link>
+      </div>
     </div>
   );
 }
