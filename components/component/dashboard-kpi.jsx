@@ -1,6 +1,5 @@
-'use client';
 import { useState, useEffect } from 'react';
-import { getEmployeesList, getCompaniesList } from '@/utils/fetchData';
+import { getEmployeesList, getCompaniesList, getUserId } from '@/utils/fetchData';
 import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
 
 // Iconos
@@ -98,14 +97,22 @@ const StarIcons = ({ count }) => (
 export default function Component() {
   const [employees, setEmployees] = useState([]);
   const [companies, setCompanies] = useState([]);
-  
+  const [userId, setUserId] = useState('');
+
   useEffect(() => {
     async function fetchData() {
       try {
-        const employeesData = await getEmployeesList();
+        const user = await getUserId();
+        setUserId(user.id);
+
         const companiesData = await getCompaniesList();
-        setEmployees(employeesData.employees);
         setCompanies(companiesData.companies);
+
+        const employeesData = await getEmployeesList();
+        const filteredEmployees = employeesData.employees.filter(employee => 
+          companiesData.companies.some(company => company.userId === user.id && company.id === employee.companyId)
+        );
+        setEmployees(filteredEmployees);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
