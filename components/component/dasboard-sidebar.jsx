@@ -19,7 +19,7 @@ export default function DashboardSidebar() {
   return (
     <div className="md:relative md:w-64">
       {/* Sidebar for desktop */}
-      <div className={`fixed inset-y-0 left-0 z-50 flex flex-col h-screen max-w-[280px] dark:bg-zinc-900 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:relative`}>
+      <div className={`fixed inset-y-0 left-0 z-50 flex flex-col min-h-screen max-w-[280px] dark:bg-zinc-900 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:relative`}>
         <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-200 dark:border-zinc-800">
           <Link className="ml-3 flex items-center gap-2 font-semibold text-lg md:text-xl" href="/">
             <MountainIcon className="h-8 w-8 md:h-10 md:w-10" />

@@ -8,9 +8,9 @@ const LayoutDashboard = async ({ children }) => {
   const session = await getServerSession(authOptions);
   if (session) {
     return (
-      <div className="flex">
+      <div className="flex min-h-screen">
         <DasboardSidebar />
-        <div className="flex-1 flex flex-col min-h-screen">
+        <div className="flex-1 flex flex-col">
           <DashboardNabvar className="sticky top-0 w-full z-50" />
           <main className="flex-1">
             {children}
@@ -19,11 +19,10 @@ const LayoutDashboard = async ({ children }) => {
       </div>
     );
   }
-  // return null;
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <DasboardSidebar />
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col">
         <DashboardNabvar className="sticky top-0 w-full z-50" />
         <main className="flex-1">
           {children}
