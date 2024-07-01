@@ -10,7 +10,6 @@ import Image from 'next/image';
 import { FaBars } from "react-icons/fa";
 import { RiArrowDownWideLine } from "react-icons/ri";
 
-
 export default function DashboardNavbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
@@ -108,7 +107,7 @@ export default function DashboardNavbar() {
                 <RiArrowDownWideLine className="w-6 h-6 text-zinc-700 dark:text-zinc-100" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent classNam="mx-4">
+            <DropdownMenuContent className="mx-4">  {/* Aquí se agrega la clase mx-4 */}
               {menuOptions.map((option, index) => (
                 <DropdownMenuItem key={index}>
                   <Link href={option.href} className="w-full">
