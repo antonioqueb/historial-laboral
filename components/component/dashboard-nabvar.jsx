@@ -108,10 +108,10 @@ export default function DashboardNavbar() {
                 <RiArrowDownWideLine className="w-6 h-6 text-zinc-700 dark:text-zinc-100" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-screen h-1/2 fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 overflow-y-auto">
+            <DropdownMenuContent classNam="mx-4">
               {menuOptions.map((option, index) => (
                 <DropdownMenuItem key={index}>
-                  <Link href={option.href} className="w-full block p-4">
+                  <Link href={option.href} className="w-full">
                     {option.label}
                   </Link>
                 </DropdownMenuItem>
