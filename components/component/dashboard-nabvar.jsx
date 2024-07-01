@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import ModeToggle from '@/components/ModeToggle';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { FaBars } from "react-icons/fa";
 import { RiArrowDownWideLine } from "react-icons/ri";
 
 export default function DashboardNavbar() {

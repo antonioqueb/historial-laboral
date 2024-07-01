@@ -8,15 +8,25 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
 
-interface Company {
-  id: string;
-  razonSocial: string;
-}
-
-interface Employee {
+export interface Company {
   id: string;
   name: string;
+  userId: string;
+  razonSocial: string;
+  rfc: string;
+ 
 }
+
+export interface Employee {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  description: string;
+  companyId: string;
+
+}
+
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
@@ -58,12 +68,28 @@ export default function DashboardEmployedEdit() {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCompanies = async () => {
+    const fetchUserId = async () => {
       try {
-        const res = await fetch('/api/listCompanies');
+        const res = await fetch('https://historiallaboral.com/api/getUserId');
         if (res.ok) {
           const data = await res.json();
-          setCompanies(data.companies);
+          return data.id;
+        } else {
+          setError('Failed to fetch user ID');
+        }
+      } catch (err) {
+        setError('Failed to fetch user ID');
+      }
+    };
+
+    const fetchCompanies = async (userId: string) => {
+      try {
+        const res = await fetch('https://historiallaboral.com/api/listCompanies');
+        if (res.ok) {
+          const data = await res.json();
+          const userCompanies = data.companies.filter((company: Company) => company.userId === userId);
+          setCompanies(userCompanies);
+          return userCompanies;
         } else {
           setError('Failed to fetch companies');
         }
@@ -72,9 +98,9 @@ export default function DashboardEmployedEdit() {
       }
     };
 
-    const fetchEmployees = async () => {
+    const fetchEmployeesByCompanyRFC = async (rfc: string) => {
       try {
-        const res = await fetch('https://historiallaboral.com/api/listAllEmployees');
+        const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
         if (res.ok) {
           const data = await res.json();
           setEmployees(data.employees);
@@ -86,13 +112,22 @@ export default function DashboardEmployedEdit() {
       }
     };
 
-    fetchCompanies();
-    fetchEmployees();
+    const initializeData = async () => {
+      const userId = await fetchUserId();
+      if (userId) {
+        const userCompanies = await fetchCompanies(userId);
+        if (userCompanies.length > 0) {
+          await fetchEmployeesByCompanyRFC(userCompanies[0].rfc);
+        }
+      }
+    };
+
+    initializeData();
 
     if (employeeId) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch('https://historiallaboral.com/api/listAllEmployees');
+          const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${employeeId}`);
           if (res.ok) {
             const data = await res.json();
             const employee = data.employees.find((emp: any) => emp.id === employeeId);
@@ -339,5 +374,4 @@ export default function DashboardEmployedEdit() {
       )}
     </div>
   );
-  
 }
