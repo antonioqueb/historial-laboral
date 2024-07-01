@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import ModeToggle from '@/components/ModeToggle';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { FaBars } from "react-icons/fa";
 
 export default function DashboardNavbar() {
   const { data: session } = useSession();
@@ -26,17 +27,16 @@ export default function DashboardNavbar() {
     };
   }, []);
 
-
-useEffect(() => {
+  useEffect(() => {
     // Sección para el path '/tablero/empleados'
     if (pathname.startsWith('/tablero/empleados')) {
       setMenuOptions([
-        { label: 'Empleados', href: '/tablero/empleados'},
+        { label: 'Empleados', href: '/tablero/empleados' },
         { label: 'Crear', href: '/tablero/empleados/crear' },
         { label: 'Editar', href: '/tablero/empleados/editar' },
-        { label: 'Recomendar', href: '/tablero/empleados/recomendar'}
+        { label: 'Recomendar', href: '/tablero/empleados/recomendar' }
       ]);
-    } 
+    }
 
     // Sección para el path '/tablero/empresas/listar'
     else if (pathname.startsWith('/tablero/empresas')) {
@@ -45,7 +45,7 @@ useEffect(() => {
         { label: 'Registrar', href: '/tablero/empresas/crear' },
         { label: 'Editar', href: '/tablero/empresas/editar' }
       ]);
-    } 
+    }
 
     // Sección para el path '/tablero/ajustes'
     else if (pathname.startsWith('/tablero/ajustes')) {
@@ -53,14 +53,14 @@ useEffect(() => {
         { label: 'General', href: '/tablero/ajustes' },
         { label: 'Empresa', href: '/tablero/ajustes/empresa' },
       ]);
-    } 
-    
+    }
+
     // Sección para el path '/tablero'
     else if (pathname.startsWith('/tablero')) {
       setMenuOptions([
         { label: 'Resumen', href: '/tablero' },
       ]);
-    } 
+    }
 
     // Sección para cualquier otro path
     else {
@@ -71,7 +71,6 @@ useEffect(() => {
       ]);
     }
   }, [pathname]);
-
 
   const handleImageError = () => {
     setImageError(true);
@@ -89,7 +88,6 @@ useEffect(() => {
   return (
     <header className={`sticky top-0 z-50 flex items-center justify-between h-16 px-4 md:px-6 w-full transition-all duration-300 ${isScrolled ? 'backdrop-blur-md' : ''}`}>
       <div className="flex items-center">
-      
         <nav className="hidden md:flex space-x-4">
           {menuOptions.map((option, index) => (
             <Link
@@ -101,9 +99,26 @@ useEffect(() => {
             </Link>
           ))}
         </nav>
+        <div className="md:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center justify-center w-10 h-10 rounded-full">
+                <FaBars className="w-6 h-6 text-zinc-700 dark:text-zinc-100" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {menuOptions.map((option, index) => (
+                <DropdownMenuItem key={index}>
+                  <Link href={option.href} className="w-full">
+                    {option.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="flex items-center gap-4">
-       
         <ModeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -159,7 +174,6 @@ useEffect(() => {
     </header>
   );
 }
-
 
 function LogOutIcon(props) {
   return (
