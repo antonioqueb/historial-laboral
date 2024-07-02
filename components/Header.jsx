@@ -8,21 +8,14 @@ import { useState } from "react";
 import Image from "next/image";
 import Login from '@/components/Login';
 
-
 export default function Header() {
   const [imageError, setImageError] = useState(false);
   const { data: session } = useSession();
   console.log(session); // Verifica que la sesión contenga el ID del usuario
 
-
   const handleImageError = () => {
     setImageError(true);
   };
-
-  // const getFirstNameAndSurname = (name) => {
-  //   const names = name.split(' ');
-  //   return `${names[0]} ${names[1]}`;
-  // };
 
   return (
     <header className="flex h-16 w-full items-center justify-between px-4 md:px-6">
@@ -34,6 +27,7 @@ export default function Header() {
           <div className="flex items-center gap-2">
             {imageError || !session.user.image ? (
               <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
+                {session.user.name.charAt(0)}
               </div>
             ) : (
               <Image
@@ -46,24 +40,18 @@ export default function Header() {
               />
             )}
           </div>
-        ) : (
-          null
-        )}
+        ) : null}
 
         <Button className="rounded-full" size="icon" variant="ghost">
           <ModeToggle />
         </Button>
-        {!session && (
-          <>
-      
-            {/* <Button>
-              <Link href="/login">Comenzar</Link>
-            </Button> */}
-            <Login />
-          </>
-        )}
+
+        <Button>
+          <Link href={session ? "/tablero" : "/login"}>
+            {session ? "Tablero" : "Comenzar"}
+          </Link>
+        </Button>
       </div>
     </header>
   );
 }
-
