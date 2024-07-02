@@ -107,5 +107,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
+    newUser: '/', // Redirigir a esta página después del registro
+  },
   },
 };
