@@ -25,7 +25,20 @@ export default function Header() {
       <div className="flex items-center gap-4">
         {session ? (
           <div className="flex items-center gap-2">
-            {imageError || !session.user.image ? (
+          
+            <Button>
+              <Link href="/tablero">Tablero</Link>
+            </Button>
+          </div>
+        ) : (
+          <>
+            <Login />
+          </>
+        )}
+        <Button className="rounded-full" size="icon" variant="ghost">
+          <ModeToggle />
+        </Button>
+        {imageError || !session.user.image ? (
               <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
                 {session.user.name.charAt(0)}
               </div>
@@ -39,18 +52,6 @@ export default function Header() {
                 onError={handleImageError}
               />
             )}
-          </div>
-        ) : null}
-
-        <Button className="rounded-full" size="icon" variant="ghost">
-          <ModeToggle />
-        </Button>
-
-        <Button>
-          <Link href={session ? "/tablero" : "/login"}>
-            {session ? "Tablero" : "Comenzar"}
-          </Link>
-        </Button>
       </div>
     </header>
   );
