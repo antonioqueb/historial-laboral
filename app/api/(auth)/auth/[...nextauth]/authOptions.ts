@@ -105,9 +105,11 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-     newUser: '/', // Redirigir a esta página después del registro
+    // signIn: '/auth/signin',
+    signIn: '/tablero',
+    // signOut: '/auth/signout',
+    signOut: '/',
+    newUser: '/tablero', // Redirigir a esta página después del registro
 
   },
 };
