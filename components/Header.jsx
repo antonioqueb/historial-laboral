@@ -25,7 +25,20 @@ export default function Header() {
       <div className="flex items-center gap-4">
         {session ? (
           <div className="flex items-center gap-2">
-          
+            {imageError || !session.user?.image ? (
+              <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
+                {session.user?.name?.charAt(0)}
+              </div>
+            ) : (
+              <Image
+                src={session.user.image}
+                alt="Avatar"
+                width={40}
+                height={40}
+                className="rounded-full"
+                onError={handleImageError}
+              />
+            )}
             <Button>
               <Link href="/tablero">Tablero</Link>
             </Button>
@@ -38,20 +51,6 @@ export default function Header() {
         <Button className="rounded-full" size="icon" variant="ghost">
           <ModeToggle />
         </Button>
-        {imageError || !session.user.image ? (
-              <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
-                {session.user.name.charAt(0)}
-              </div>
-            ) : (
-              <Image
-                src={session.user.image}
-                alt="Avatar"
-                width={40}
-                height={40}
-                className="rounded-full"
-                onError={handleImageError}
-              />
-            )}
       </div>
     </header>
   );
