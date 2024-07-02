@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { getCompaniesList, createEmployee, Company } from "@/utils/fetchData";
+import { getCompaniesList, createEmployee, Company, uploadEmployeeFiles } from "@/utils/fetchData";
 
 // Definición de tipos para los datos esperados
 interface FormData {
@@ -71,6 +71,7 @@ export default function DashboardEmployedAdmin() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
 
   // Función para cargar las compañías
   const loadCompanies = async () => {
@@ -97,6 +98,12 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
+  const handleAdditionalFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setAdditionalFiles(Array.from(e.target.files));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -112,6 +119,12 @@ export default function DashboardEmployedAdmin() {
 
     const result = await createEmployee(form);
     if (result.success) {
+      if (formData.RFC && additionalFiles.length > 0) {
+        const uploadResult = await uploadEmployeeFiles(formData.RFC, additionalFiles);
+        if (!uploadResult.success) {
+          setError(uploadResult.error ?? 'Error al subir archivos adicionales');
+        }
+      }
       setSuccess('Empleado creado exitosamente');
       setFormData({
         name: '',
@@ -141,6 +154,7 @@ export default function DashboardEmployedAdmin() {
         contractType: '',
         profileImage: null,
       });
+      setAdditionalFiles([]);
     } else {
       setError(result.error ?? null);
     }
@@ -290,6 +304,10 @@ export default function DashboardEmployedAdmin() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="profileImage">Foto de Perfil</Label>
               <Input type="file" id="profileImage" name="profileImage" onChange={handleFileChange} />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+              <Label htmlFor="additionalFiles">Archivos Adicionales</Label>
+              <Input type="file" id="additionalFiles" name="additionalFiles" onChange={handleAdditionalFilesChange} multiple />
             </div>
           </div>
         </div>

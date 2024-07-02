@@ -78,6 +78,36 @@ export interface Review {
 }
 
 
+
+
+// Función para cargar archivos de empleados por RFC
+export async function uploadEmployeeFiles(rfc: string, files: File[]): Promise<{ success: boolean; error?: string }> {
+  const formData = new FormData();
+  formData.append('rfc', rfc);
+  files.forEach(file => {
+    formData.append('files', file);
+  });
+
+  try {
+    const response = await fetch('https://server-file-by-rfc.historiallaboral.com/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      return { success: true };
+    } else {
+      const data = await response.json();
+      return { success: false, error: data.error || 'Error al subir los archivos' };
+    }
+  } catch (error) {
+    console.error("Error de conexión:", error);
+    return { success: false, error: 'Error de conexión' };
+  }
+}
+
+
+
 // Función para obtener la lista de compañías por RFC
 export async function getCompaniesRFC(): Promise<{ rfcs: string[] }> {
   try {

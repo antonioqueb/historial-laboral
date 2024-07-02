@@ -76,7 +76,9 @@ model Employee {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   reviewsReceived      Review[] // Relación con las reviews que ha recibido este empleado
+  uploadedFiles        String[] @default([]) // Añadido: lista de archivos subidos
 }
+
 
 
 model Review {
