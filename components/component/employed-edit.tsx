@@ -48,7 +48,7 @@ export interface Employee {
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [employeeRFC, setEmployeeRFC] = useState<string | undefined>(undefined);
+  const [employeeId, setEmployeeId] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [formData, setFormData] = useState({
     id: '',
@@ -143,20 +143,29 @@ export default function DashboardEmployedEdit() {
   }, []);
 
   useEffect(() => {
-    if (employeeRFC) {
-      const selectedEmployee = employees.find(emp => emp.RFC === employeeRFC);
-      if (selectedEmployee) {
-        setFormData({
-          ...selectedEmployee,
-          birthDate: selectedEmployee.birthDate ? new Date(selectedEmployee.birthDate).toISOString().split('T')[0] : '',
-          hireDate: selectedEmployee.hireDate ? new Date(selectedEmployee.hireDate).toISOString().split('T')[0] : '',
-          profileImage: null,
-        });
-      } else {
-        setError('Empleado no encontrado');
-      }
+    if (employeeId) {
+      const fetchEmployee = async () => {
+        try {
+          const res = await fetch(`/api/getEmployeeById?id=${employeeId}`);
+          if (res.ok) {
+            const employee = await res.json();
+            setFormData({
+              ...employee,
+              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+              profileImage: null,
+            });
+          } else {
+            setError('Failed to fetch employee data');
+          }
+        } catch (err) {
+          setError('Failed to fetch employee data');
+        }
+      };
+
+      fetchEmployee();
     }
-  }, [employeeRFC, employees]);
+  }, [employeeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -208,18 +217,18 @@ export default function DashboardEmployedEdit() {
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
-      {!employeeRFC ? (
+      {!employeeId ? (
         <div>
           <Label className="mb-2" htmlFor="employee">
             Seleccionar Empleado
           </Label>
-          <Select value={employeeRFC ?? undefined} onValueChange={(value) => setEmployeeRFC(value)} required>
+          <Select value={employeeId ?? undefined} onValueChange={(value) => setEmployeeId(value)} required>
             <SelectTrigger>
               <SelectValue placeholder="Seleccionar empleado" />
             </SelectTrigger>
             <SelectContent>
               {employees.map((employee) => (
-                <SelectItem key={employee.RFC} value={employee.RFC}>
+                <SelectItem key={employee.id} value={employee.id}>
                   {employee.name}
                 </SelectItem>
               ))}
