@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -8,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
-import { uploadEmployeeFiles } from "@/utils/fetchData";
 
 export interface Company {
   id: string;
@@ -16,6 +14,7 @@ export interface Company {
   userId: string;
   razonSocial: string;
   rfc: string;
+ 
 }
 
 export interface Employee {
@@ -25,7 +24,9 @@ export interface Employee {
   department: string;
   description: string;
   companyId: string;
+
 }
+
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
@@ -61,7 +62,6 @@ export default function DashboardEmployedEdit() {
     contractType: '',
     profileImage: null as File | null,
   });
-  const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
 
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -165,12 +165,6 @@ export default function DashboardEmployedEdit() {
     }
   };
 
-  const handleAdditionalFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setAdditionalFiles(Array.from(e.target.files));
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -191,12 +185,6 @@ export default function DashboardEmployedEdit() {
       });
 
       if (response.ok) {
-        if (formData.RFC && additionalFiles.length > 0) {
-          const uploadResult = await uploadEmployeeFiles(formData.RFC, additionalFiles);
-          if (!uploadResult.success) {
-            setError(uploadResult.error ?? 'Error al subir archivos adicionales');
-          }
-        }
         setSuccess('Empleado actualizado exitosamente');
         router.push('/tablero/empleados/editar'); // Redireccionar a la lista de empleados
       } else {
@@ -372,19 +360,15 @@ export default function DashboardEmployedEdit() {
                 <Label htmlFor="profileImage">Foto de Perfil</Label>
                 <Input type="file" id="profileImage" name="profileImage" onChange={handleFileChange} />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="additionalFiles">Archivos Adicionales</Label>
-                <Input type="file" id="additionalFiles" name="additionalFiles" onChange={handleAdditionalFilesChange} multiple />
-              </div>
             </div>
           </div>
           {error && <div className="text-red-500 mb-4">{error}</div>}
           {success && <div className="text-green-500 mb-4">{success}</div>}
           <div className="flex justify-end mt-4">           
-            <Button type="submit">Actualizar</Button>
-            <Link href="/tablero/empleados" className="ml-2">
-              <Button type="button">Cancelar</Button>
-            </Link>
+          <Button type="submit">Actualizar</Button>
+          <Link href="/tablero/empleados" className="ml-2">
+            <Button type="button">Cancelar</Button>
+          </Link>
           </div>
         </form>
       )}
