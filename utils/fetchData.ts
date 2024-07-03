@@ -183,17 +183,7 @@ export async function getEmployeesList(): Promise<{ employees: Employee[] }> {
   }
 }
 
-// Función para obtener los datos de un empleado por su ID
-export async function getEmployeeById(employeeId: string): Promise<Employee | null> {
-  try {
-    const response = await fetch(`/api/getEmployee/${employeeId}`);
-    const data = await response.json();
-    return data.employee || null;
-  } catch (error) {
-    console.error("Error al obtener los datos del empleado:", error);
-    return null;
-  }
-}
+
 
 // Función para editar un empleado
 export async function editEmployee(form: FormData): Promise<{ success: boolean; error?: string }> {
@@ -325,5 +315,22 @@ export async function getReviewsByNSS(nss: string): Promise<{ reviews: Review[] 
   } catch (error) {
     console.error("Error al obtener las reseñas:", error);
     return { reviews: [] };
+  }
+}
+
+
+// Función para obtener los datos de un empleado por su RFC
+export async function getEmployeeByRfc(rfc: string): Promise<Employee | null> {
+  try {
+    const response = await fetch(`/api/getEmployeeByRfc?rfc=${rfc}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data.employee || null;
+    } else {
+      throw new Error('Failed to fetch employee data');
+    }
+  } catch (error) {
+    console.error("Error al obtener los datos del empleado:", error);
+    return null;
   }
 }

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
-import { uploadEmployeeFiles } from "@/utils/fetchData";
+import { uploadEmployeeFiles, getUserId } from "@/utils/fetchData";
 
 export interface Company {
   id: string;
@@ -25,12 +25,33 @@ export interface Employee {
   department: string;
   description: string;
   companyId: string;
+  socialSecurityNumber: string;
+  CURP: string;
+  RFC: string;
+  address: string;
+  phoneNumber: string;
+  email: string;
+  birthDate: Date;
+  hireDate: Date;
+  emergencyContact: string;
+  emergencyPhone: string;
+  bankAccountNumber: string;
+  clabeNumber: string;
+  maritalStatus: string;
+  nationality: string;
+  educationLevel: string;
+  gender: string;
+  bloodType: string;
+  jobTitle: string;
+  workShift: string;
+  contractType: string;
+  profileImageUrl?: string;
 }
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [employeeId, setEmployeeId] = useState<string | undefined>(undefined);
+  const [employeeRFC, setEmployeeRFC] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [formData, setFormData] = useState({
     id: '',
@@ -62,7 +83,6 @@ export default function DashboardEmployedEdit() {
     profileImage: null as File | null,
   });
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
-
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -124,10 +144,10 @@ export default function DashboardEmployedEdit() {
 
     initializeData();
 
-    if (employeeId) {
+    if (employeeRFC) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`/api/getEmployeeById?id=${employeeId}`);
+          const res = await fetch(`/api/getEmployeeByRfc?rfc=${employeeRFC}`);
           if (res.ok) {
             const data = await res.json();
             const employee = data.employee;
@@ -149,7 +169,7 @@ export default function DashboardEmployedEdit() {
 
       fetchEmployee();
     }
-  }, [employeeId]);
+  }, [employeeRFC]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -213,18 +233,18 @@ export default function DashboardEmployedEdit() {
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
-      {!employeeId ? (
+      {!employeeRFC ? (
         <div>
           <Label className="mb-2" htmlFor="employee">
             Seleccionar Empleado
           </Label>
-          <Select value={employeeId ?? undefined} onValueChange={(value) => setEmployeeId(value)} required>
+          <Select value={employeeRFC ?? undefined} onValueChange={(value) => setEmployeeRFC(value)} required>
             <SelectTrigger>
               <SelectValue placeholder="Seleccionar empleado" />
             </SelectTrigger>
             <SelectContent>
               {employees.map((employee) => (
-                <SelectItem key={employee.id} value={employee.id}>
+                <SelectItem key={employee.RFC} value={employee.RFC}>
                   {employee.name}
                 </SelectItem>
               ))}
