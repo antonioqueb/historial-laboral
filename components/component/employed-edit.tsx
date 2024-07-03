@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -8,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
-import { uploadEmployeeFiles, getUserId, getEmployeeByRfc } from "@/utils/fetchData";
 
 export interface Company {
   id: string;
@@ -16,6 +14,7 @@ export interface Company {
   userId: string;
   razonSocial: string;
   rfc: string;
+ 
 }
 
 export interface Employee {
@@ -25,33 +24,14 @@ export interface Employee {
   department: string;
   description: string;
   companyId: string;
-  socialSecurityNumber: string;
-  CURP: string;
-  RFC: string;
-  address: string;
-  phoneNumber: string;
-  email: string;
-  birthDate: Date;
-  hireDate: Date;
-  emergencyContact: string;
-  emergencyPhone: string;
-  bankAccountNumber: string;
-  clabeNumber: string;
-  maritalStatus: string;
-  nationality: string;
-  educationLevel: string;
-  gender: string;
-  bloodType: string;
-  jobTitle: string;
-  workShift: string;
-  contractType: string;
-  profileImageUrl?: string;
+
 }
+
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [employeeRFC, setEmployeeRFC] = useState<string | undefined>(undefined);
+  const [employeeId, setEmployeeId] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [formData, setFormData] = useState({
     id: '',
@@ -82,7 +62,7 @@ export default function DashboardEmployedEdit() {
     contractType: '',
     profileImage: null as File | null,
   });
-  const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
+
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -144,18 +124,21 @@ export default function DashboardEmployedEdit() {
 
     initializeData();
 
-    if (employeeRFC) {
+    if (employeeId) {
       const fetchEmployee = async () => {
         try {
-          const res = await getEmployeeByRfc(employeeRFC);
-          if (res) {
-            const employee = res;
-            setFormData({
-              ...employee,
-              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
-              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
-              profileImage: null,
-            });
+          const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${employeeId}`);
+          if (res.ok) {
+            const data = await res.json();
+            const employee = data.employees.find((emp: any) => emp.id === employeeId);
+            if (employee) {
+              setFormData({
+                ...employee,
+                birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+                hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+                profileImage: null,
+              });
+            }
           } else {
             setError('Failed to fetch employee data');
           }
@@ -166,7 +149,7 @@ export default function DashboardEmployedEdit() {
 
       fetchEmployee();
     }
-  }, [employeeRFC]);
+  }, [employeeId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -179,12 +162,6 @@ export default function DashboardEmployedEdit() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormData({ ...formData, profileImage: e.target.files[0] });
-    }
-  };
-
-  const handleAdditionalFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setAdditionalFiles(Array.from(e.target.files));
     }
   };
 
@@ -208,12 +185,6 @@ export default function DashboardEmployedEdit() {
       });
 
       if (response.ok) {
-        if (formData.RFC && additionalFiles.length > 0) {
-          const uploadResult = await uploadEmployeeFiles(formData.RFC, additionalFiles);
-          if (!uploadResult.success) {
-            setError(uploadResult.error ?? 'Error al subir archivos adicionales');
-          }
-        }
         setSuccess('Empleado actualizado exitosamente');
         router.push('/tablero/empleados/editar'); // Redireccionar a la lista de empleados
       } else {
@@ -230,18 +201,18 @@ export default function DashboardEmployedEdit() {
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
-      {!employeeRFC ? (
+      {!employeeId ? (
         <div>
           <Label className="mb-2" htmlFor="employee">
             Seleccionar Empleado
           </Label>
-          <Select value={employeeRFC ?? undefined} onValueChange={(value) => setEmployeeRFC(value)} required>
+          <Select value={employeeId ?? undefined} onValueChange={(value) => setEmployeeId(value)} required>
             <SelectTrigger>
               <SelectValue placeholder="Seleccionar empleado" />
             </SelectTrigger>
             <SelectContent>
               {employees.map((employee) => (
-                <SelectItem key={employee.RFC} value={employee.RFC}>
+                <SelectItem key={employee.id} value={employee.id}>
                   {employee.name}
                 </SelectItem>
               ))}
@@ -389,19 +360,15 @@ export default function DashboardEmployedEdit() {
                 <Label htmlFor="profileImage">Foto de Perfil</Label>
                 <Input type="file" id="profileImage" name="profileImage" onChange={handleFileChange} />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="additionalFiles">Archivos Adicionales</Label>
-                <Input type="file" id="additionalFiles" name="additionalFiles" onChange={handleAdditionalFilesChange} multiple />
-              </div>
             </div>
           </div>
           {error && <div className="text-red-500 mb-4">{error}</div>}
           {success && <div className="text-green-500 mb-4">{success}</div>}
           <div className="flex justify-end mt-4">           
-            <Button type="submit">Actualizar</Button>
-            <Link href="/tablero/empleados" className="ml-2">
-              <Button type="button">Cancelar</Button>
-            </Link>
+          <Button type="submit">Actualizar</Button>
+          <Link href="/tablero/empleados" className="ml-2">
+            <Button type="button">Cancelar</Button>
+          </Link>
           </div>
         </form>
       )}
