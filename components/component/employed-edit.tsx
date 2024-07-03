@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
-import { uploadEmployeeFiles, getUserId } from "@/utils/fetchData";
+import { uploadEmployeeFiles, getUserId, getEmployeeByRfc } from "@/utils/fetchData";
 
 export interface Company {
   id: string;
@@ -50,7 +50,6 @@ export interface Employee {
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [employeeRFC, setEmployeeRFC] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [formData, setFormData] = useState({
@@ -147,18 +146,14 @@ export default function DashboardEmployedEdit() {
     if (employeeRFC) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`/api/getEmployeeByRfc?rfc=${employeeRFC}`);
-          if (res.ok) {
-            const data = await res.json();
-            const employee = data.employee;
-            if (employee) {
-              setFormData({
-                ...employee,
-                birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
-                hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
-                profileImage: null,
-              });
-            }
+          const employee = await getEmployeeByRfc(employeeRFC);
+          if (employee) {
+            setFormData({
+              ...employee,
+              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+              profileImage: null,
+            });
           } else {
             setError('Failed to fetch employee data');
           }
