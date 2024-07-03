@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -50,6 +50,7 @@ export interface Employee {
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [employeeRFC, setEmployeeRFC] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [formData, setFormData] = useState({
@@ -146,8 +147,9 @@ export default function DashboardEmployedEdit() {
     if (employeeRFC) {
       const fetchEmployee = async () => {
         try {
-          const employee = await getEmployeeByRfc(employeeRFC);
-          if (employee) {
+          const res = await getEmployeeByRfc(employeeRFC);
+          if (res) {
+            const employee = res;
             setFormData({
               ...employee,
               birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
