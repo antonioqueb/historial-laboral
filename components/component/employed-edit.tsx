@@ -8,25 +8,15 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
 
-export interface Company {
+interface Company {
   id: string;
-  name: string;
-  userId: string;
   razonSocial: string;
-  rfc: string;
- 
 }
 
-export interface Employee {
+interface Employee {
   id: string;
   name: string;
-  role: string;
-  department: string;
-  description: string;
-  companyId: string;
-
 }
-
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
@@ -68,28 +58,12 @@ export default function DashboardEmployedEdit() {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUserId = async () => {
+    const fetchCompanies = async () => {
       try {
-        const res = await fetch('https://historiallaboral.com/api/getUserId');
+        const res = await fetch('/api/listCompanies');
         if (res.ok) {
           const data = await res.json();
-          return data.id;
-        } else {
-          setError('Failed to fetch user ID');
-        }
-      } catch (err) {
-        setError('Failed to fetch user ID');
-      }
-    };
-
-    const fetchCompanies = async (userId: string) => {
-      try {
-        const res = await fetch('https://historiallaboral.com/api/listCompanies');
-        if (res.ok) {
-          const data = await res.json();
-          const userCompanies = data.companies.filter((company: Company) => company.userId === userId);
-          setCompanies(userCompanies);
-          return userCompanies;
+          setCompanies(data.companies);
         } else {
           setError('Failed to fetch companies');
         }
@@ -98,9 +72,9 @@ export default function DashboardEmployedEdit() {
       }
     };
 
-    const fetchEmployeesByCompanyRFC = async (rfc: string) => {
+    const fetchEmployees = async () => {
       try {
-        const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
+        const res = await fetch('https://historiallaboral.com/api/listAllEmployees');
         if (res.ok) {
           const data = await res.json();
           setEmployees(data.employees);
@@ -112,22 +86,13 @@ export default function DashboardEmployedEdit() {
       }
     };
 
-    const initializeData = async () => {
-      const userId = await fetchUserId();
-      if (userId) {
-        const userCompanies = await fetchCompanies(userId);
-        if (userCompanies.length > 0) {
-          await fetchEmployeesByCompanyRFC(userCompanies[0].rfc);
-        }
-      }
-    };
-
-    initializeData();
+    fetchCompanies();
+    fetchEmployees();
 
     if (employeeId) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${employeeId}`);
+          const res = await fetch('https://historiallaboral.com/api/listAllEmployees');
           if (res.ok) {
             const data = await res.json();
             const employee = data.employees.find((emp: any) => emp.id === employeeId);
@@ -197,7 +162,7 @@ export default function DashboardEmployedEdit() {
   };
 
   return (
-    <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
+    <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
@@ -374,4 +339,5 @@ export default function DashboardEmployedEdit() {
       )}
     </div>
   );
+  
 }
