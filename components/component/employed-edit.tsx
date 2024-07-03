@@ -14,7 +14,6 @@ export interface Company {
   userId: string;
   razonSocial: string;
   rfc: string;
- 
 }
 
 export interface Employee {
@@ -24,9 +23,27 @@ export interface Employee {
   department: string;
   description: string;
   companyId: string;
-
+  socialSecurityNumber: string;
+  CURP: string;
+  RFC: string;
+  address: string;
+  phoneNumber: string;
+  email: string;
+  birthDate: string;
+  hireDate: string;
+  emergencyContact: string;
+  emergencyPhone: string;
+  bankAccountNumber: string;
+  clabeNumber: string;
+  maritalStatus: string;
+  nationality: string;
+  educationLevel: string;
+  gender: string;
+  bloodType: string;
+  jobTitle: string;
+  workShift: string;
+  contractType: string;
 }
-
 
 export default function DashboardEmployedEdit() {
   const router = useRouter();
@@ -63,11 +80,9 @@ export default function DashboardEmployedEdit() {
     profileImage: null as File | null,
   });
 
-
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -98,7 +113,6 @@ export default function DashboardEmployedEdit() {
       }
     };
 
-
     const fetchCompanies = async (userId: string) => {
       try {
         const res = await fetch('https://historiallaboral.com/api/listCompanies');
@@ -114,6 +128,7 @@ export default function DashboardEmployedEdit() {
         setError('Failed to fetch companies');
       }
     };
+
     const initializeData = async () => {
       const userId = await fetchUserId();
       if (userId) {
@@ -125,26 +140,21 @@ export default function DashboardEmployedEdit() {
     };
 
     initializeData();
+  }, []);
 
-
-
- 
-
+  useEffect(() => {
     if (employeeId) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${employeeId}`);
+          const res = await fetch(`/api/getEmployeeById?id=${employeeId}`);
           if (res.ok) {
-            const data = await res.json();
-            const employee = data.employees.find((emp: any) => emp.id === employeeId);
-            if (employee) {
-              setFormData({
-                ...employee,
-                birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
-                hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
-                profileImage: null,
-              });
-            }
+            const employee = await res.json();
+            setFormData({
+              ...employee,
+              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+              profileImage: null,
+            });
           } else {
             setError('Failed to fetch employee data');
           }
@@ -156,7 +166,6 @@ export default function DashboardEmployedEdit() {
       fetchEmployee();
     }
   }, [employeeId]);
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -202,7 +211,7 @@ export default function DashboardEmployedEdit() {
       setError('Error de conexión');
     }
   };
-  
+
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
@@ -372,14 +381,13 @@ export default function DashboardEmployedEdit() {
           {error && <div className="text-red-500 mb-4">{error}</div>}
           {success && <div className="text-green-500 mb-4">{success}</div>}
           <div className="flex justify-end mt-4">           
-          <Button type="submit">Actualizar</Button>
-          <Link href="/tablero/empleados" className="ml-2">
-            <Button type="button">Cancelar</Button>
-          </Link>
+            <Button type="submit">Actualizar</Button>
+            <Link href="/tablero/empleados" className="ml-2">
+              <Button type="button">Cancelar</Button>
+            </Link>
           </div>
         </form>
       )}
     </div>
   );
-  
 }
