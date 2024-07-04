@@ -108,7 +108,7 @@ export const authOptions: NextAuthOptions = {
     // signIn: '/auth/signin',
     signIn: '/tablero',
     // signOut: '/auth/signout',
-    signOut: '/',
+    signOut: 'https://historiallaboral.com/',
     newUser: '/tablero', // Redirigir a esta página después del registro
 
   },

@@ -176,12 +176,12 @@ export default function DashboardNavbar() {
             )}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>
-              <Link className="flex items-center" href="/tablero/perfil">
+            <Link className="flex items-center" href="/tablero/perfil">
+              <DropdownMenuItem>
                 <UserIcon className="h-4 w-4 mr-2" />
                 Perfil
-              </Link>
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <Button onClick={() => signOut()} className="flex items-center" href="#">
