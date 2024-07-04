@@ -176,7 +176,7 @@ export default function DashboardNavbar() {
             )}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <Link className="flex items-center" href="/tablero/perfil">
+            <Link href="/tablero/perfil">
               <DropdownMenuItem>
                 <UserIcon className="h-4 w-8 mr-2" />
                 Perfil
