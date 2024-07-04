@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import ProfileImageUploader from '@/components/component/ProfileImageUploader';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import Link from 'next/link'; // Importar Link de next/link
 
 const ProfilePage: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -82,25 +85,29 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-left">Personalizar Perfil</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
+      <div className="flex flex-col md:flex-row items-start justify-between mb-6">
+        <h1 className="text-2xl font-bold mb-4 md:mb-0">Personalizar Perfil</h1>
+      </div>
+      <div className="grid gap-6 md:grid-cols-2 py-4">
         <Card className="p-6 shadow-lg">
           <h2 className="text-2xl font-semibold mb-4">Información Personal</h2>
           <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">Email:</label>
-              <input
+            <div className="grid grid-cols-1 gap-4 items-center mb-4">
+              <Label htmlFor="email">Email:</Label>
+              <Input
                 type="email"
+                id="email"
                 value={userData.email}
                 onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                 className="block w-full text-sm border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">Nombre:</label>
-              <input
+            <div className="grid grid-cols-1 gap-4 items-center mb-4">
+              <Label htmlFor="name">Nombre:</Label>
+              <Input
                 type="text"
+                id="name"
                 value={userData.name}
                 onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                 className="block w-full text-sm border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
@@ -114,6 +121,11 @@ const ProfilePage: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-4">Foto de Perfil</h2>
           <ProfileImageUploader userId={userId} onUpdateStatus={handleUpdateStatus} />
         </Card>
+      </div>
+      <div className="flex justify-end mt-4">
+        <Link href="/dashboard" className="ml-2">
+          <Button type="button">Cancelar</Button>
+        </Link>
       </div>
     </div>
   );
