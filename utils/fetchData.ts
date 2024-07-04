@@ -213,13 +213,20 @@ export async function getUserId(): Promise<{ id: string }> {
       credentials: 'include'
     });
 
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw new Error('Failed to fetch user ID');
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user ID: ${response.statusText}`);
     }
+
+    const data = await response.json();
+    console.log("Response from getUserId:", data);
+
+    if (!data.id) {
+      throw new Error('User ID not found in response');
+    }
+
+    return data;
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching user ID:', error);
     throw new Error('Failed to fetch user ID');
   }
 }
@@ -232,17 +239,23 @@ export async function getProfileImageUrl(): Promise<{ profileImageUrl: string }>
       credentials: 'include'
     });
 
-    if (response.ok) {
-      return await response.json();
-    } else {
-      throw new Error('Failed to fetch profile image URL');
+    if (!response.ok) {
+      throw new Error(`Failed to fetch profile image URL: ${response.statusText}`);
     }
+
+    const data = await response.json();
+    console.log("Response from getProfileImage:", data);
+
+    if (!data.profileImageUrl) {
+      throw new Error('Profile image URL not found in response');
+    }
+
+    return data;
   } catch (error) {
-    console.error(error);
+    console.error('Error fetching profile image URL:', error);
     throw new Error('Failed to fetch profile image URL');
   }
 }
-
 
 
 // Función para crear una compañía
