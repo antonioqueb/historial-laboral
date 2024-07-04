@@ -8,15 +8,12 @@ import ModeToggle from '@/components/ModeToggle';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { RiArrowDownWideLine } from "react-icons/ri";
-import { getProfileImageUrl } from '@/utils/fetchData';
 
 export default function DashboardNavbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const [menuOptions, setMenuOptions] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -75,19 +72,6 @@ export default function DashboardNavbar() {
     }
   }, [pathname]);
 
-  useEffect(() => {
-    const fetchProfileImageUrl = async () => {
-      try {
-        const data = await getProfileImageUrl();
-        setProfileImageUrl(data.profileImageUrl);
-      } catch (error) {
-        console.error('Error fetching profile image URL:', error);
-      }
-    };
-
-    fetchProfileImageUrl();
-  }, []);
-
   const handleImageError = () => {
     setImageError(true);
   };
@@ -98,6 +82,8 @@ export default function DashboardNavbar() {
     const surname = rest.length > 0 ? rest[0] : '';
     return `${firstName.charAt(0)}${surname.charAt(0)}`;
   };
+
+  const [imageError, setImageError] = useState(false);
 
   return (
     <header className={`sticky top-0 z-50 flex items-center justify-between h-16 px-4 md:px-6 w-full transition-all duration-300 ${isScrolled ? 'backdrop-blur-md' : ''}`}>
@@ -138,13 +124,13 @@ export default function DashboardNavbar() {
           <DropdownMenuTrigger asChild>
             {session ? (
               <div className="flex items-center gap-2">
-                {imageError || !profileImageUrl ? (
+                {imageError || !session.user.image ? (
                   <div className="w-10 h-10 flex items-center justify-center bg-zinc-400 rounded-full text-xl text-white">
                     {getFirstNameAndSurname(session.user.name)}
                   </div>
                 ) : (
                   <Image
-                    src={profileImageUrl}
+                    src={session.user.image}
                     alt="Avatar"
                     width={36}
                     height={36}
