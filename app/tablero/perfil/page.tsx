@@ -47,7 +47,6 @@ const ProfilePage: React.FC = () => {
   const handleUpdate = async () => {
     if (!userId || !userData) {
       setUpdateStatus('Missing user ID or data');
-      (window as any).addToast('Missing user ID or data', 'error');
       return;
     }
 
@@ -65,16 +64,14 @@ const ProfilePage: React.FC = () => {
       }
 
       setUpdateStatus('User data updated successfully!');
-      (window as any).addToast('User data updated successfully!', 'success');
     } catch (error) {
       console.error('Error updating user data', error);
       setUpdateStatus('Error updating user data');
-      (window as any).addToast('Error updating user data', 'error');
     }
   };
 
-  const handleUpdateStatus = (message: string, type: 'success' | 'error') => {
-    (window as any).addToast(message, type);
+  const handleUpdateStatus = (message: string) => {
+    setUpdateStatus(message);
   };
 
   if (error) {
@@ -88,7 +85,7 @@ const ProfilePage: React.FC = () => {
   return (
     <div>
       <h1>Profile</h1>
-      <Card>
+      <Card className="p-4 mb-4">
         <div className="mb-4">
           <label>Email:</label>
           <input
@@ -107,10 +104,10 @@ const ProfilePage: React.FC = () => {
             className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
           />
         </div>
-        <Button onClick={handleUpdate}>Update Profile</Button>
+        <Button onClick={handleUpdate} className="w-full">Update Profile</Button>
         {updateStatus && <p>{updateStatus}</p>}
       </Card>
-      <ProfileImageUploader userId={userId} userData={userData} onUpdateStatus={handleUpdateStatus} />
+      <ProfileImageUploader userId={userId} onUpdateStatus={handleUpdateStatus} />
     </div>
   );
 };

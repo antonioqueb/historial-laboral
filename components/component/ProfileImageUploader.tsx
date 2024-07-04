@@ -3,15 +3,13 @@
 import React, { useState } from 'react';
 import {Button} from '@/components/ui/button';
 import {Card} from '@/components/ui/card';
-import {Toaster} from '@/components/ui/toaster';
 
 interface ProfileImageUploaderProps {
   userId: string;
-  userData: { email: string; name: string };
-  onUpdateStatus: (message: string, type: 'success' | 'error') => void;
+  onUpdateStatus: (message: string) => void;
 }
 
-const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, userData, onUpdateStatus }) => {
+const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, onUpdateStatus }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState('');
 
@@ -24,7 +22,7 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, use
   const handleUpload = async () => {
     if (!selectedFile) {
       setUploadStatus('Please select a file to upload');
-      onUpdateStatus('Please select a file to upload', 'error');
+      onUpdateStatus('Please select a file to upload');
       return;
     }
 
@@ -59,16 +57,16 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, use
       }
 
       setUploadStatus('Image uploaded successfully!');
-      onUpdateStatus('Image uploaded successfully!', 'success');
+      onUpdateStatus('Image uploaded successfully!');
     } catch (error) {
       console.error('Error uploading image', error);
       setUploadStatus('Error uploading image');
-      onUpdateStatus('Error uploading image', 'error');
+      onUpdateStatus('Error uploading image');
     }
   };
 
   return (
-    <Card>
+    <Card className="p-4">
       <div className="mb-4">
         <input
           type="file"
@@ -76,9 +74,8 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, use
           className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
         />
       </div>
-      <Button onClick={handleUpload}>Upload</Button>
+      <Button onClick={handleUpload} className="w-full">Upload</Button>
       {uploadStatus && <p>{uploadStatus}</p>}
-      <Toaster />
     </Card>
   );
 };
