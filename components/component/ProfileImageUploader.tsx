@@ -1,7 +1,8 @@
+'use client';
 import React, { useState } from 'react';
 
 interface ProfileImageUploaderProps {
-  userId: string; // Definir el tipo de userId como string
+  userId: string;
 }
 
 const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId }) => {
