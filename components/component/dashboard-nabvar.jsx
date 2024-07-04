@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu } from '@/components/ui/dropdown-menu';
 import { usePathname } from 'next/navigation';
@@ -14,6 +12,8 @@ export default function DashboardNavbar() {
   const pathname = usePathname();
   const [menuOptions, setMenuOptions] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,6 +72,34 @@ export default function DashboardNavbar() {
     }
   }, [pathname]);
 
+  useEffect(() => {
+    if (session) {
+      fetchUserIdAndProfileImage();
+    }
+  }, [session]);
+
+  const fetchUserIdAndProfileImage = async () => {
+    try {
+      const userIdResponse = await fetch('/api/getUserId');
+      if (userIdResponse.ok) {
+        const userIdData = await userIdResponse.json();
+        const userId = userIdData.id;
+
+        const profileImageResponse = await fetch(`/api/getProfileImage?id=${userId}`);
+        if (profileImageResponse.ok) {
+          const profileImageData = await profileImageResponse.json();
+          setProfileImageUrl(profileImageData.profileImageUrl);
+        } else {
+          console.error('Failed to fetch profile image URL');
+        }
+      } else {
+        console.error('Failed to fetch user ID');
+      }
+    } catch (error) {
+      console.error('Error fetching user ID or profile image URL:', error);
+    }
+  };
+
   const handleImageError = () => {
     setImageError(true);
   };
@@ -82,8 +110,6 @@ export default function DashboardNavbar() {
     const surname = rest.length > 0 ? rest[0] : '';
     return `${firstName.charAt(0)}${surname.charAt(0)}`;
   };
-
-  const [imageError, setImageError] = useState(false);
 
   return (
     <header className={`sticky top-0 z-50 flex items-center justify-between h-16 px-4 md:px-6 w-full transition-all duration-300 ${isScrolled ? 'backdrop-blur-md' : ''}`}>
@@ -106,7 +132,7 @@ export default function DashboardNavbar() {
                 <RiArrowDownWideLine className="w-6 h-6 text-zinc-700 dark:text-zinc-100" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="mx-4">  {/* Aquí se agrega la clase mx-4 */}
+            <DropdownMenuContent className="mx-4">
               {menuOptions.map((option, index) => (
                 <DropdownMenuItem key={index}>
                   <Link href={option.href} className="w-full">
@@ -124,13 +150,13 @@ export default function DashboardNavbar() {
           <DropdownMenuTrigger asChild>
             {session ? (
               <div className="flex items-center gap-2">
-                {imageError || !session.user.image ? (
+                {imageError || !profileImageUrl ? (
                   <div className="w-10 h-10 flex items-center justify-center bg-zinc-400 rounded-full text-xl text-white">
                     {getFirstNameAndSurname(session.user.name)}
                   </div>
                 ) : (
                   <Image
-                    src={session.user.image}
+                    src={profileImageUrl}
                     alt="Avatar"
                     width={36}
                     height={36}
