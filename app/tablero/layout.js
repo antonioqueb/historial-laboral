@@ -1,8 +1,9 @@
 import React from 'react';
-import DasboardSidebar from '@/components/component/dasboard-sidebar';   // Asegúrate de que la ruta sea correcta
+import DasboardSidebar from '@/components/component/dasboard-sidebar'; // Asegúrate de que la ruta sea correcta
 import DashboardNabvar from '@/components/component/dashboard-nabvar';
 import { authOptions } from '../api/(auth)/auth/[...nextauth]/authOptions';
 import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
 const LayoutDashboard = async ({ children }) => {
   const session = await getServerSession(authOptions);
@@ -19,6 +20,8 @@ const LayoutDashboard = async ({ children }) => {
       </div>
     );
   }
+  // Redirigir a la raíz si no hay sesión activa
+  redirect('/');
   return null;
 }
 
