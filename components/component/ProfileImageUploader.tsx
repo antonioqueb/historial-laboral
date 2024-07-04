@@ -24,7 +24,7 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId }) =
 
     const formData = new FormData();
     formData.append('image', selectedFile);
-    formData.append('id', userId);
+    formData.append('id', userId);  // Esto asegurará que el ID del usuario se envíe correctamente
     formData.append('docType', 'profile');
 
     try {
