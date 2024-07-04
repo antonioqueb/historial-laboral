@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuContent, DropdownMenu } from '@/components/ui/dropdown-menu';
 import { usePathname } from 'next/navigation';
