@@ -4,14 +4,42 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import ModeToggle from "./ModeToggle";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Login from '@/components/Login';
 
 export default function Header() {
   const [imageError, setImageError] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState(null);
   const { data: session } = useSession();
-  console.log(session); // Verifica que la sesión contenga el ID del usuario
+
+  useEffect(() => {
+    if (session) {
+      fetchUserIdAndProfileImage();
+    }
+  }, [session]);
+
+  const fetchUserIdAndProfileImage = async () => {
+    try {
+      const userIdResponse = await fetch('/api/getUserId');
+      if (userIdResponse.ok) {
+        const userIdData = await userIdResponse.json();
+        const userId = userIdData.id;
+
+        const profileImageResponse = await fetch(`/api/getProfileImage?id=${userId}`);
+        if (profileImageResponse.ok) {
+          const profileImageData = await profileImageResponse.json();
+          setProfileImageUrl(profileImageData.profileImageUrl);
+        } else {
+          console.error('Failed to fetch profile image URL');
+        }
+      } else {
+        console.error('Failed to fetch user ID');
+      }
+    } catch (error) {
+      console.error('Error fetching user ID or profile image URL:', error);
+    }
+  };
 
   const handleImageError = () => {
     setImageError(true);
@@ -25,13 +53,13 @@ export default function Header() {
       <div className="flex items-center gap-4">
         {session ? (
           <div className="flex items-center gap-2">
-            {imageError || !session.user?.image ? (
+            {imageError || !profileImageUrl ? (
               <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
                 {session.user?.name?.charAt(0)}
               </div>
             ) : (
               <Image
-                src={session.user.image}
+                src={profileImageUrl}
                 alt="Avatar"
                 width={40}
                 height={40}
