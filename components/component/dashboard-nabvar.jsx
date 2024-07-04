@@ -16,6 +16,7 @@ export default function DashboardNavbar() {
   const [menuOptions, setMenuOptions] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,8 +98,6 @@ export default function DashboardNavbar() {
     const surname = rest.length > 0 ? rest[0] : '';
     return `${firstName.charAt(0)}${surname.charAt(0)}`;
   };
-
-  const [imageError, setImageError] = useState(false);
 
   return (
     <header className={`sticky top-0 z-50 flex items-center justify-between h-16 px-4 md:px-6 w-full transition-all duration-300 ${isScrolled ? 'backdrop-blur-md' : ''}`}>

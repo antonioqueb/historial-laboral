@@ -204,10 +204,15 @@ export async function editEmployee(form: FormData): Promise<{ success: boolean; 
     return { success: false, error: 'Error de conexión' };
   }
 }
+
 // Función para obtener el userId
 export async function getUserId(): Promise<{ id: string }> {
   try {
-    const response = await fetch("https://historiallaboral.com/api/getUserId");
+    const response = await fetch("https://historiallaboral.com/api/getUserId", {
+      method: 'GET',
+      credentials: 'include'
+    });
+
     if (response.ok) {
       return await response.json();
     } else {
@@ -222,7 +227,11 @@ export async function getUserId(): Promise<{ id: string }> {
 // Función para obtener la URL de la imagen de perfil
 export async function getProfileImageUrl(): Promise<{ profileImageUrl: string }> {
   try {
-    const response = await fetch("/api/getProfileImage");
+    const response = await fetch("/api/getProfileImage", {
+      method: 'GET',
+      credentials: 'include'
+    });
+
     if (response.ok) {
       return await response.json();
     } else {
@@ -233,6 +242,7 @@ export async function getProfileImageUrl(): Promise<{ profileImageUrl: string }>
     throw new Error('Failed to fetch profile image URL');
   }
 }
+
 
 
 // Función para crear una compañía
