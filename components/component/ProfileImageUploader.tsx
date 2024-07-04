@@ -1,12 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
+import {Button} from '@/components/ui/button';
+import {Card} from '@/components/ui/card';
+import {Toaster} from '@/components/ui/toaster';
 
 interface ProfileImageUploaderProps {
   userId: string;
+  userData: { email: string; name: string };
+  onUpdateStatus: (message: string, type: 'success' | 'error') => void;
 }
 
-const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId }) => {
+const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, userData, onUpdateStatus }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState('');
 
@@ -19,12 +24,13 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId }) =
   const handleUpload = async () => {
     if (!selectedFile) {
       setUploadStatus('Please select a file to upload');
+      onUpdateStatus('Please select a file to upload', 'error');
       return;
     }
 
     const formData = new FormData();
     formData.append('image', selectedFile);
-    formData.append('id', userId);  // Esto asegurará que el ID del usuario se envíe correctamente
+    formData.append('id', userId);
     formData.append('docType', 'profile');
 
     try {
@@ -53,18 +59,27 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId }) =
       }
 
       setUploadStatus('Image uploaded successfully!');
+      onUpdateStatus('Image uploaded successfully!', 'success');
     } catch (error) {
       console.error('Error uploading image', error);
       setUploadStatus('Error uploading image');
+      onUpdateStatus('Error uploading image', 'error');
     }
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
+    <Card>
+      <div className="mb-4">
+        <input
+          type="file"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+        />
+      </div>
+      <Button onClick={handleUpload}>Upload</Button>
       {uploadStatus && <p>{uploadStatus}</p>}
-    </div>
+      <Toaster />
+    </Card>
   );
 };
 
