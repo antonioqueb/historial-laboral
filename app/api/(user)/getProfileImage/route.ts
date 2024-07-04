@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { getUserId } from '@/utils/fetchData';
 
 const prisma = new PrismaClient();
 
-export async function GET() {
+export async function GET(req: Request, { params }: { params: { userId: string } }) {
   try {
-    console.log("Fetching user ID...");
-    const { id: userId } = await getUserId();
-
-    console.log("User ID fetched:", userId);
+    const userId = params.userId;
+    console.log("User ID fetched from path:", userId);
     
     if (!userId) {
       console.log("User ID not found");
