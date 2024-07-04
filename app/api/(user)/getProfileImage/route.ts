@@ -3,10 +3,12 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(req: Request, { params }: { params: { userId: string } }) {
+export async function GET(req: Request) {
   try {
-    const userId = params.userId;
-    console.log("User ID fetched from path:", userId);
+    // Parsear los parámetros de consulta
+    const url = new URL(req.url);
+    const userId = url.searchParams.get('id');
+    console.log("User ID fetched from query:", userId);
     
     if (!userId) {
       console.log("User ID not found");
