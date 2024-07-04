@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import ProfileImageUploader from '@/components/component/ProfileImageUploader';
-import {Button} from '@/components/ui/button';
-import {Card} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 const ProfilePage: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -83,31 +83,37 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className='px-4'>
-      <h1 className="text-3xl font-bold mb-8">Perfil</h1>
-      <Card className="p-4 mb-4">
-        <div className="mb-4">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={userData.email}
-            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          />
-        </div>
-        <div className="mb-4">
-          <label>Name:</label>
-          <input
-            type="text"
-            value={userData.name}
-            onChange={(e) => setUserData({ ...userData, name: e.target.value })}
-            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-          />
-        </div>
-        <Button onClick={handleUpdate} className="w-full">Update Profile</Button>
-        {updateStatus && <p>{updateStatus}</p>}
-      </Card>
-      <ProfileImageUploader userId={userId} onUpdateStatus={handleUpdateStatus} />
+    <div className="px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">Perfil</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="p-6 shadow-lg">
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">Email:</label>
+              <input
+                type="email"
+                value={userData.email}
+                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                className="block w-full text-sm border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">Name:</label>
+              <input
+                type="text"
+                value={userData.name}
+                onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+                className="block w-full text-sm border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
+              />
+            </div>
+            <Button onClick={handleUpdate} className="w-full">Update Profile</Button>
+            {updateStatus && <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{updateStatus}</p>}
+          </div>
+        </Card>
+        <Card className="p-6 shadow-lg">
+          <ProfileImageUploader userId={userId} onUpdateStatus={handleUpdateStatus} />
+        </Card>
+      </div>
     </div>
   );
 };
