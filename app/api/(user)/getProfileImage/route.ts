@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { getUserId } from '../../../utils/fetchData';
+import { getUserId } from '@/utils/fetchData';
 
 const prisma = new PrismaClient();
 
