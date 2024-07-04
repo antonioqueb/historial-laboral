@@ -4,10 +4,9 @@ import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSeparator, DropdownM
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ModeToggle from '@/components/ModeToggle';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react'; // Importa signOut
 import Image from 'next/image';
 import { RiArrowDownWideLine } from "react-icons/ri";
-import federatedLogout from "@/utils/federatedLogout";
 import { Button } from '../ui/button';
 
 export default function DashboardNavbar() {
@@ -185,7 +184,7 @@ export default function DashboardNavbar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Button onClick={() => federatedLogout()} className="flex items-center" href="#">
+              <Button onClick={() => signOut()} className="flex items-center" href="#">
                 <LogOutIcon className="h-4 w-4 mr-2" />
                 Cerrar sesión
               </Button>
