@@ -83,8 +83,8 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>Profile</h1>
+    <div className='px-4'>
+      <h1 className="text-3xl font-bold mb-8">Perfil</h1>
       <Card className="p-4 mb-4">
         <div className="mb-4">
           <label>Email:</label>
