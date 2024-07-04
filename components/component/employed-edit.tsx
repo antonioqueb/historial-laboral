@@ -48,7 +48,7 @@ export interface Employee {
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [employeeId, setEmployeeId] = useState<string | undefined>(undefined);
+  const [nss, setNss] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [formData, setFormData] = useState({
     id: '',
@@ -101,7 +101,7 @@ export default function DashboardEmployedEdit() {
 
     const fetchEmployeesByCompanyRFC = async (rfc: string) => {
       try {
-        const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
+        const res = await fetch(`https://historiallaboral.com/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
         if (res.ok) {
           const data = await res.json();
           setEmployees(data.employees);
@@ -143,12 +143,12 @@ export default function DashboardEmployedEdit() {
   }, []);
 
   useEffect(() => {
-    if (employeeId) {
+    if (nss) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`/api/getEmployeeById?id=${employeeId}`);
+          const res = await fetch(`https://historiallaboral.com/api/getEmployeeByNss?nss=${nss}`);
           if (res.ok) {
-            const employee = await res.json();
+            const { employee } = await res.json();
             setFormData({
               ...employee,
               birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
@@ -165,7 +165,7 @@ export default function DashboardEmployedEdit() {
 
       fetchEmployee();
     }
-  }, [employeeId]);
+  }, [nss]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -195,7 +195,7 @@ export default function DashboardEmployedEdit() {
     });
 
     try {
-      const response = await fetch('/api/editEmployee', {
+      const response = await fetch('https://historiallaboral.com/api/editEmployee', {
         method: 'PATCH',
         body: form,
       });
@@ -217,18 +217,18 @@ export default function DashboardEmployedEdit() {
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
-      {!employeeId ? (
+      {!nss ? (
         <div>
           <Label className="mb-2" htmlFor="employee">
             Seleccionar Empleado
           </Label>
-          <Select value={employeeId ?? undefined} onValueChange={(value) => setEmployeeId(value)} required>
+          <Select value={nss ?? undefined} onValueChange={(value) => setNss(value)} required>
             <SelectTrigger>
               <SelectValue placeholder="Seleccionar empleado" />
             </SelectTrigger>
             <SelectContent>
               {employees.map((employee) => (
-                <SelectItem key={employee.id} value={employee.id}>
+                <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
                   {employee.name}
                 </SelectItem>
               ))}
