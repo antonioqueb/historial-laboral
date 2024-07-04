@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import ProfileImageUploader from '@/components/component/ProfileImageUploader';
 import { Button } from '@/components/ui/button';
