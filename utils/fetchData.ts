@@ -219,6 +219,20 @@ export async function getUserId(): Promise<{ id: string }> {
     throw new Error('Failed to fetch user ID');
   }
 }
+// Función para obtener la URL de la imagen de perfil
+export async function getProfileImageUrl(): Promise<{ profileImageUrl: string }> {
+  try {
+    const response = await fetch("/api/getProfileImage");
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error('Failed to fetch profile image URL');
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch profile image URL');
+  }
+}
 
 // Función para crear una compañía
 export async function createCompany(data: any): Promise<{ company: { name: string }, error?: string }> {
