@@ -7,6 +7,8 @@ import ModeToggle from '@/components/ModeToggle';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { RiArrowDownWideLine } from "react-icons/ri";
+import federatedLogout from "@/utils/federatedLogout";
+import { Button } from '../ui/button';
 
 export default function DashboardNavbar() {
   const { data: session } = useSession();
@@ -176,23 +178,17 @@ export default function DashboardNavbar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>
-              <Link className="flex items-center" href="#">
+              <Link className="flex items-center" href="/tablero/perfil">
                 <UserIcon className="h-4 w-4 mr-2" />
                 Perfil
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link className="flex items-center" href="#">
-                <SettingsIcon className="h-4 w-4 mr-2" />
-                Configuración
-              </Link>
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link className="flex items-center" href="#">
+              <Button onClick={() => federatedLogout()} className="flex items-center" href="#">
                 <LogOutIcon className="h-4 w-4 mr-2" />
                 Cerrar sesión
-              </Link>
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
