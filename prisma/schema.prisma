@@ -9,12 +9,12 @@ datasource db {
   url               = env("DATABASE_URL")
   directUrl         = env("DIRECT_URL")
 }
-
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  name      String?
-  companies Company[]
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  companies      Company[]
+  profileImageUrl String?  // Nuevo campo para la URL de la foto de perfil
 }
 
 model Company {
