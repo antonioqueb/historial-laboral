@@ -8,12 +8,14 @@ import ModeToggle from '@/components/ModeToggle';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { RiArrowDownWideLine } from "react-icons/ri";
+import { getProfileImageUrl } from '@/utils/fetchData';
 
 export default function DashboardNavbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const [menuOptions, setMenuOptions] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,6 +74,19 @@ export default function DashboardNavbar() {
     }
   }, [pathname]);
 
+  useEffect(() => {
+    const fetchProfileImageUrl = async () => {
+      try {
+        const data = await getProfileImageUrl();
+        setProfileImageUrl(data.profileImageUrl);
+      } catch (error) {
+        console.error('Error fetching profile image URL:', error);
+      }
+    };
+
+    fetchProfileImageUrl();
+  }, []);
+
   const handleImageError = () => {
     setImageError(true);
   };
@@ -124,13 +139,13 @@ export default function DashboardNavbar() {
           <DropdownMenuTrigger asChild>
             {session ? (
               <div className="flex items-center gap-2">
-                {imageError || !session.user.image ? (
+                {imageError || !profileImageUrl ? (
                   <div className="w-10 h-10 flex items-center justify-center bg-zinc-400 rounded-full text-xl text-white">
                     {getFirstNameAndSurname(session.user.name)}
                   </div>
                 ) : (
                   <Image
-                    src={session.user.image}
+                    src={profileImageUrl}
                     alt="Avatar"
                     width={36}
                     height={36}
