@@ -1,20 +1,36 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProfileImageUploader from '@/components/component/ProfileImageUploader';
-import { getSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 
-const Profile = async () => {
-  const session = await getSession();
+const ProfilePage = () => {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!session || !session.user || !session.user.id) {
-    // Redirigir al usuario a la página de inicio de sesión si no está autenticado
-    redirect('/auth/signin');
-    return null;
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const res = await fetch('https://historiallaboral.com/api/getUserId');
+        if (res.ok) {
+          const data = await res.json();
+          setUserId(data.id);
+        } else {
+          setError('Failed to fetch user ID');
+        }
+      } catch (err) {
+        setError('Failed to fetch user ID');
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
-  // Asegúrate de que el usuario tiene un ID
-  const userId = session.user.id;
+  if (!userId) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -24,4 +40,4 @@ const Profile = async () => {
   );
 };
 
-export default Profile;
+export default ProfilePage;

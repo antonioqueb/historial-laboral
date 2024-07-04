@@ -1,15 +1,15 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 
 interface ProfileImageUploaderProps {
-  userId: string;
+  userId: string; // Definir el tipo de userId como string
 }
 
 const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploadStatus, setUploadStatus] = useState<string>('');
+  const [uploadStatus, setUploadStatus] = useState('');
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
     }
   };
