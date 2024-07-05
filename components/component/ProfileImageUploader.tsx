@@ -66,7 +66,7 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, onU
   };
 
   return (
-    <Card className="p-4 h-full">
+    <Card className="p-4">
       <div className="mb-4">
         <input
           type="file"
