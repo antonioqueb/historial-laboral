@@ -161,9 +161,6 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
         <Button onClick={handleSaveSignature} variant="secondary">
           <FaSave className="mr-2 h-4 w-4" /> Guardar Firma
         </Button>
-        <Button onClick={() => handleGenerateAndUploadPDF(signatureURL ?? '')} disabled={!signatureURL} variant="secondary">
-          <FaFileDownload className="mr-2 h-4 w-4" /> Descargar PDF
-        </Button>
       </div>
     </div>
   );
