@@ -1,25 +1,14 @@
-'use client'; // Esto asegura que el código se ejecute en el cliente
+'use client'; // Asegura que el código se ejecute en el cliente
 
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 
-interface Params {
-  codigo: string;
-}
-
 const Contrato: FC = () => {
-  const router = useRouter();
-  const [codigo, setCodigo] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (router.isReady) {
-      const { codigo } = router.query as unknown as Params;
-      setCodigo(codigo);
-    }
-  }, [router.isReady, router.query]);
+  const searchParams = useSearchParams();
+  const codigo = searchParams.get('codigo');
 
   if (!codigo) {
-    return <div>Cargando...</div>;
+    return <div>Código no encontrado</div>;
   }
 
   return (
