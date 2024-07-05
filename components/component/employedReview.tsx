@@ -50,6 +50,7 @@ export default function DashboardEmployedReview() {
   const [success, setSuccess] = useState<string | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
+  // Fetch companies when the component mounts
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
@@ -65,6 +66,7 @@ export default function DashboardEmployedReview() {
     fetchCompanies();
   }, []);
 
+  // Fetch employees when a company is selected
   useEffect(() => {
     if (selectedCompany) {
       const fetchEmployees = async () => {
@@ -82,6 +84,7 @@ export default function DashboardEmployedReview() {
     }
   }, [selectedCompany]);
 
+  // Check authorization when an employee is selected
   useEffect(() => {
     if (selectedEmployee) {
       const checkEmployeeAuthorization = async () => {
@@ -96,9 +99,13 @@ export default function DashboardEmployedReview() {
       };
 
       checkEmployeeAuthorization();
+    } else {
+      // Reset authorization state when no employee is selected
+      setIsAuthorized(null);
     }
   }, [selectedEmployee, employees]);
 
+  // Handle form input changes
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setReviewData((prevData) => ({
@@ -107,6 +114,7 @@ export default function DashboardEmployedReview() {
     }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
