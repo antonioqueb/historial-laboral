@@ -1,9 +1,10 @@
-'use client';
+'use client'; // Asegura que el código se ejecute en el cliente
 
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { getEmployeesByCompany, getCompaniesList, Employee, Company } from "@/utils/fetchData";
+import Link from 'next/link';
 
 export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -44,6 +45,19 @@ export default function DashboardEmployedList() {
       loadEmployees();
     }
   }, [selectedCompany]);
+
+  const generateContractUrl = (employeeId: string) => {
+    const uniqueCode = `${employeeId}-${Date.now()}`;
+    return `${window.location.origin}/contrato/${uniqueCode}`;
+  };
+
+  const copyToClipboard = (url: string) => {
+    navigator.clipboard.writeText(url).then(() => {
+      alert("URL copiada al portapapeles");
+    }).catch((err) => {
+      console.error("Error copiando la URL: ", err);
+    });
+  };
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
@@ -88,6 +102,17 @@ export default function DashboardEmployedList() {
               <p className="text-zinc-500 dark:text-zinc-400">{employee.role}</p>
               <p className="text-sm line-clamp-2">{employee.description}</p>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department}</p>
+              <div className="flex space-x-2 mt-2">
+                <Link href={generateContractUrl(employee.id)}>
+                  <a className="text-blue-500 hover:underline">Ver Contrato</a>
+                </Link>
+                <button
+                  onClick={() => copyToClipboard(generateContractUrl(employee.id))}
+                  className="text-blue-500 hover:underline"
+                >
+                  Copiar URL
+                </button>
+              </div>
             </div>
           </div>
         ))}
