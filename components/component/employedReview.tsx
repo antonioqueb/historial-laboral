@@ -1,4 +1,3 @@
-// components\component\employedReview.tsx
 'use client';
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -7,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import Link from 'next/link'; // Asegúrate de importar Link
+import Link from 'next/link';
 import { createReview, getCompaniesList, getEmployeesByCompany, getUserId, Employee, Company } from '@/utils/fetchData';
 
 interface ReviewData {
@@ -18,7 +17,18 @@ interface ReviewData {
   rating: number;
   positive: boolean;
   documentation: string;
-  userId?: string; // Propiedad opcional
+  userId?: string;
+}
+
+async function checkAuthorization(socialSecurityNumber: string): Promise<boolean> {
+  try {
+    const response = await fetch(`https://upload-file-by-nss.historiallaboral.com/check-signature/${socialSecurityNumber}`);
+    const data = await response.json();
+    return data.signature_exists;
+  } catch (error) {
+    console.error('Error checking authorization:', error);
+    return false;
+  }
 }
 
 export default function DashboardEmployedReview() {
@@ -38,6 +48,7 @@ export default function DashboardEmployedReview() {
   });
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -71,11 +82,28 @@ export default function DashboardEmployedReview() {
     }
   }, [selectedCompany]);
 
+  useEffect(() => {
+    if (selectedEmployee) {
+      const checkEmployeeAuthorization = async () => {
+        const selectedEmployeeData = employees.find(emp => emp.id === selectedEmployee);
+        if (selectedEmployeeData && selectedEmployeeData.socialSecurityNumber) {
+          const authorized = await checkAuthorization(selectedEmployeeData.socialSecurityNumber);
+          setIsAuthorized(authorized);
+        } else {
+          setIsAuthorized(false);
+          setError('No se pudo verificar la autorización. Falta el número de seguridad social del empleado.');
+        }
+      };
+
+      checkEmployeeAuthorization();
+    }
+  }, [selectedEmployee, employees]);
+
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setReviewData((prevData) => ({
       ...prevData,
-      [name]: name === 'rating' ? parseInt(value) : value, // Convertir rating a número
+      [name]: name === 'rating' ? parseInt(value) : value,
     }));
   };
 
@@ -85,17 +113,22 @@ export default function DashboardEmployedReview() {
     setSuccess(null);
     console.log('Submitting review:', reviewData);
 
+    if (!isAuthorized) {
+      setError('No estás autorizado para dejar una reseña para este empleado.');
+      return;
+    }
+
     try {
       const userIdResponse = await getUserId();
       console.log('Fetched user ID:', userIdResponse.id);
 
-      const updatedReviewData = { ...reviewData, userId: userIdResponse.id }; // Actualiza reviewData con userId
+      const updatedReviewData = { ...reviewData, userId: userIdResponse.id };
 
       const result = await createReview(updatedReviewData);
       if (result.success) {
         console.log('Review created successfully');
         setSuccess('Reseña creada exitosamente');
-        router.push('/tablero/empleados/'); // Redireccionar a la lista de reseñas
+        router.push('/tablero/empleados/');
       } else {
         console.error('Error creating review:', result.error);
         setError(result.error ?? 'Error desconocido');
@@ -146,7 +179,7 @@ export default function DashboardEmployedReview() {
                 </Select>
               </div>
             )}
-            {selectedEmployee && (
+            {selectedEmployee && isAuthorized && (
               <>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
                   <Label htmlFor="title">Título</Label>
@@ -178,16 +211,21 @@ export default function DashboardEmployedReview() {
                 </div>
               </>
             )}
+            {selectedEmployee && isAuthorized === false && (
+              <div className="text-red-500 mb-4">
+                No estás autorizado para dejar una reseña para este empleado. Por favor, asegúrate de que el contrato esté firmado.
+              </div>
+            )}
           </div>
         </div>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         {success && <div className="text-green-500 mb-4">{success}</div>}
         <div className="flex justify-end mt-4">  
-        <Button type="submit">Dejar Reseña</Button>
-        <Link href="/tablero/empleados" className="ml-2">
-          <Button type="button">Cancelar</Button>
-        </Link>
-      </div>
+          <Button type="submit" disabled={!isAuthorized}>Dejar Reseña</Button>
+          <Link href="/tablero/empleados" className="ml-2">
+            <Button type="button">Cancelar</Button>
+          </Link>
+        </div>
       </form>
     </div>
   );
