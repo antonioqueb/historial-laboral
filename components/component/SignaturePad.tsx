@@ -5,7 +5,7 @@ import SignatureCanvas from 'react-signature-canvas';
 import { Page, Text, View, Document, StyleSheet, pdf, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import { Button } from '../ui/button';
-import { FaTrash, FaSave, FaFileDownload } from 'react-icons/fa';
+import { FaTrash, FaSave } from 'react-icons/fa';
 
 const styles = StyleSheet.create({
   page: {
@@ -134,6 +134,9 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
       const response = await fetch('https://upload-file-by-nss.historiallaboral.com/upload-signature', {
         method: 'POST',
         body: formData,
+        headers: {
+          'Access-Control-Allow-Origin': '*', // Solo para pruebas locales; en producción debe ser configurado en el servidor
+        },
       });
 
       if (response.ok) {
