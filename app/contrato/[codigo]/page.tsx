@@ -1,4 +1,5 @@
 // app/contrato/[codigo]/page.tsx
+'use client';
 import { useRouter } from 'next/router';
 
 interface Params {
