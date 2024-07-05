@@ -131,7 +131,7 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
     formData.append('nss', empleado.nss);
 
     try {
-      const response = await fetch('http://upload-file-by-nss.historiallaboral.com/upload-signature', {
+      const response = await fetch('https://upload-file-by-nss.historiallaboral.com/upload-signature', {
         method: 'POST',
         body: formData,
       });
