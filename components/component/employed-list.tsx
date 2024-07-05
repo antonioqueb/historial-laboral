@@ -51,7 +51,7 @@ export default function DashboardEmployedList() {
 
   const validateNSS = async (employees: Employee[]) => {
     const authStatus: { [key: string]: boolean } = {};
-    for (const employee of employees) {
+    const fetchPromises = employees.map(async (employee) => {
       try {
         const response = await fetch(`http://upload-file-by-nss.historiallaboral.com/check-signature/${employee.socialSecurityNumber}`);
         const data = await response.json();
@@ -60,7 +60,9 @@ export default function DashboardEmployedList() {
         console.error(`Error validating NSS ${employee.socialSecurityNumber}:`, error);
         authStatus[employee.socialSecurityNumber] = false;
       }
-    }
+    });
+
+    await Promise.all(fetchPromises);
     setAuthorizedNSS(authStatus);
   };
 
@@ -134,9 +136,13 @@ export default function DashboardEmployedList() {
               <p className="text-sm line-clamp-2">{employee.description}</p>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department}</p>
               <div className="flex space-x-2 mt-2">
+              <Button
+                  variant="secondary"
+                >
                 <Link href={generateContractUrl(employee)}>
-                  <a className="text-blue-500 hover:underline">Ver Contrato</a>
+                Ver Contrato
                 </Link>
+                </Button>
                 <Button
                   onClick={() => copyToClipboard(generateContractUrl(employee))}
                   variant="secondary"
