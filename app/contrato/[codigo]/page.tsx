@@ -1,7 +1,9 @@
-'use client'; // Asegura que el código se ejecute en el cliente
+// pages/contrato.tsx
+'use client';
 
 import { useParams, useSearchParams } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
+import SignaturePad from '@/components/component/SignaturePad';
 
 interface Empleado {
   nombre: string;
@@ -66,18 +68,8 @@ const Contrato: FC = () => {
       <section className="mt-8">
         <h2 className="text-xl font-semibold">Firma</h2>
         <p className="mt-2">Al firmar este documento, el empleado acepta todos los términos y condiciones establecidos en este contrato.</p>
+        <SignaturePad empleado={empleado} codigo={codigo} />
       </section>
-      <div className="flex justify-between mt-12">
-        <div className="text-center">
-          <p className="border-t border-gray-400 pt-2">_____________________________</p>
-          <p className="font-semibold">Firma del Empleado</p>
-          <p>{empleado.nombre}</p>
-        </div>
-        <div className="text-center">
-          <p className="border-t border-gray-400 pt-2">_____________________________</p>
-          <p className="font-semibold">Firma del Representante de la Empresa</p>
-        </div>
-      </div>
     </main>
   );
 };
