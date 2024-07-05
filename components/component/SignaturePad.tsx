@@ -58,15 +58,15 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
     setSignatureURL(null);
   };
 
-  const handleSaveSignature = () => {
+  const handleSaveSignature = async () => {
     if (sigCanvas.current) {
       const url = sigCanvas.current.getTrimmedCanvas().toDataURL('image/png');
       setSignatureURL(url);
-      uploadSignature(url);
+      await handleGenerateAndUploadPDF(url);
     }
   };
 
-  const handleDownloadPDF = async () => {
+  const handleGenerateAndUploadPDF = async (signatureURL: string) => {
     if (!signatureURL) return;
 
     const MyDocument = (
@@ -122,12 +122,12 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
 
     const blob = await pdf(MyDocument).toBlob();
     saveAs(blob, 'Contrato_Firmado.pdf');
+    await uploadPDF(blob);
   };
 
-  const uploadSignature = async (signatureUrl: string) => {
-    const blob = await (await fetch(signatureUrl)).blob();
+  const uploadPDF = async (blob: Blob) => {
     const formData = new FormData();
-    formData.append('file', blob, 'firma.png');
+    formData.append('file', blob, 'Contrato_Firmado.pdf');
     formData.append('nss', empleado.nss);
 
     try {
@@ -138,9 +138,9 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Archivo de firma subido exitosamente:', result);
+        console.log('Archivo PDF subido exitosamente:', result);
       } else {
-        console.error('Error al subir la firma:', response.statusText);
+        console.error('Error al subir el archivo PDF:', response.statusText);
       }
     } catch (error) {
       console.error('Error al realizar la solicitud:', error);
@@ -155,17 +155,17 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
         canvasProps={{ width: 500, height: 200, className: 'sigCanvas' }}
       />
       <div className='gap-4 flex-row flex'>
-      <Button onClick={handleClear} variant="secondary">
-        <FaTrash className="mr-2 h-4 w-4" /> Limpiar Firma
-      </Button>
-      <Button onClick={handleSaveSignature} variant="secondary">
-        <FaSave className="mr-2 h-4 w-4" /> Guardar Firma
-      </Button>
-      <Button onClick={handleDownloadPDF} disabled={!signatureURL} variant="secondary">
-        <FaFileDownload className="mr-2 h-4 w-4" /> Descargar PDF
-      </Button>
-    </div>
+        <Button onClick={handleClear} variant="secondary">
+          <FaTrash className="mr-2 h-4 w-4" /> Limpiar Firma
+        </Button>
+        <Button onClick={handleSaveSignature} variant="secondary">
+          <FaSave className="mr-2 h-4 w-4" /> Guardar Firma
+        </Button>
+        <Button onClick={() => handleGenerateAndUploadPDF(signatureURL ?? '')} disabled={!signatureURL} variant="secondary">
+          <FaFileDownload className="mr-2 h-4 w-4" /> Descargar PDF
+        </Button>
       </div>
+    </div>
   );
 };
 
