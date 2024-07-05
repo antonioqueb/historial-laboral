@@ -53,7 +53,7 @@ export default function DashboardEmployedList() {
     const authStatus: { [key: string]: boolean } = {};
     const fetchPromises = employees.map(async (employee) => {
       try {
-        const response = await fetch(`http://upload-file-by-nss.historiallaboral.com/check-signature/${employee.socialSecurityNumber}`);
+        const response = await fetch(`https://upload-file-by-nss.historiallaboral.com/check-signature/${employee.socialSecurityNumber}`);
         const data = await response.json();
         authStatus[employee.socialSecurityNumber] = data.signature_exists;
       } catch (error) {
