@@ -66,7 +66,7 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, onU
   };
 
   return (
-    <div className="p-4 pt-6">
+    <div className="pt-6">
       <div className="mb-4">
         <input
           type="file"
