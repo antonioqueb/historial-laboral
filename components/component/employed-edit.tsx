@@ -212,8 +212,14 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  const codigoCifrado = 'abc123';
+
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
+      <h1>Página Principal</h1>
+      <Link href={`/contrato/${codigoCifrado}`}>
+        Ir al Contrato
+      </Link>
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
