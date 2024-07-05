@@ -11,6 +11,7 @@ export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState<string>("");
+  const [authorizedNSS, setAuthorizedNSS] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -19,7 +20,7 @@ export default function DashboardEmployedList() {
         console.log("Companies data:", data);
         setCompanies(data.companies);
         if (data.companies.length > 0) {
-          setSelectedCompany(data.companies[0].id); // Selecciona el primer companyId por defecto...
+          setSelectedCompany(data.companies[0].id);
           console.log("Selected company set to:", data.companies[0].id);
         }
       } catch (error) {
@@ -38,6 +39,7 @@ export default function DashboardEmployedList() {
           const filteredEmployees = await getEmployeesByCompany(selectedCompany);
           console.log("Filtered employees:", filteredEmployees);
           setEmployees(filteredEmployees);
+          await validateNSS(filteredEmployees);
         } catch (error) {
           console.error("Error fetching employees:", error);
         }
@@ -46,6 +48,21 @@ export default function DashboardEmployedList() {
       loadEmployees();
     }
   }, [selectedCompany]);
+
+  const validateNSS = async (employees: Employee[]) => {
+    const authStatus: { [key: string]: boolean } = {};
+    for (const employee of employees) {
+      try {
+        const response = await fetch(`http://upload-file-by-nss.historiallaboral.com/check-signature/${employee.socialSecurityNumber}`);
+        const data = await response.json();
+        authStatus[employee.socialSecurityNumber] = data.signature_exists;
+      } catch (error) {
+        console.error(`Error validating NSS ${employee.socialSecurityNumber}:`, error);
+        authStatus[employee.socialSecurityNumber] = false;
+      }
+    }
+    setAuthorizedNSS(authStatus);
+  };
 
   const generateContractUrl = (employee: Employee) => {
     const uniqueCode = `${employee.id}-${Date.now()}`;
@@ -95,7 +112,7 @@ export default function DashboardEmployedList() {
                 alt={`Foto de ${employee.name}`}
                 className="w-full h-full object-cover"
                 height={400}
-                src={employee.profileImageUrl ? employee.profileImageUrl : "/placeholder.svg"} // Usar la URL de la imagen o un placeholder
+                src={employee.profileImageUrl ? employee.profileImageUrl : "/placeholder.svg"}
                 style={{
                   aspectRatio: "400/400",
                   objectFit: "cover",
@@ -103,6 +120,9 @@ export default function DashboardEmployedList() {
                 width={400}
                 unoptimized
               />
+              <div className={`absolute top-2 right-2 p-2 rounded-full ${authorizedNSS[employee.socialSecurityNumber] ? 'bg-green-500' : 'bg-red-500'}`}>
+                {authorizedNSS[employee.socialSecurityNumber] ? '✔️' : '❌'}
+              </div>
             </div>
             <div className="p-4 space-y-2">
               <h3 className="text-lg font-semibold">{employee.name}</h3>
