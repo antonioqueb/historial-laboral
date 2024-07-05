@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { getEmployeesByCompany, getCompaniesList, Employee, Company } from "@/utils/fetchData";
 import Link from 'next/link';
+import { Button } from "../ui/button";
 
 export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -112,12 +113,12 @@ export default function DashboardEmployedList() {
                 <Link href={generateContractUrl(employee)}>
                   <a className="text-blue-500 hover:underline">Ver Contrato</a>
                 </Link>
-                <button
+                <Button
                   onClick={() => copyToClipboard(generateContractUrl(employee))}
-                  className="text-blue-500 hover:underline"
+                  variant="secondary"
                 >
                   Copiar URL
-                </button>
+                </Button>
               </div>
             </div>
           </div>
