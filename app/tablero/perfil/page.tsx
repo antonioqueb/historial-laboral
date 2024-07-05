@@ -117,7 +117,7 @@ const ProfilePage: React.FC = () => {
             {updateStatus && <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{updateStatus}</p>}
           </div>
         </Card>
-        <Card className="p-6 shadow-lg">
+        <Card className="p-4 shadow-lg">
           <h2 className="text-2xl font-semibold mb-4 pb-4">Foto de Perfil</h2>
           <ProfileImageUploader userId={userId} onUpdateStatus={handleUpdateStatus} />
         </Card>
