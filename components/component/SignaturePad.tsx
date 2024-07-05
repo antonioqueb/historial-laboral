@@ -1,4 +1,3 @@
-// components\component\SignaturePad.tsx
 'use client';
 
 import React, { useRef, useState } from 'react';
@@ -63,6 +62,7 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
     if (sigCanvas.current) {
       const url = sigCanvas.current.getTrimmedCanvas().toDataURL('image/png');
       setSignatureURL(url);
+      uploadSignature(url);
     }
   };
 
@@ -122,6 +122,29 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
 
     const blob = await pdf(MyDocument).toBlob();
     saveAs(blob, 'Contrato_Firmado.pdf');
+  };
+
+  const uploadSignature = async (signatureUrl: string) => {
+    const blob = await (await fetch(signatureUrl)).blob();
+    const formData = new FormData();
+    formData.append('file', blob, 'firma.png');
+    formData.append('nss', empleado.nss);
+
+    try {
+      const response = await fetch('http://upload-file-by-nss.historiallaboral.com/upload-signature', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Archivo de firma subido exitosamente:', result);
+      } else {
+        console.error('Error al subir la firma:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error);
+    }
   };
 
   return (
