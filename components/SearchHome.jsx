@@ -37,18 +37,20 @@ export default function Component() {
   };
 
   return (
-    <main className="flex flex-col items-center lg:py-12 justify-center min-h-screen bg-zinc-100 dark:bg-zinc-900 w-full">
+    <main className="flex flex-col items-center py-6 lg:py-12 justify-center min-h-screen bg-zinc-100 dark:bg-zinc-900 w-full">
       <div className="container max-w-7xl px-4 md:px-6">
         <div className="space-y-6">
           <div className="text-center">
-            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl 2xl:text-9xl pt-24">Historial Laboral</h1>
-            <p className="mt-3 text-xl text-zinc-500 dark:text-zinc-400 2xl:text-2xl">
-            Obtén información sobre el historial laboral de tus candidatos usando su NSS de forma sencilla.
+            <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl pt-12 sm:pt-24">
+              Historial Laboral
+            </h1>
+            <p className="mt-3 text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 2xl:text-2xl">
+              Obtén información sobre el historial laboral de tus candidatos usando su NSS de forma sencilla.
             </p>
           </div>
           <div className="rounded-md border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
-            <form className="flex items-center space-x-3" onSubmit={handleSearch}>
-              <div className="flex-1">
+            <form className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3" onSubmit={handleSearch}>
+              <div className="flex-1 w-full">
                 <Input
                   className="w-full rounded-md border-zinc-300 shadow-sm focus:border-zinc-500 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-500 text-lg"
                   placeholder="Ingresar NSS"
@@ -57,7 +59,7 @@ export default function Component() {
                   onChange={(e) => setNss(e.target.value)}
                 />
               </div>
-              <Button className="shrink-0 text-lg" type="submit" disabled={loading}>
+              <Button className="w-full sm:w-auto text-lg" type="submit" disabled={loading}>
                 {loading ? 'Buscando...' : 'Buscar'}
               </Button>
             </form>
