@@ -6,6 +6,7 @@ import SignatureCanvas from 'react-signature-canvas';
 import { Page, Text, View, Document, StyleSheet, pdf, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import { Button } from '../ui/button';
+import { FaTrash, FaSave, FaFileDownload } from 'react-icons/fa';
 
 const styles = StyleSheet.create({
   page: {
@@ -130,11 +131,17 @@ const SignaturePad: React.FC<Props> = ({ empleado, codigo }) => {
         penColor="black"
         canvasProps={{ width: 500, height: 200, className: 'sigCanvas' }}
       />
-      <div className='gap-4 flex-row flex '>
-      <Button onClick={handleClear} variant="secondary">Limpiar Firma</Button>
-      <Button onClick={handleSaveSignature} variant="secondary">Guardar Firma</Button>
-      <Button onClick={handleDownloadPDF} disabled={!signatureURL} variant="secondary">Descargar PDF</Button>
-      </div>
+      <div className='gap-4 flex-row flex'>
+      <Button onClick={handleClear} variant="secondary">
+        <FaTrash className="mr-2 h-4 w-4" /> Limpiar Firma
+      </Button>
+      <Button onClick={handleSaveSignature} variant="secondary">
+        <FaSave className="mr-2 h-4 w-4" /> Guardar Firma
+      </Button>
+      <Button onClick={handleDownloadPDF} disabled={!signatureURL} variant="secondary">
+        <FaFileDownload className="mr-2 h-4 w-4" /> Descargar PDF
+      </Button>
+    </div>
       </div>
   );
 };
