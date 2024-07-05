@@ -120,12 +120,16 @@ export default function DashboardEmployedList() {
                 width={400}
                 unoptimized
               />
-              <div className={`absolute top-2 right-2 p-2 rounded-full ${authorizedNSS[employee.socialSecurityNumber] ? 'bg-green-500' : 'bg-red-500'}`}>
-                {authorizedNSS[employee.socialSecurityNumber] ? '✔️' : '❌'}
-              </div>
             </div>
             <div className="p-4 space-y-2">
               <h3 className="text-lg font-semibold">{employee.name}</h3>
+              <div className="flex items-center">
+                {authorizedNSS[employee.socialSecurityNumber] ? (
+                  <span className="text-green-500">✔️ Autorizado</span>
+                ) : (
+                  <span className="text-red-500">❌ No Autorizado</span>
+                )}
+              </div>
               <p className="text-zinc-500 dark:text-zinc-400">{employee.role}</p>
               <p className="text-sm line-clamp-2">{employee.description}</p>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department}</p>
