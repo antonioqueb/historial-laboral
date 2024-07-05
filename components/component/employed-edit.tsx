@@ -48,7 +48,8 @@ export interface Employee {
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [nss, setNss] = useState<string | undefined>(undefined);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | undefined>(undefined);
+  const [selectedEmployeeNss, setSelectedEmployeeNss] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [formData, setFormData] = useState({
     id: '',
@@ -99,20 +100,6 @@ export default function DashboardEmployedEdit() {
       }
     };
 
-    const fetchEmployeesByCompanyRFC = async (rfc: string) => {
-      try {
-        const res = await fetch(`https://historiallaboral.com/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
-        if (res.ok) {
-          const data = await res.json();
-          setEmployees(data.employees);
-        } else {
-          setError('Failed to fetch employees');
-        }
-      } catch (err) {
-        setError('Failed to fetch employees');
-      }
-    };
-
     const fetchCompanies = async (userId: string) => {
       try {
         const res = await fetch('https://historiallaboral.com/api/listCompanies');
@@ -132,10 +119,7 @@ export default function DashboardEmployedEdit() {
     const initializeData = async () => {
       const userId = await fetchUserId();
       if (userId) {
-        const userCompanies = await fetchCompanies(userId);
-        if (userCompanies.length > 0) {
-          await fetchEmployeesByCompanyRFC(userCompanies[0].rfc);
-        }
+        await fetchCompanies(userId);
       }
     };
 
@@ -143,10 +127,30 @@ export default function DashboardEmployedEdit() {
   }, []);
 
   useEffect(() => {
-    if (nss) {
+    if (selectedCompanyId) {
+      const fetchEmployeesByCompanyId = async (companyId: string) => {
+        try {
+          const res = await fetch(`https://historiallaboral.com/api/listEmployeesByCompanyId?companyId=${companyId}`);
+          if (res.ok) {
+            const data = await res.json();
+            setEmployees(data.employees);
+          } else {
+            setError('Failed to fetch employees');
+          }
+        } catch (err) {
+          setError('Failed to fetch employees');
+        }
+      };
+
+      fetchEmployeesByCompanyId(selectedCompanyId);
+    }
+  }, [selectedCompanyId]);
+
+  useEffect(() => {
+    if (selectedEmployeeNss) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`https://historiallaboral.com/api/getEmployeeByNss?nss=${nss}`);
+          const res = await fetch(`https://historiallaboral.com/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
           if (res.ok) {
             const { employee } = await res.json();
             setFormData({
@@ -165,14 +169,10 @@ export default function DashboardEmployedEdit() {
 
       fetchEmployee();
     }
-  }, [nss]);
+  }, [selectedEmployeeNss]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSelectChange = (value: string) => {
-    setFormData({ ...formData, companyId: value });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -212,19 +212,35 @@ export default function DashboardEmployedEdit() {
     }
   };
 
-  const codigoCifrado = 'abc123';
-
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
-      {!nss ? (
+      {!selectedCompanyId ? (
+        <div>
+          <Label className="mb-2" htmlFor="company">
+            Seleccionar Empresa
+          </Label>
+          <Select value={selectedCompanyId ?? undefined} onValueChange={(value) => setSelectedCompanyId(value)} required>
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar empresa" />
+            </SelectTrigger>
+            <SelectContent>
+              {companies.map((company) => (
+                <SelectItem key={company.id} value={company.id}>
+                  {company.razonSocial}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      ) : !selectedEmployeeNss ? (
         <div>
           <Label className="mb-2" htmlFor="employee">
             Seleccionar Empleado
           </Label>
-          <Select value={nss ?? undefined} onValueChange={(value) => setNss(value)} required>
+          <Select value={selectedEmployeeNss ?? undefined} onValueChange={(value) => setSelectedEmployeeNss(value)} required>
             <SelectTrigger>
               <SelectValue placeholder="Seleccionar empleado" />
             </SelectTrigger>
@@ -279,7 +295,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="companyId">Empresa</Label>
-                <Select value={formData.companyId} onValueChange={handleSelectChange} required>
+                <Select value={formData.companyId} onValueChange={(value) => setFormData({ ...formData, companyId: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar empresa" />
                   </SelectTrigger>
