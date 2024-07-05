@@ -1,17 +1,25 @@
-// app/contrato/[codigo]/page.tsx
-'use client';
+'use client'; // Esto asegura que el código se ejecute en el cliente
+
 import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
 
 interface Params {
   codigo: string;
 }
 
-const Contrato: React.FC = () => {
+const Contrato: FC = () => {
   const router = useRouter();
-  const { codigo } = router.query as unknown as Params;
+  const [codigo, setCodigo] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (router.isReady) {
+      const { codigo } = router.query as unknown as Params;
+      setCodigo(codigo);
+    }
+  }, [router.isReady, router.query]);
 
   if (!codigo) {
-    return <div>Código no encontrado</div>;
+    return <div>Cargando...</div>;
   }
 
   return (
