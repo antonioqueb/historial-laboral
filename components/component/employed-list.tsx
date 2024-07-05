@@ -46,9 +46,15 @@ export default function DashboardEmployedList() {
     }
   }, [selectedCompany]);
 
-  const generateContractUrl = (employeeId: string) => {
-    const uniqueCode = `${employeeId}-${Date.now()}`;
-    return `${window.location.origin}/contrato/${uniqueCode}`;
+  const generateContractUrl = (employee: Employee) => {
+    const uniqueCode = `${employee.id}-${Date.now()}`;
+    const params = new URLSearchParams({
+      nombre: employee.name,
+      curp: employee.CURP,
+      rfc: employee.RFC,
+      nss: employee.socialSecurityNumber,
+    });
+    return `${window.location.origin}/contrato/${uniqueCode}?${params.toString()}`;
   };
 
   const copyToClipboard = (url: string) => {
@@ -103,11 +109,11 @@ export default function DashboardEmployedList() {
               <p className="text-sm line-clamp-2">{employee.description}</p>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department}</p>
               <div className="flex space-x-2 mt-2">
-                <Link href={generateContractUrl(employee.id)}>
+                <Link href={generateContractUrl(employee)}>
                   <a className="text-blue-500 hover:underline">Ver Contrato</a>
                 </Link>
                 <button
-                  onClick={() => copyToClipboard(generateContractUrl(employee.id))}
+                  onClick={() => copyToClipboard(generateContractUrl(employee))}
                   className="text-blue-500 hover:underline"
                 >
                   Copiar URL
