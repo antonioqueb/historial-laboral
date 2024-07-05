@@ -6,6 +6,7 @@ import { FC, useEffect, useState } from 'react';
 const Contrato: FC = () => {
   const searchParams = useSearchParams();
   const codigo = searchParams.get('codigo');
+  console.log('Código del contrato:', codigo);
 
   if (!codigo) {
     return <div>Código no encontrado</div>;
