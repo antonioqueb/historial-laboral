@@ -71,7 +71,7 @@ const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({ userId, onU
         <input
           type="file"
           onChange={handleFileChange}
-          className="block w-full py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+          className="block w-full  text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
         />
       </div>
       <Button onClick={handleUpload} className="w-full my-4">Subir Imagen</Button>
