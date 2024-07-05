@@ -48,7 +48,7 @@ export interface Employee {
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string | undefined>(undefined);
+  const [selectedCompanyRFC, setSelectedCompanyRFC] = useState<string | undefined>(undefined);
   const [selectedEmployeeNss, setSelectedEmployeeNss] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [formData, setFormData] = useState({
@@ -127,10 +127,10 @@ export default function DashboardEmployedEdit() {
   }, []);
 
   useEffect(() => {
-    if (selectedCompanyId) {
-      const fetchEmployeesByCompanyId = async (companyId: string) => {
+    if (selectedCompanyRFC) {
+      const fetchEmployeesByCompanyRFC = async (rfc: string) => {
         try {
-          const res = await fetch(`https://historiallaboral.com/api/listEmployeesByCompanyId?companyId=${companyId}`);
+          const res = await fetch(`https://historiallaboral.com/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
           if (res.ok) {
             const data = await res.json();
             setEmployees(data.employees);
@@ -142,9 +142,9 @@ export default function DashboardEmployedEdit() {
         }
       };
 
-      fetchEmployeesByCompanyId(selectedCompanyId);
+      fetchEmployeesByCompanyRFC(selectedCompanyRFC);
     }
-  }, [selectedCompanyId]);
+  }, [selectedCompanyRFC]);
 
   useEffect(() => {
     if (selectedEmployeeNss) {
@@ -217,18 +217,18 @@ export default function DashboardEmployedEdit() {
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
       </div>
-      {!selectedCompanyId ? (
+      {!selectedCompanyRFC ? (
         <div>
           <Label className="mb-2" htmlFor="company">
             Seleccionar Empresa
           </Label>
-          <Select value={selectedCompanyId ?? undefined} onValueChange={(value) => setSelectedCompanyId(value)} required>
+          <Select value={selectedCompanyRFC ?? undefined} onValueChange={(value) => setSelectedCompanyRFC(value)} required>
             <SelectTrigger>
               <SelectValue placeholder="Seleccionar empresa" />
             </SelectTrigger>
             <SelectContent>
               {companies.map((company) => (
-                <SelectItem key={company.id} value={company.id}>
+                <SelectItem key={company.rfc} value={company.rfc}>
                   {company.razonSocial}
                 </SelectItem>
               ))}
