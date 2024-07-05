@@ -123,7 +123,7 @@ const ProfilePage: React.FC = () => {
         </Card>
       </div>
       <div className="flex justify-end mt-4">
-        <Link href="/dashboard" className="ml-2">
+        <Link href="/tablero" className="ml-2">
           <Button type="button">Cancelar</Button>
         </Link>
       </div>
