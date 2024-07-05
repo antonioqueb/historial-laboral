@@ -1,12 +1,11 @@
 'use client'; // Asegura que el código se ejecute en el cliente
 
-import { useSearchParams } from 'next/navigation';
-import { FC, useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { FC } from 'react';
 
 const Contrato: FC = () => {
-  const searchParams = useSearchParams();
-  const codigo = searchParams.get('codigo');
-  console.log('Código del contrato:', codigo);
+  const params = useParams();
+  const codigo = params.codigo as string;
 
   if (!codigo) {
     return <div>Código no encontrado</div>;
