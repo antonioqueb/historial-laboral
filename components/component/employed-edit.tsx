@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
+import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema
+import { z } from "zod";
 
 export interface Company {
   id: string;
@@ -185,6 +188,15 @@ export default function DashboardEmployedEdit() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    try {
+      editEmployeeSchema.parse(formData); // Validate formData with Zod
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setError(error.errors.map(err => err.message).join(", "));
+        return;
+      }
+    }
 
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
