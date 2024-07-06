@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Label } from "../ui/label";
@@ -8,6 +6,8 @@ import { Button } from "../ui/button";
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { getUserId, getCompanyByRfc, editCompany, getCompaniesRFC } from "@/utils/fetchData";
+import { z } from "zod";
+import { editCompanySchema } from "@/schemas/editCompanySchema";
 
 export default function EditCompany() {
   const { data: session } = useSession();
@@ -17,7 +17,6 @@ export default function EditCompany() {
   const searchParams = useSearchParams();
   const initialRfc = searchParams.get("rfc");
 
-  // Nuevos campos
   const [razonSocial, setRazonSocial] = useState("");
   const [rfc, setRfc] = useState(initialRfc || "");
   const [domicilioFiscalCalle, setDomicilioFiscalCalle] = useState("");
@@ -38,7 +37,6 @@ export default function EditCompany() {
 
   const [companies, setCompanies] = useState<string[]>([]);
 
-  // Función para cargar el userId
   const loadUserId = async () => {
     try {
       const data = await getUserId();
@@ -48,13 +46,11 @@ export default function EditCompany() {
     }
   };
 
-  // Función para cargar las compañías
   const loadCompanies = async () => {
     const data = await getCompaniesRFC();
     setCompanies(data.rfcs);
   };
 
-  // Función para cargar los datos de la empresa seleccionada
   const fetchCompanyData = async (rfc: string) => {
     try {
       const data = await getCompanyByRfc(rfc);
@@ -131,6 +127,15 @@ export default function EditCompany() {
       certificaciones: certificaciones.split(',').map(cert => cert.trim())
     };
 
+    try {
+      editCompanySchema.parse(data); // Validar datos con Zod
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setMessage(error.errors.map(err => err.message).join(", "));
+        return;
+      }
+    }
+
     const result = await editCompany(data);
 
     if (result.company.name) {
@@ -179,7 +184,6 @@ export default function EditCompany() {
             </select>
           </div>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Información General */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Información General</h2>
               <div>
@@ -234,7 +238,6 @@ export default function EditCompany() {
               </div>
             </div>
 
-            {/* Domicilio Fiscal */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Domicilio Fiscal</h2>
               <div>
@@ -299,7 +302,6 @@ export default function EditCompany() {
               </div>
             </div>
 
-            {/* Información del Representante Legal */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Representante Legal</h2>
               <div>
@@ -324,7 +326,6 @@ export default function EditCompany() {
               </div>
             </div>
 
-            {/* Información Adicional */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Información Adicional</h2>
               <div>
@@ -381,7 +382,7 @@ export default function EditCompany() {
             
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
               <Button type="submit">Editar Empresa</Button>
-              <Link href="/tablero/empresas"  className="ml-2">
+              <Link href="/tablero/empresas" className="ml-2">
                 <Button type="button">Cancelar</Button>
               </Link>
             </div>
