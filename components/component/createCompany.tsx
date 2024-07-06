@@ -1,11 +1,11 @@
-'use client';
-
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { getUserId, createCompany } from "@/utils/fetchData";
+import { z } from "zod";
+import  createCompanySchema  from "@/schemas/createCompanySchema";
 
 export default function CreateCompany() {
   const { data: session } = useSession();
@@ -13,7 +13,6 @@ export default function CreateCompany() {
   const [message, setMessage] = useState<string | null>(null);
   const [userId, setUserId] = useState("");
 
-  // Nuevos campos
   const [razonSocial, setRazonSocial] = useState("");
   const [rfc, setRfc] = useState("");
   const [domicilioFiscalCalle, setDomicilioFiscalCalle] = useState("");
@@ -32,7 +31,6 @@ export default function CreateCompany() {
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
 
-  // Función para cargar el userId
   const loadUserId = async () => {
     try {
       const data = await getUserId();
@@ -83,6 +81,15 @@ export default function CreateCompany() {
       certificaciones: certificaciones.split(',').map(cert => cert.trim())
     };
 
+    try {
+      createCompanySchema.parse(data); // Validar datos con Zod
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setMessage(error.errors.map(err => err.message).join(", "));
+        return;
+      }
+    }
+
     const result = await createCompany(data);
 
     if (result.company.name) {
@@ -110,7 +117,6 @@ export default function CreateCompany() {
         <>
           <h1 className="text-3xl font-bold mb-8">Registrar Empresa</h1>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Información General */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Información General</h2>
               <div>
@@ -165,7 +171,6 @@ export default function CreateCompany() {
               </div>
             </div>
 
-            {/* Domicilio Fiscal */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Domicilio Fiscal</h2>
               <div>
@@ -230,7 +235,6 @@ export default function CreateCompany() {
               </div>
             </div>
 
-            {/* Información del Representante Legal */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Representante Legal</h2>
               <div>
@@ -255,7 +259,6 @@ export default function CreateCompany() {
               </div>
             </div>
 
-            {/* Información Adicional */}
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Información Adicional</h2>
               <div>
