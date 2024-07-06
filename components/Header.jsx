@@ -53,6 +53,12 @@ export default function Header() {
       <div className="flex items-center gap-4">
         {session ? (
           <div className="flex items-center gap-2">
+            <Button>
+              <Link href="/tablero">Tablero</Link>
+            </Button>
+            <Button className="rounded-full" size="icon" variant="ghost">
+              <ModeToggle />
+            </Button>
             {imageError || !profileImageUrl ? (
               <div className="w-10 h-10 flex items-center justify-center bg-zinc-300 rounded-full text-xl text-white">
                 {session.user?.name?.charAt(0)}
@@ -67,18 +73,14 @@ export default function Header() {
                 onError={handleImageError}
               />
             )}
-            <Button>
-              <Link href="/tablero">Tablero</Link>
-            </Button>
+          
           </div>
         ) : (
           <>
             <Login />
           </>
         )}
-        <Button className="rounded-full" size="icon" variant="ghost">
-          <ModeToggle />
-        </Button>
+       
       </div>
     </header>
   );
