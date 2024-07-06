@@ -5,7 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import Link from 'next/link'; // Importar Link de next/link
+import Link from 'next/link';
+import { profileSchema } from '@/schemas/profileSchema'; // Importar el esquema de validación
+import { z } from 'zod';
 
 const ProfilePage: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
@@ -50,6 +52,16 @@ const ProfilePage: React.FC = () => {
     if (!userId || !userData) {
       setUpdateStatus('Missing user ID or data');
       return;
+    }
+
+    // Validar los datos del perfil con Zod
+    try {
+      profileSchema.parse(userData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setError(error.errors.map(err => err.message).join(", "));
+        return;
+      }
     }
 
     try {
