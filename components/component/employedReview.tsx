@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -8,6 +9,8 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
 import { createReview, getCompaniesList, getEmployeesByCompany, getUserId, Employee, Company } from '@/utils/fetchData';
+import { reviewSchema } from "@/schemas/reviewSchema"; // Importar el esquema de validación
+import { z } from "zod";
 
 interface ReviewData {
   employeeId: string;
@@ -124,6 +127,16 @@ export default function DashboardEmployedReview() {
     if (!isAuthorized) {
       setError('No estás autorizado para dejar una reseña para este empleado.');
       return;
+    }
+
+    // Validar los datos de la reseña con Zod
+    try {
+      reviewSchema.parse(reviewData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setError(error.errors.map(err => err.message).join(", "));
+        return;
+      }
     }
 
     try {
