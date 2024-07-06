@@ -81,42 +81,53 @@ export default function DashboardEmployedList() {
     });
   };
 
+  const handleChangeCompany = () => {
+    setSelectedCompany("");
+    setEmployees([]);
+  };
+
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Empleados</h1>
+        {selectedCompany && (
+          <Button onClick={handleChangeCompany} variant="secondary">
+            Cambiar de Empresa
+          </Button>
+        )}
       </div>
-      <div className="mb-4">
-        <Label htmlFor="companySelect">Seleccionar Empresa</Label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {companies.map((company) => (
-            <div
-              key={company.id}
-              className={`bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden cursor-pointer ${selectedCompany === company.id ? 'border-2 border-indigo-500' : ''}`}
-              onClick={() => setSelectedCompany(company.id)}
-            >
-              <div className="aspect-square">
-                <Image
-                  alt={`Logo de ${company.razonSocial}`}
-                  className="w-full h-full object-cover"
-                  height={400}
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "400/400",
-                    objectFit: "cover",
-                  }}
-                  width={400}
-                  unoptimized
-                />
+      {!selectedCompany ? (
+        <div className="mb-4">
+          <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {companies.map((company) => (
+              <div
+                key={company.id}
+                className={`bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden cursor-pointer ${selectedCompany === company.id ? 'border-2 border-indigo-500' : ''}`}
+                onClick={() => setSelectedCompany(company.id)}
+              >
+                <div className="aspect-square">
+                  <Image
+                    alt={`Logo de ${company.razonSocial}`}
+                    className="w-full h-full object-cover"
+                    height={400}
+                    src="/placeholder.svg"
+                    style={{
+                      aspectRatio: "400/400",
+                      objectFit: "cover",
+                    }}
+                    width={400}
+                    unoptimized
+                  />
+                </div>
+                <div className="p-4 space-y-2">
+                  <h3 className="text-lg font-semibold">{company.razonSocial}</h3>
+                </div>
               </div>
-              <div className="p-4 space-y-2">
-                <h3 className="text-lg font-semibold">{company.razonSocial}</h3>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-      {selectedCompany && (
+      ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {employees.map((employee) => (
             <div key={employee.id} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden">
