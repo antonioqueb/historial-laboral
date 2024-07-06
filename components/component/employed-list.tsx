@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { getEmployeesByCompany, getCompaniesList, Employee, Company } from "@/utils/fetchData";
-import Link from 'next/link';
 import { Button } from "../ui/button";
 
 export default function DashboardEmployedList() {
@@ -169,7 +168,7 @@ export default function DashboardEmployedList() {
                 <p className="text-sm line-clamp-2">{employee.description}</p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department}</p>
                 <div className="flex space-x-2 mt-2">
-                  {authorizedNSS[employee.socialSecurityNumber] && (
+                  {authorizedNSS[employee.socialSecurityNumber] ? (
                     <Button
                       onClick={async () => {
                         const token = await fetchToken(employee.socialSecurityNumber);
@@ -183,18 +182,14 @@ export default function DashboardEmployedList() {
                     >
                       Ver Contrato Firmado
                     </Button>
+                  ) : (
+                    <Button
+                      onClick={() => copyToClipboard(generateContractUrl(employee))}
+                      variant="secondary"
+                    >
+                      Copiar URL
+                    </Button>
                   )}
-                  <Button variant="secondary">
-                    <Link href={generateContractUrl(employee)}>
-                      Ver Contrato
-                    </Link>
-                  </Button>
-                  <Button
-                    onClick={() => copyToClipboard(generateContractUrl(employee))}
-                    variant="secondary"
-                  >
-                    Copiar URL
-                  </Button>
                 </div>
               </div>
             </div>
