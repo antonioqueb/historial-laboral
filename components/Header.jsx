@@ -50,9 +50,9 @@ export default function Header() {
       <Link className="flex items-center gap-2" href="/">
         <h2 className="font-bold text-xl lg:text-2xl">Historial Laboral</h2>
       </Link>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 ml-auto">
         {session ? (
-          <div className="flex items-center gap-2">
+          <>
             <Button>
               <Link href="/tablero">Tablero</Link>
             </Button>
@@ -64,26 +64,24 @@ export default function Header() {
                 {session.user?.name?.charAt(0)}
               </div>
             ) : (
-              <Button className="rounded-full" size="icon" variant="ghost">
-                <ModeToggle />
-              </Button>
-
+              <Image
+                src={profileImageUrl}
+                alt="Avatar"
+                width={40}
+                height={40}
+                className="rounded-full"
+                onError={handleImageError}
+              />
             )}
-            <Image
-              src={profileImageUrl}
-              alt="Avatar"
-              width={40}
-              height={40}
-              className="rounded-full"
-              onError={handleImageError}
-            />
-          </div>
+          </>
         ) : (
           <>
             <Login />
+            <Button className="rounded-full" size="icon" variant="ghost">
+              <ModeToggle />
+            </Button>
           </>
         )}
-
       </div>
     </header>
   );
