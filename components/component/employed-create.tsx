@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,8 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { getCompaniesList, createEmployee, Company, uploadEmployeeFiles } from "@/utils/fetchData";
+import { z } from "zod";
+import  createEmployedSchema  from "@/schemas/createEmployedSchema";
 
-// Definición de tipos para los datos esperados
 interface FormData {
   name: string;
   role: string;
@@ -73,13 +73,11 @@ export default function DashboardEmployedAdmin() {
   const [success, setSuccess] = useState<string | null>(null);
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
 
-  // Función para cargar las compañías
   const loadCompanies = async () => {
     const data = await getCompaniesList();
     setCompanies(data.companies);
   };
 
-  // Cargar las compañías al montar el componente
   useEffect(() => {
     loadCompanies();
   }, []);
@@ -108,6 +106,15 @@ export default function DashboardEmployedAdmin() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    try {
+      createEmployedSchema.parse(formData); // Validar datos con Zod
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setError(error.errors.map(err => err.message).join(", "));
+        return;
+      }
+    }
 
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
