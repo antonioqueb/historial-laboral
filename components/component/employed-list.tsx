@@ -81,6 +81,17 @@ export default function DashboardEmployedList() {
     });
   };
 
+  const fetchToken = async (nss: string) => {
+    try {
+      const response = await fetch(`https://upload-file-by-nss.historiallaboral.com/generate-token/${nss}`);
+      const data = await response.json();
+      return data.token;
+    } catch (error) {
+      console.error("Error generating token:", error);
+      return null;
+    }
+  };
+
   const handleChangeCompany = () => {
     setSelectedCompany("");
     setEmployees([]);
@@ -158,6 +169,21 @@ export default function DashboardEmployedList() {
                 <p className="text-sm line-clamp-2">{employee.description}</p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department}</p>
                 <div className="flex space-x-2 mt-2">
+                  {authorizedNSS[employee.socialSecurityNumber] && (
+                    <Button
+                      onClick={async () => {
+                        const token = await fetchToken(employee.socialSecurityNumber);
+                        if (token) {
+                          window.open(`https://upload-file-by-nss.historiallaboral.com/get-signature/${token}`, '_blank');
+                        } else {
+                          alert("Error al generar el token. Por favor, intente de nuevo.");
+                        }
+                      }}
+                      variant="secondary"
+                    >
+                      Ver Contrato Firmado
+                    </Button>
+                  )}
                   <Button variant="secondary">
                     <Link href={generateContractUrl(employee)}>
                       Ver Contrato
