@@ -64,23 +64,26 @@ export default function Header() {
                 {session.user?.name?.charAt(0)}
               </div>
             ) : (
-              <Image
-                src={profileImageUrl}
-                alt="Avatar"
-                width={40}
-                height={40}
-                className="rounded-full"
-                onError={handleImageError}
-              />
+              <Button className="rounded-full" size="icon" variant="ghost">
+                <ModeToggle />
+              </Button>
+
             )}
-          
+            <Image
+              src={profileImageUrl}
+              alt="Avatar"
+              width={40}
+              height={40}
+              className="rounded-full"
+              onError={handleImageError}
+            />
           </div>
         ) : (
           <>
             <Login />
           </>
         )}
-       
+
       </div>
     </header>
   );
