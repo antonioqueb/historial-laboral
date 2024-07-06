@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Label } from "../ui/label";
