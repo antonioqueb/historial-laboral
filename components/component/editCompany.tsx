@@ -8,7 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { getUserId, getCompanyByRfc, editCompany, getCompaniesRFC } from "@/utils/fetchData";
 import { z } from "zod";
-import { editCompanySchema } from "@/schemas/editCompanySchema";
+import editCompanySchema from "@/schemas/editCompanySchema";
 
 export default function EditCompany() {
   const { data: session } = useSession();
@@ -127,6 +127,9 @@ export default function EditCompany() {
     formData.append("registrosInfonavit", registrosInfonavit);
     formData.append("giroActividadEconomica", giroActividadEconomica);
     formData.append("certificaciones", certificaciones);
+    if (logo) {
+      formData.append("logo", logo);
+    }
 
     const parsedData = {
       name,

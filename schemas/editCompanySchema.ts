@@ -1,4 +1,3 @@
-// schemas\editCompanySchema.ts
 import { z } from "zod";
 
 export const editCompanySchema = z.object({
@@ -16,10 +15,10 @@ export const editCompanySchema = z.object({
   objetoSocial: z.string().nonempty("Objeto Social es requerido"),
   representanteLegalNombre: z.string().nonempty("Nombre del Representante Legal es requerido"),
   representanteLegalCurp: z.string().nonempty("CURP del Representante Legal es requerido"),
-  capitalSocial: z.number().positive("Capital Social debe ser mayor a cero"),
+  capitalSocial: z.preprocess((val) => parseFloat(val as string), z.number().positive("Capital Social debe ser mayor a cero")),
   registrosImss: z.string().optional(),
   registrosInfonavit: z.string().optional(),
   giroActividadEconomica: z.string().nonempty("Actividad Económica es requerida"),
-  certificaciones: z.array(z.string()).optional(),
+  certificaciones: z.preprocess((val) => (val as string).split(',').map(cert => cert.trim()), z.array(z.string())).optional(),
   logo: z.instanceof(File).optional()
 });
