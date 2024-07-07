@@ -38,7 +38,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, viewMode }) => {
       <Card className="w-full max-w-md">
         {company.logoUrl && (
           <img
-            src={company.logoUrl}
+            src={company.logoUrl ? company.logoUrl : "/placeholder.svg"}
             alt={`${company.name} Logo`}
             width={600}
             height={300}
