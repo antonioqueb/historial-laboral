@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 
 export interface Company {
   id: string;
@@ -33,13 +34,16 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
 
   return (
     <Card className="w-full max-w-md">
-      <img
-        src={logoSrc}
-        alt={`${company.name} Logo`}
-        width={600}
-        height={300}
-        className="object-cover rounded-t-lg"
-      />
+      <div className="relative w-full h-48">
+        <Image
+          src={logoSrc}
+          alt={`${company.name} Logo`}
+          layout="fill"
+          objectFit="cover"
+          className="rounded-t-lg"
+          unoptimized
+        />
+      </div>
       <CardContent className="p-6 space-y-4">
         <div className="space-y-1">
           <h3 className="text-xl font-semibold">{company.name}</h3>
