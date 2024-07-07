@@ -1,8 +1,7 @@
-// components\component\CompanyCard.tsx
-
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export interface Company {
   id: string;
@@ -29,10 +28,45 @@ export interface Company {
 
 interface CompanyCardProps {
   company: Company;
-  viewMode: "list" | "grid";
+  viewMode: "list" | "grid" | "card";
 }
 
 const CompanyCard: React.FC<CompanyCardProps> = ({ company, viewMode }) => {
+  if (viewMode === "card") {
+    return (
+      <Card className="w-full max-w-md">
+        {company.logoUrl && (
+          <img
+            src={company.logoUrl}
+            alt={`${company.name} Logo`}
+            width={600}
+            height={300}
+            className="object-cover rounded-t-lg"
+          />
+        )}
+        <CardContent className="p-6 space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-xl font-semibold">{company.name}</h3>
+            <p className="text-muted-foreground">Razón Social: {company.razonSocial}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-muted-foreground">RFC: {company.rfc}</p>
+          </div>
+          <div className="space-y-1">
+            <p className="text-muted-foreground">Domicilio Fiscal:</p>
+            <p>
+              {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}
+            </p>
+          </div>
+          <div>
+            <p className="text-muted-foreground">Nombre Comercial:</p>
+            <p>{company.nombreComercial}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className={`p-4 bg-white dark:bg-zinc-800 rounded-lg shadow-md ${viewMode === "list" ? "flex flex-col sm:flex-row" : "flex flex-col justify-between h-full"}`}>
       {company.logoUrl && (
