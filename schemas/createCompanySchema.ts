@@ -20,6 +20,7 @@ const createCompanySchema = z.object({
   registrosInfonavit: z.string().nonempty("Registros Infonavit es requerido"),
   giroActividadEconomica: z.string().nonempty("Actividad Económica es requerida"),
   certificaciones: z.array(z.string()).optional(),
+  logo: z.instanceof(File).optional() // El logo es opcional y es un archivo
 });
 
 export default createCompanySchema;
