@@ -1,7 +1,6 @@
 // components\CompanyCard.tsx
 import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export interface Company {
@@ -29,7 +28,7 @@ export interface Company {
 
 interface CompanyCardProps {
   company: Company;
-  viewMode: "list" | "card";
+  viewMode: "card" | "list";
 }
 
 const CompanyCard: React.FC<CompanyCardProps> = ({ company, viewMode }) => {
