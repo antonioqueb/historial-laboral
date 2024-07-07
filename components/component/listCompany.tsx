@@ -29,6 +29,7 @@ export interface Company {
   registrosInfonavit?: string;
   giroActividadEconomica: string;
   certificaciones: string[];
+  logoUrl?: string; // Añadido para la URL del logo
   employees?: Employee[];
   reviewsGiven?: Review[];
 }
@@ -134,6 +135,9 @@ export default function ListCompany() {
               {companies.length > 0 ? (
                 companies.map((company) => (
                   <div key={company.id} className="p-4 bg-white dark:bg-zinc-800 rounded-lg shadow-md flex flex-col sm:flex-row">
+                    {company.logoUrl && (
+                      <img src={company.logoUrl} alt={`${company.name} Logo`} className="w-16 h-16 mr-4" />
+                    )}
                     <div className="flex-grow">
                       <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`}>
                         <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">{company.name}</h3>
@@ -165,6 +169,9 @@ export default function ListCompany() {
                       <span className="sr-only">Ver detalles</span>
                     </Link>
                     <div className="p-4 bg-white dark:bg-zinc-800 flex-grow">
+                      {company.logoUrl && (
+                        <img src={company.logoUrl} alt={`${company.name} Logo`} className="w-16 h-16 mb-2" />
+                      )}
                       <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">{company.name}</h3>
                       <p className="text-sm mb-1 text-zinc-700 dark:text-zinc-300">{company.razonSocial}</p>
                       <p className="text-sm mb-1 text-zinc-700 dark:text-zinc-300">{company.rfc}</p>
