@@ -1,3 +1,4 @@
+// components\CompanyCard.tsx
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ export interface Company {
 
 interface CompanyCardProps {
   company: Company;
-  viewMode: "list" | "grid" | "card";
+  viewMode: "list" | "card";
 }
 
 const CompanyCard: React.FC<CompanyCardProps> = ({ company, viewMode }) => {
@@ -88,14 +89,6 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, viewMode }) => {
         <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Actividad Económica:</span> {company.giroActividadEconomica}</p>
         <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Certificaciones:</span> {company.certificaciones.join(", ")}</p>
       </div>
-      {viewMode === "grid" && (
-        <div className="p-4 bg-gray-100 dark:bg-zinc-700 flex justify-end gap-2">
-          <Button variant="outline" size="sm">
-            <FilePenIcon className="h-4 w-4" />
-            <span className="sr-only">Editar</span>
-          </Button>
-        </div>
-      )}
     </div>
   );
 }

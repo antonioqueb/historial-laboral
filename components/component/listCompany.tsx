@@ -10,7 +10,7 @@ export default function ListCompany() {
   const { data: session } = useSession();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [message, setMessage] = useState<string>("");
-  const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
+  const [viewMode, setViewMode] = useState<"list" | "card">("list");
 
   useEffect(() => {
     if (session) {
@@ -51,7 +51,7 @@ export default function ListCompany() {
             </h1>
             <div>
               <Button variant="outline" onClick={() => setViewMode("list")}>Lista</Button>
-              <Button className="ml-4" variant="outline" onClick={() => setViewMode("grid")}>Cuadrícula</Button>
+              <Button className="ml-4" variant="outline" onClick={() => setViewMode("card")}>Tarjeta</Button>
             </div>
           </div>
           {message && <Alert variant="destructive" className="mb-4">{message}</Alert>}
