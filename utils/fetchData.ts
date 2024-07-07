@@ -261,12 +261,17 @@ export async function getProfileImageUrl(): Promise<{ profileImageUrl: string }>
 // Función para crear una compañía
 export async function createCompany(data: any): Promise<{ company: { name: string }, error?: string }> {
   try {
+    // Creamos un FormData para manejar la subida del archivo
+    const formData = new FormData();
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        formData.append(key, data[key]);
+      }
+    }
+
     const response = await fetch("/api/createCompany", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: formData, // Enviamos el FormData en lugar de JSON
     });
 
     if (response.ok) {

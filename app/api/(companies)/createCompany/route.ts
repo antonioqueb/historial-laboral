@@ -7,7 +7,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-    // Crear un objeto "NextAuth" compatible con la request y el response
     const session = await getServerSession({ req, ...authOptions });
     if (!session || !session.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -32,10 +31,31 @@ export async function POST(req: Request) {
         registrosImss,
         registrosInfonavit,
         giroActividadEconomica,
-        certificaciones
+        certificaciones,
+        logo // Nuevo campo para la imagen del logo
     } = await req.json();
 
-    // Crear la empresa en la base de datos
+    let logoUrl = "";
+
+    if (logo) {
+        const formData = new FormData();
+        formData.append("image", logo);
+        formData.append("rfc", rfc);
+        formData.append("docType", "logo");
+
+        const response = await fetch("https://cdn-company-images.historiallaboral.com/upload_rfc", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            return NextResponse.json({ error: "Failed to upload logo" }, { status: 500 });
+        }
+
+        const result = await response.json();
+        logoUrl = result.imageUrl;
+    }
+
     const company = await prisma.company.create({
         data: {
             name,
@@ -56,7 +76,8 @@ export async function POST(req: Request) {
             registrosImss,
             registrosInfonavit,
             giroActividadEconomica,
-            certificaciones
+            certificaciones,
+            logoUrl // Guardamos la URL del logo en la base de datos
         },
     });
 

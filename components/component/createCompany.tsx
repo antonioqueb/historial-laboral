@@ -6,7 +6,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { getUserId, createCompany } from "@/utils/fetchData";
 import { z } from "zod";
-import  createCompanySchema  from "@/schemas/createCompanySchema";
+import createCompanySchema from "@/schemas/createCompanySchema";
 
 export default function CreateCompany() {
   const { data: session } = useSession();
@@ -31,6 +31,7 @@ export default function CreateCompany() {
   const [registrosInfonavit, setRegistrosInfonavit] = useState("");
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
+  const [logo, setLogo] = useState<File | null>(null); // Nuevo estado para la imagen del logo
 
   const loadUserId = async () => {
     try {
@@ -79,7 +80,8 @@ export default function CreateCompany() {
       registrosImss,
       registrosInfonavit,
       giroActividadEconomica,
-      certificaciones: certificaciones.split(',').map(cert => cert.trim())
+      certificaciones: certificaciones.split(',').map(cert => cert.trim()),
+      logo // Añadimos el logo al objeto de datos
     };
 
     try {
@@ -312,8 +314,17 @@ export default function CreateCompany() {
                   placeholder="Separar por comas"
                 />
               </div>
+              <div>
+                <Label htmlFor="logo">Logo</Label>
+                <Input
+                  id="logo"
+                  type="file"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLogo(e.target.files?.[0] ?? null)}
+                  accept="image/*"
+                />
+              </div>
             </div>
-            
+
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
               <Button type="submit">Registrar Empresa</Button>
             </div>

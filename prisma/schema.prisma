@@ -41,7 +41,9 @@ model Company {
   giroActividadEconomica String   @default("")
   certificaciones        String[] @default([])
   reviewsGiven           Review[] // Relación con las reviews que esta compañía ha dado
+  logoUrl                String?  // Campo para almacenar la URL del logo
 }
+
 
 
 model Employee {
