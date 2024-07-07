@@ -6,7 +6,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { getUserId, createCompany } from "@/utils/fetchData";
 import { z } from "zod";
-import createCompanySchema from "@/schemas/createCompanySchema";
+import { createCompanySchema } from "@/schemas/createCompanySchema";
 
 export default function CreateCompany() {
   const { data: session } = useSession();

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const editCompanySchema = z.object({
+export const createCompanySchema = z.object({
   name: z.string().nonempty("Nombre es requerido"),
   userId: z.string().nonempty("User ID es requerido"),
   razonSocial: z.string().nonempty("Razón Social es requerida"),
