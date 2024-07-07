@@ -1,3 +1,4 @@
+// Componente a editar
 'use client';
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
@@ -35,6 +36,7 @@ export default function EditCompany() {
   const [registrosInfonavit, setRegistrosInfonavit] = useState("");
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
+  const [logo, setLogo] = useState<File | null>(null); // Nuevo estado para la imagen del logo
 
   const [companies, setCompanies] = useState<string[]>([]);
 
@@ -106,30 +108,32 @@ export default function EditCompany() {
       return;
     }
 
-    const data = {
-      name,
-      userId,
-      razonSocial,
-      rfc,
-      domicilioFiscalCalle,
-      domicilioFiscalNumero,
-      domicilioFiscalColonia,
-      domicilioFiscalMunicipio,
-      domicilioFiscalEstado,
-      domicilioFiscalCodigoPostal,
-      nombreComercial,
-      objetoSocial,
-      representanteLegalNombre,
-      representanteLegalCurp,
-      capitalSocial,
-      registrosImss,
-      registrosInfonavit,
-      giroActividadEconomica,
-      certificaciones: certificaciones.split(',').map(cert => cert.trim())
-    };
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("userId", userId);
+    formData.append("razonSocial", razonSocial);
+    formData.append("rfc", rfc);
+    formData.append("domicilioFiscalCalle", domicilioFiscalCalle);
+    formData.append("domicilioFiscalNumero", domicilioFiscalNumero);
+    formData.append("domicilioFiscalColonia", domicilioFiscalColonia);
+    formData.append("domicilioFiscalMunicipio", domicilioFiscalMunicipio);
+    formData.append("domicilioFiscalEstado", domicilioFiscalEstado);
+    formData.append("domicilioFiscalCodigoPostal", domicilioFiscalCodigoPostal);
+    formData.append("nombreComercial", nombreComercial);
+    formData.append("objetoSocial", objetoSocial);
+    formData.append("representanteLegalNombre", representanteLegalNombre);
+    formData.append("representanteLegalCurp", representanteLegalCurp);
+    formData.append("capitalSocial", capitalSocial.toString());
+    formData.append("registrosImss", registrosImss);
+    formData.append("registrosInfonavit", registrosInfonavit);
+    formData.append("giroActividadEconomica", giroActividadEconomica);
+    formData.append("certificaciones", certificaciones);
+    if (logo) {
+      formData.append("logo", logo);
+    }
 
     try {
-      editCompanySchema.parse(data); // Validar datos con Zod
+      editCompanySchema.parse(Object.fromEntries(formData)); // Validar datos con Zod
     } catch (error) {
       if (error instanceof z.ZodError) {
         setMessage(error.errors.map(err => err.message).join(", "));
@@ -137,7 +141,7 @@ export default function EditCompany() {
       }
     }
 
-    const result = await editCompany(data);
+    const result = await editCompany(formData);
 
     if (result.company.name) {
       setMessage(`Company updated: ${result.company.name}`);
@@ -379,6 +383,15 @@ export default function EditCompany() {
                   placeholder="Separar por comas"
                 />
               </div>
+              <div>
+                <Label htmlFor="logo">Logo</Label>
+                <Input
+                  id="logo"
+                  type="file"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLogo(e.target.files?.[0] ?? null)}
+                  accept="image/*"
+                />
+              </div>
             </div>
             
             <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
@@ -396,3 +409,4 @@ export default function EditCompany() {
     </div>
   );
 }
+

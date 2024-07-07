@@ -302,14 +302,11 @@ export async function getCompanyByRfc(rfc: string): Promise<Company | null> {
 }
 
 // Función para editar una empresa
-export async function editCompany(data: any): Promise<{ company: { name: string }, error?: string }> {
+export async function editCompany(formData: FormData): Promise<{ company: { name: string }, error?: string }> {
   try {
     const response = await fetch("/api/editCompany", {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      body: formData,
     });
 
     if (response.ok) {
@@ -323,6 +320,7 @@ export async function editCompany(data: any): Promise<{ company: { name: string 
     return { company: { name: '' }, error: 'Error de conexión' };
   }
 }
+
 
 
 // Función para crear una reseña
