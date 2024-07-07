@@ -34,23 +34,25 @@ interface CompanyCardProps {
 
 const CompanyCard: React.FC<CompanyCardProps> = ({ company, viewMode }) => {
   return (
-    <div className={`p-6 bg-white dark:bg-zinc-800 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 ${viewMode === "list" ? "flex flex-col sm:flex-row items-center" : "flex flex-col justify-between h-full"}`}>
-      <img src={company.logoUrl || './placeholder.svg'} alt={`${company.name} Logo`} className="w-24 h-24 mb-4 sm:mb-0 sm:mr-6 rounded-full shadow-lg" />
-      <div className="flex-grow text-center sm:text-left">
+    <div className={`p-4 bg-white dark:bg-zinc-800 rounded-lg shadow-md ${viewMode === "list" ? "flex flex-col sm:flex-row" : "flex flex-col justify-between h-full"}`}>
+      {company.logoUrl && (
+        <img src={company.logoUrl} alt={`${company.name} Logo`} className="w-16 h-16 mr-4" />
+      )}
+      <div className="flex-grow">
         <Link href={`/tablero/empresas/editar?rfc=${company.rfc}`}>
-          <h3 className="text-2xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">{company.name}</h3>
+          <h3 className="text-xl font-bold mb-2 text-zinc-900 dark:text-zinc-100">{company.name}</h3>
         </Link>
-        <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Razón Social:</span> {company.razonSocial}</p>
-        <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">RFC:</span> {company.rfc}</p>
-        <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Domicilio Fiscal:</span> {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
-        {company.nombreComercial && <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Nombre Comercial:</span> {company.nombreComercial}</p>}
-        <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Objeto Social:</span> {company.objetoSocial}</p>
-        <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Representante Legal:</span> {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
-        <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Capital Social:</span> {company.capitalSocial}</p>
-        {company.registrosImss && <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Registros IMSS:</span> {company.registrosImss}</p>}
-        {company.registrosInfonavit && <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Registros Infonavit:</span> {company.registrosInfonavit}</p>}
-        <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Actividad Económica:</span> {company.giroActividadEconomica}</p>
-        <p className="mb-2"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Certificaciones:</span> {company.certificaciones.join(", ")}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Razón Social:</span> {company.razonSocial}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">RFC:</span> {company.rfc}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Domicilio Fiscal:</span> {company.domicilioFiscalCalle}, {company.domicilioFiscalNumero}, {company.domicilioFiscalColonia}, {company.domicilioFiscalMunicipio}, {company.domicilioFiscalEstado}, {company.domicilioFiscalCodigoPostal}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Nombre Comercial:</span> {company.nombreComercial}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Objeto Social:</span> {company.objetoSocial}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Representante Legal:</span> {company.representanteLegalNombre} (CURP: {company.representanteLegalCurp})</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Capital Social:</span> {company.capitalSocial}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Registros IMSS:</span> {company.registrosImss}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Registros Infonavit:</span> {company.registrosInfonavit}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Actividad Económica:</span> {company.giroActividadEconomica}</p>
+        <p className="mb-1"><span className="font-semibold text-zinc-700 dark:text-zinc-300">Certificaciones:</span> {company.certificaciones.join(", ")}</p>
       </div>
       {viewMode === "grid" && (
         <div className="p-4 bg-gray-100 dark:bg-zinc-700 flex justify-end gap-2">
