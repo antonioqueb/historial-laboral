@@ -1,4 +1,3 @@
-// Componente a editar
 'use client';
 import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
@@ -36,7 +35,7 @@ export default function EditCompany() {
   const [registrosInfonavit, setRegistrosInfonavit] = useState("");
   const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
   const [certificaciones, setCertificaciones] = useState("");
-  const [logo, setLogo] = useState<File | null>(null); // Nuevo estado para la imagen del logo
+  const [logo, setLogo] = useState<File | null>(null);
 
   const [companies, setCompanies] = useState<string[]>([]);
 
@@ -128,12 +127,32 @@ export default function EditCompany() {
     formData.append("registrosInfonavit", registrosInfonavit);
     formData.append("giroActividadEconomica", giroActividadEconomica);
     formData.append("certificaciones", certificaciones);
-    if (logo) {
-      formData.append("logo", logo);
-    }
+
+    const parsedData = {
+      name,
+      userId,
+      razonSocial,
+      rfc,
+      domicilioFiscalCalle,
+      domicilioFiscalNumero,
+      domicilioFiscalColonia,
+      domicilioFiscalMunicipio,
+      domicilioFiscalEstado,
+      domicilioFiscalCodigoPostal,
+      nombreComercial,
+      objetoSocial,
+      representanteLegalNombre,
+      representanteLegalCurp,
+      capitalSocial: parseFloat(capitalSocial.toString()), // Asegurar que sea un número
+      registrosImss,
+      registrosInfonavit,
+      giroActividadEconomica,
+      certificaciones: certificaciones.split(',').map(cert => cert.trim()), // Convertir a array de strings
+      logo // Este campo no se enviará a Zod
+    };
 
     try {
-      editCompanySchema.parse(Object.fromEntries(formData)); // Validar datos con Zod
+      editCompanySchema.parse(parsedData); // Validar datos con Zod
     } catch (error) {
       if (error instanceof z.ZodError) {
         setMessage(error.errors.map(err => err.message).join(", "));
@@ -228,7 +247,6 @@ export default function EditCompany() {
                   type="text"
                   value={nombreComercial}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNombreComercial(e.target.value)}
-                  required
                 />
               </div>
               <div>
@@ -350,7 +368,6 @@ export default function EditCompany() {
                   type="text"
                   value={registrosImss}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosImss(e.target.value)}
-                  required
                 />
               </div>
               <div>
@@ -360,7 +377,6 @@ export default function EditCompany() {
                   type="text"
                   value={registrosInfonavit}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosInfonavit(e.target.value)}
-                  required
                 />
               </div>
               <div>
@@ -409,4 +425,3 @@ export default function EditCompany() {
     </div>
   );
 }
-

@@ -301,6 +301,7 @@ export async function getCompanyByRfc(rfc: string): Promise<Company | null> {
   }
 }
 
+
 // Función para editar una empresa
 export async function editCompany(formData: FormData): Promise<{ company: { name: string }, error?: string }> {
   try {
@@ -320,7 +321,6 @@ export async function editCompany(formData: FormData): Promise<{ company: { name
     return { company: { name: '' }, error: 'Error de conexión' };
   }
 }
-
 
 
 // Función para crear una reseña
