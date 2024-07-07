@@ -6,7 +6,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { getUserId, getCompanyByRfc, editCompany, getCompaniesRFC } from "@/utils/fetchData";
+import { getUserId, getCompanyByRfc, editCompanyData, uploadCompanyImage, getCompaniesRFC } from "@/utils/fetchData";
 import { z } from "zod";
 import { editCompanySchema } from "@/schemas/editCompanySchema";
 
@@ -127,43 +127,17 @@ export default function EditCompany() {
     formData.append("registrosInfonavit", registrosInfonavit);
     formData.append("giroActividadEconomica", giroActividadEconomica);
     formData.append("certificaciones", certificaciones);
+
     if (logo) {
-      formData.append("logo", logo);
-    }
-
-    const parsedData = {
-      name,
-      userId,
-      razonSocial,
-      rfc,
-      domicilioFiscalCalle,
-      domicilioFiscalNumero,
-      domicilioFiscalColonia,
-      domicilioFiscalMunicipio,
-      domicilioFiscalEstado,
-      domicilioFiscalCodigoPostal,
-      nombreComercial,
-      objetoSocial,
-      representanteLegalNombre,
-      representanteLegalCurp,
-      capitalSocial: parseFloat(capitalSocial.toString()), // Asegurar que sea un número
-      registrosImss,
-      registrosInfonavit,
-      giroActividadEconomica,
-      certificaciones: certificaciones.split(',').map(cert => cert.trim()), // Convertir a array de strings
-      logo // Este campo no se enviará a Zod
-    };
-
-    try {
-      editCompanySchema.parse(parsedData); // Validar datos con Zod
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        setMessage(error.errors.map(err => err.message).join(", "));
+      const uploadResult = await uploadCompanyImage(logo, rfc);
+      if (uploadResult.error) {
+        setMessage(`Error uploading image: ${uploadResult.error}`);
         return;
       }
+      formData.append("logoUrl", uploadResult.imageUrl);
     }
 
-    const result = await editCompany(formData);
+    const result = await editCompanyData(formData);
 
     if (result.company.name) {
       setMessage(`Company updated: ${result.company.name}`);

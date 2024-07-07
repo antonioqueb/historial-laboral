@@ -302,8 +302,8 @@ export async function getCompanyByRfc(rfc: string): Promise<Company | null> {
 }
 
 
-// Función para editar una empresa
-export async function editCompany(formData: FormData): Promise<{ company: { name: string }, error?: string }> {
+
+export async function editCompanyData(formData: FormData): Promise<{ company: { name: string }, error?: string }> {
   try {
     const response = await fetch("/api/editCompany", {
       method: "PATCH",
@@ -321,6 +321,31 @@ export async function editCompany(formData: FormData): Promise<{ company: { name
     return { company: { name: '' }, error: 'Error de conexión' };
   }
 }
+
+export async function uploadCompanyImage(file: File, rfc: string): Promise<{ imageUrl: string, filename: string, error?: string }> {
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("rfc", rfc);
+  formData.append("docType", "logo");
+
+  try {
+    const response = await fetch("https://cdn-company-images.historiallaboral.com/upload_rfc", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      return await response.json();
+    } else {
+      const errorData = await response.json();
+      return { imageUrl: '', filename: '', error: errorData.error };
+    }
+  } catch (error) {
+    console.error("Error de conexión:", error);
+    return { imageUrl: '', filename: '', error: 'Error de conexión' };
+  }
+}
+
 
 
 // Función para crear una reseña
