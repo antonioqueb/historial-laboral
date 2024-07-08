@@ -312,15 +312,6 @@ export default function EditCompany() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="representanteLegalCurp">CURP</Label>
-                <Input
-                  id="representanteLegalCurp"
-                  type="text"
-                  value={representanteLegalCurp}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepresentanteLegalCurp(e.target.value)}
-                />
-              </div>
             </div>
 
             <div className="space-y-4">
