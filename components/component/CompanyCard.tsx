@@ -48,7 +48,6 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
       <CardContent className="p-6 space-y-4">
         <div className="space-y-1">
           <h3 className="text-xl font-semibold">{company.name}</h3>
-          <p className="text-muted-foreground">Razón Social: {company.razonSocial}</p>
         </div>
         <div className="space-y-1">
           <p className="text-muted-foreground">RFC: {company.rfc}</p>
