@@ -77,7 +77,6 @@ export default function Component() {
     fetchData();
   }, []);
 
-  // Calcula los valores principales de las tarjetas basado en los datos obtenidos
   const totalEmployees = employees.length;
   const totalCompanies = companies.filter(company => company.userId === userId).length;
 
@@ -98,20 +97,20 @@ export default function Component() {
   ];
 
   return (
-    <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-5 mb-14">
+    <section className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-6 mb-14">
       {cardData.map(({ title, description, mainValue, subValue, icon }, index) => (
-        <Card key={index} className="min-h-[500px] lg:min-h-[550px]">
+        <Card key={index} className="min-h-[200px] p-6 bg-white shadow-lg rounded-lg">
           <div className="flex flex-col justify-between h-full">
             <CardHeader>
-              <CardTitle>{title}</CardTitle>
-              <CardDescription>{description}</CardDescription>
+              <CardTitle className="text-2xl font-semibold text-gray-800">{title}</CardTitle>
+              <CardDescription className="text-gray-500">{description}</CardDescription>
             </CardHeader>
             <CardFooter className="flex items-center justify-between mt-auto">
               <div className="grid gap-1">
-                <div className="text-4xl font-bold">{mainValue}</div>
-                {subValue && <div className="text-sm text-zinc-500 dark:text-zinc-400">{subValue}</div>}
+                <div className="text-4xl font-bold text-gray-900">{mainValue}</div>
+                {subValue && <div className="text-sm text-gray-500">{subValue}</div>}
               </div>
-              <IconComponent IconComponent={icon} className="h-12 w-12 text-zinc-400 ml-4" />
+              <IconComponent IconComponent={icon} className="h-12 w-12 text-gray-400 ml-4" />
             </CardFooter>
           </div>
         </Card>
