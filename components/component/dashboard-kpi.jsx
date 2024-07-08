@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { getEmployeesList, getCompaniesList, getUserId } from '@/utils/fetchData';
-import { CardTitle, CardDescription, CardHeader, CardFooter, Card, CardContent } from "@/components/ui/card";
+import { CardTitle, CardDescription, CardHeader, Card, CardContent } from "@/components/ui/card";
 import { CartesianGrid, XAxis, Bar, BarChart, Line, LineChart } from "recharts";
 import { ChartTooltipContent, ChartTooltip, ChartContainer } from "@/components/ui/chart";
 
@@ -55,6 +55,7 @@ export default function Component() {
   const [employees, setEmployees] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [userId, setUserId] = useState('');
+  const [employeeCounts, setEmployeeCounts] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -70,6 +71,12 @@ export default function Component() {
           companiesData.companies.some(company => company.userId === user.id && company.id === employee.companyId)
         );
         setEmployees(filteredEmployees);
+
+        // Simula datos para el mes actual
+        const currentDate = new Date();
+        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+        const employeeCounts = Array.from({ length: daysInMonth }, (_, i) => ({ date: i + 1, count: Math.floor(Math.random() * 100) }));
+        setEmployeeCounts(employeeCounts);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -89,14 +96,14 @@ export default function Component() {
       mainValue: totalEmployees.toString(),
       subValue: "En todos los departamentos",
       icon: UsersIcon,
-      chart: <BarchartChart className="aspect-[4/3]" />
+      chart: <BarchartChart employeeCounts={employeeCounts} className="aspect-[4/3]" />
     },
     {
       title: "Total de Empresas Vinculadas",
       description: "Número de empresas vinculadas a tu cuenta",
       mainValue: totalCompanies.toString(),
       icon: GaugeIcon,
-      chart: <LinechartChart className="aspect-[4/3]" />
+      chart: <LinechartChart employeeCounts={employeeCounts} className="aspect-[4/3]" />
     }
   ];
 
@@ -121,7 +128,7 @@ export default function Component() {
   );
 }
 
-function BarchartChart(props) {
+function BarchartChart({ employeeCounts, ...props }) {
   return (
     <div {...props}>
       <ChartContainer
@@ -135,32 +142,24 @@ function BarchartChart(props) {
       >
         <BarChart
           accessibilityLayer
-          data={[
-            { month: "January", desktop: 186 },
-            { month: "February", desktop: 305 },
-            { month: "March", desktop: 237 },
-            { month: "April", desktop: 73 },
-            { month: "May", desktop: 209 },
-            { month: "June", desktop: 214 },
-          ]}
+          data={employeeCounts}
         >
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="month"
+            dataKey="date"
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-          <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+          <Bar dataKey="count" fill="var(--color-desktop)" radius={8} />
         </BarChart>
       </ChartContainer>
     </div>
-  )
+  );
 }
 
-function LinechartChart(props) {
+function LinechartChart({ employeeCounts, ...props }) {
   return (
     <div {...props}>
       <ChartContainer
@@ -173,14 +172,7 @@ function LinechartChart(props) {
       >
         <LineChart
           accessibilityLayer
-          data={[
-            { month: "January", desktop: 186 },
-            { month: "February", desktop: 305 },
-            { month: "March", desktop: 237 },
-            { month: "April", desktop: 73 },
-            { month: "May", desktop: 209 },
-            { month: "June", desktop: 214 },
-          ]}
+          data={employeeCounts}
           margin={{
             left: 12,
             right: 12,
@@ -188,16 +180,15 @@ function LinechartChart(props) {
         >
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="month"
+            dataKey="date"
             tickLine={false}
             axisLine={false}
             tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
           />
           <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-          <Line dataKey="desktop" type="natural" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
+          <Line dataKey="count" type="natural" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
         </LineChart>
       </ChartContainer>
     </div>
-  )
+  );
 }
