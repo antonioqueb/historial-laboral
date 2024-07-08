@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getEmployeesList, getCompaniesList, getUserId } from '@/utils/fetchData';
 import { CardTitle, CardDescription, CardHeader, Card, CardContent } from "@/components/ui/card";
-import { CartesianGrid, XAxis, Bar, BarChart, Line, LineChart } from "recharts";
+import { CartesianGrid, XAxis, YAxis, Bar, BarChart, Line, LineChart } from "recharts";
 import { ChartTooltipContent, ChartTooltip, ChartContainer } from "@/components/ui/chart";
 
 // Iconos
@@ -151,6 +151,12 @@ function BarchartChart({ employeeCounts, ...props }) {
             tickMargin={10}
             axisLine={false}
           />
+          <YAxis
+            domain={[0, 'dataMax']}
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+          />
           <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
           <Bar dataKey="count" fill="var(--color-desktop)" radius={8} />
         </BarChart>
@@ -181,6 +187,12 @@ function LinechartChart({ employeeCounts, ...props }) {
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="date"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+          />
+          <YAxis
+            domain={[0, 'dataMax']}
             tickLine={false}
             axisLine={false}
             tickMargin={8}
