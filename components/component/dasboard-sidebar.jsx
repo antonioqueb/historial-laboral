@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaStore, FaIdCard } from "react-icons/fa";
 import { FaChartSimple } from "react-icons/fa6";
+import { BiSolidSearchAlt2 } from "react-icons/bi";
+
 
 export default function DashboardSidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,6 +71,10 @@ export default function DashboardSidebar() {
     </div>
     {/* Bottom navigation for mobile */}
     <div className="fixed w-full inset-x-0 bottom-0 z-50 flex justify-around bg-white dark:bg-zinc-900 dark:border-zinc-800 md:hidden">
+    <Link href="/tablero" className={`flex flex-col items-center py-2 ${isActive(['/tablero']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
+          <BiSolidSearchAlt2 className="h-6 w-6" />
+          <span className="text-sm">Buscar</span>
+        </Link>
         <Link href="/tablero" className={`flex flex-col items-center py-2 ${isActive(['/tablero']) ? 'text-primary' : 'text-zinc-700 dark:text-zinc-400'}`}>
           <FaChartSimple className="h-6 w-6" />
           <span className="text-sm">Tablero</span>
