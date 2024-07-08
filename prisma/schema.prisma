@@ -34,16 +34,15 @@ model Company {
   nombreComercial        String?  @default("")
   objetoSocial           String   @default("")
   representanteLegalNombre String @default("")
-  representanteLegalCurp String   @default("")
-  capitalSocial          Float    @default(0.0)
-  registrosImss          String?  @default("")
-  registrosInfonavit     String?  @default("")
-  giroActividadEconomica String   @default("")
-  certificaciones        String[] @default([])
+  representanteLegalCurp  String?  @default("")  // No requerido
+  capitalSocial          Float?   @default(0.0)  // No requerido
+  registrosImss          String?  @default("")   // No requerido
+  registrosInfonavit     String?  @default("")   // No requerido
+  giroActividadEconomica String?  @default("")   // No requerido
+  certificaciones        String[] @default([])   // No requerido
   reviewsGiven           Review[] // Relación con las reviews que esta compañía ha dado
   logoUrl                String?  // Campo para almacenar la URL del logo
 }
-
 
 
 model Employee {

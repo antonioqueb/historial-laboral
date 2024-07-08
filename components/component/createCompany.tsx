@@ -25,12 +25,6 @@ export default function CreateCompany() {
   const [nombreComercial, setNombreComercial] = useState("");
   const [objetoSocial, setObjetoSocial] = useState("");
   const [representanteLegalNombre, setRepresentanteLegalNombre] = useState("");
-  const [representanteLegalCurp, setRepresentanteLegalCurp] = useState("");
-  const [capitalSocial, setCapitalSocial] = useState(0.0);
-  const [registrosImss, setRegistrosImss] = useState("");
-  const [registrosInfonavit, setRegistrosInfonavit] = useState("");
-  const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
-  const [certificaciones, setCertificaciones] = useState("");
   const [logo, setLogo] = useState<File | null>(null); // Nuevo estado para la imagen del logo
 
   const loadUserId = async () => {
@@ -75,12 +69,6 @@ export default function CreateCompany() {
       nombreComercial,
       objetoSocial,
       representanteLegalNombre,
-      representanteLegalCurp,
-      capitalSocial,
-      registrosImss,
-      registrosInfonavit,
-      giroActividadEconomica,
-      certificaciones: certificaciones.split(',').map(cert => cert.trim()),
       logo // Añadimos el logo al objeto de datos
     };
 
@@ -159,7 +147,6 @@ export default function CreateCompany() {
                   type="text"
                   value={nombreComercial}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNombreComercial(e.target.value)}
-                  required
                 />
               </div>
               <div>
@@ -241,7 +228,7 @@ export default function CreateCompany() {
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Representante Legal</h2>
               <div>
-                <Label htmlFor="representanteLegalNombre">Nombre</Label>
+                <Label htmlFor="representanteLegalNombre">Nombre Completo</Label>
                 <Input
                   id="representanteLegalNombre"
                   type="text"
@@ -250,70 +237,10 @@ export default function CreateCompany() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="representanteLegalCurp">CURP</Label>
-                <Input
-                  id="representanteLegalCurp"
-                  type="text"
-                  value={representanteLegalCurp}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepresentanteLegalCurp(e.target.value)}
-                  required
-                />
-              </div>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Información Adicional</h2>
-              <div>
-                <Label htmlFor="capitalSocial">Capital Social</Label>
-                <Input
-                  id="capitalSocial"
-                  type="number"
-                  value={capitalSocial}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCapitalSocial(parseFloat(e.target.value))}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="registrosImss">Registros IMSS</Label>
-                <Input
-                  id="registrosImss"
-                  type="text"
-                  value={registrosImss}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosImss(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="registrosInfonavit">Registros Infonavit</Label>
-                <Input
-                  id="registrosInfonavit"
-                  type="text"
-                  value={registrosInfonavit}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosInfonavit(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="giroActividadEconomica">Actividad Económica</Label>
-                <Input
-                  id="giroActividadEconomica"
-                  type="text"
-                  value={giroActividadEconomica}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGiroActividadEconomica(e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="certificaciones">Certificaciones</Label>
-                <Input
-                  id="certificaciones"
-                  type="text"
-                  value={certificaciones}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCertificaciones(e.target.value)}
-                  placeholder="Separar por comas"
-                />
-              </div>
               <div>
                 <Label htmlFor="logo">Logo</Label>
                 <Input
