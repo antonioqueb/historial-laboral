@@ -1,10 +1,8 @@
-// components/component/dashboard-kpi.jsx
+// components\component\dashboard-kpi.jsx
 'use client';
 import { useState, useEffect } from 'react';
 import { getEmployeesList, getCompaniesList, getUserId } from '@/utils/fetchData';
 import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
-import { CartesianGrid, XAxis, Bar, BarChart, Line, LineChart } from "recharts";
-import { ChartTooltipContent, ChartTooltip, ChartContainer } from "@/components/ui/chart";
 
 // Iconos
 function GaugeIcon(props) {
@@ -90,116 +88,34 @@ export default function Component() {
       mainValue: totalEmployees.toString(),
       subValue: "En todos los departamentos",
       icon: UsersIcon,
-      chart: <BarchartChart className="aspect-[4/3]" />
     },
     {
       title: "Total de Empresas Vinculadas",
       description: "Número de empresas vinculadas a tu cuenta",
       mainValue: totalCompanies.toString(),
       icon: GaugeIcon,
-      chart: <LinechartChart className="aspect-[4/3]" />
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {cardData.map(({ title, description, mainValue, subValue, icon, chart }, index) => (
+    <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-5 mb-14">
+      {cardData.map(({ title, description, mainValue, subValue, icon }, index) => (
         <Card key={index} className="min-h-[500px] lg:min-h-[550px]">
-          <CardHeader>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-center justify-center h-full">
-              <h2 className="text-4xl font-bold">{mainValue}</h2>
-              {subValue && <p className="text-muted-foreground">{subValue}</p>}
-            </div>
-            {chart}
-          </CardContent>
+          <div className="flex flex-col justify-between h-full">
+            <CardHeader>
+              <CardTitle>{title}</CardTitle>
+              <CardDescription>{description}</CardDescription>
+            </CardHeader>
+            <CardFooter className="flex items-center justify-between mt-auto">
+              <div className="grid gap-1">
+                <div className="text-4xl font-bold">{mainValue}</div>
+                {subValue && <div className="text-sm text-zinc-500 dark:text-zinc-400">{subValue}</div>}
+              </div>
+              <IconComponent IconComponent={icon} className="h-12 w-12 text-zinc-400 ml-4" />
+            </CardFooter>
+          </div>
         </Card>
       ))}
-    </div>
+    </section>
   );
-}
-
-function BarchartChart(props) {
-  return (
-    <div {...props}>
-      <ChartContainer
-        config={{
-          desktop: {
-            label: "Desktop",
-            color: "hsl(var(--chart-1))",
-          },
-        }}
-        className="min-h-[300px]"
-      >
-        <BarChart
-          accessibilityLayer
-          data={[
-            { month: "January", desktop: 186 },
-            { month: "February", desktop: 305 },
-            { month: "March", desktop: 237 },
-            { month: "April", desktop: 73 },
-            { month: "May", desktop: 209 },
-            { month: "June", desktop: 214 },
-          ]}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-          <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
-        </BarChart>
-      </ChartContainer>
-    </div>
-  )
-}
-
-
-function LinechartChart(props) {
-  return (
-    <div {...props}>
-      <ChartContainer
-        config={{
-          desktop: {
-            label: "Desktop",
-            color: "hsl(var(--chart-1))",
-          },
-        }}
-      >
-        <LineChart
-          accessibilityLayer
-          data={[
-            { month: "January", desktop: 186 },
-            { month: "February", desktop: 305 },
-            { month: "March", desktop: 237 },
-            { month: "April", desktop: 73 },
-            { month: "May", desktop: 209 },
-            { month: "June", desktop: 214 },
-          ]}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-          <Line dataKey="desktop" type="natural" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
-        </LineChart>
-      </ChartContainer>
-    </div>
-  )
 }
