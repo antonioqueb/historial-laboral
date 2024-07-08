@@ -81,9 +81,31 @@ export default function CreateCompany() {
       }
     }
 
-    const result = await createCompany(data);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("userId", userId);
+    formData.append("razonSocial", razonSocial);
+    formData.append("rfc", rfc);
+    formData.append("domicilioFiscalCalle", domicilioFiscalCalle);
+    formData.append("domicilioFiscalNumero", domicilioFiscalNumero);
+    formData.append("domicilioFiscalColonia", domicilioFiscalColonia);
+    formData.append("domicilioFiscalMunicipio", domicilioFiscalMunicipio);
+    formData.append("domicilioFiscalEstado", domicilioFiscalEstado);
+    formData.append("domicilioFiscalCodigoPostal", domicilioFiscalCodigoPostal);
+    formData.append("nombreComercial", nombreComercial || "");
+    formData.append("objetoSocial", objetoSocial);
+    formData.append("representanteLegalNombre", representanteLegalNombre);
 
-    if (result.company.name) {
+    if (logo) {
+      formData.append("logo", logo);
+    }
+
+    const result = await fetch("/api/createCompany", {
+      method: "POST",
+      body: formData,
+    }).then((res) => res.json());
+
+    if (result.company) {
       setMessage(`Company created: ${result.company.name}`);
       setName("");
     } else {

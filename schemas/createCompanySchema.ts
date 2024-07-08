@@ -1,4 +1,3 @@
-// schemas\createCompanySchema.ts
 import { z } from "zod";
 
 export const createCompanySchema = z.object({
@@ -13,7 +12,7 @@ export const createCompanySchema = z.object({
   domicilioFiscalEstado: z.string().nonempty("Estado es requerido"),
   domicilioFiscalCodigoPostal: z.string().nonempty("Código Postal es requerido"),
   nombreComercial: z.string().optional(),
-  objetoSocial: z.string().nonempty("Objeto Social es requerido"),
+  objetoSocial: z.string().nonempty("Objeto Social es requerido").transform((val) => `Principal: ${val}`),
   representanteLegalNombre: z.string().nonempty("Nombre del Representante Legal es requerido"),
   representanteLegalCurp: z.string().optional(),  // No requerido
   capitalSocial: z.number().optional(),           // No requerido
@@ -21,5 +20,5 @@ export const createCompanySchema = z.object({
   registrosInfonavit: z.string().optional(),      // No requerido
   giroActividadEconomica: z.string().optional(),  // No requerido
   certificaciones: z.array(z.string()).optional(),
-  logo: z.instanceof(File).optional()
+  logo: z.any().optional()                        // No requerido, puede ser cualquier tipo
 });

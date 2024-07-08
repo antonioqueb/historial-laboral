@@ -12,22 +12,22 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const {
-    name,
-    userId,
-    razonSocial,
-    rfc,
-    domicilioFiscalCalle,
-    domicilioFiscalNumero,
-    domicilioFiscalColonia,
-    domicilioFiscalMunicipio,
-    domicilioFiscalEstado,
-    domicilioFiscalCodigoPostal,
-    nombreComercial,
-    objetoSocial,
-    representanteLegalNombre,
-    logo // Nuevo campo para la imagen del logo
-  } = await req.json();
+  const formData = await req.formData();
+
+  const name = formData.get("name") as string;
+  const userId = formData.get("userId") as string;
+  const razonSocial = formData.get("razonSocial") as string;
+  const rfc = formData.get("rfc") as string;
+  const domicilioFiscalCalle = formData.get("domicilioFiscalCalle") as string;
+  const domicilioFiscalNumero = formData.get("domicilioFiscalNumero") as string;
+  const domicilioFiscalColonia = formData.get("domicilioFiscalColonia") as string;
+  const domicilioFiscalMunicipio = formData.get("domicilioFiscalMunicipio") as string;
+  const domicilioFiscalEstado = formData.get("domicilioFiscalEstado") as string;
+  const domicilioFiscalCodigoPostal = formData.get("domicilioFiscalCodigoPostal") as string;
+  const nombreComercial = formData.get("nombreComercial") as string;
+  const objetoSocial = formData.get("objetoSocial") as string;
+  const representanteLegalNombre = formData.get("representanteLegalNombre") as string;
+  const logo = formData.get("logo") as File | null;
 
   let logoUrl = "";
 
