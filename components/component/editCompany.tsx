@@ -186,7 +186,7 @@ export default function EditCompany() {
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Información General</h2>
               <div>
-                <Label htmlFor="companyName">Nombre</Label>
+                <Label htmlFor="companyName">Nombre Corto</Label>
                 <Input
                   id="companyName"
                   type="text"
