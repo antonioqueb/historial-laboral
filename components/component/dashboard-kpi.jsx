@@ -1,9 +1,8 @@
+// components\component\dashboard-kpi.jsx
 'use client';
 import { useState, useEffect } from 'react';
 import { getEmployeesList, getCompaniesList, getUserId } from '@/utils/fetchData';
-import { CardTitle, CardDescription, CardHeader, Card, CardContent } from "@/components/ui/card";
-import { CartesianGrid, XAxis, YAxis, Bar, BarChart, Line, LineChart } from "recharts";
-import { ChartTooltipContent, ChartTooltip, ChartContainer } from "@/components/ui/chart";
+import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
 
 // Iconos
 function GaugeIcon(props) {
@@ -55,7 +54,6 @@ export default function Component() {
   const [employees, setEmployees] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [userId, setUserId] = useState('');
-  const [employeeCounts, setEmployeeCounts] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -71,12 +69,6 @@ export default function Component() {
           companiesData.companies.some(company => company.userId === user.id && company.id === employee.companyId)
         );
         setEmployees(filteredEmployees);
-
-        // Simula datos para el mes actual
-        const currentDate = new Date();
-        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-        const employeeCounts = Array.from({ length: daysInMonth }, (_, i) => ({ date: i + 1, count: Math.floor(Math.random() * 100) }));
-        setEmployeeCounts(employeeCounts);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -96,111 +88,34 @@ export default function Component() {
       mainValue: totalEmployees.toString(),
       subValue: "En todos los departamentos",
       icon: UsersIcon,
-      chart: <BarchartChart employeeCounts={employeeCounts} className="aspect-[4/3]" />
     },
     {
       title: "Total de Empresas Vinculadas",
       description: "Número de empresas vinculadas a tu cuenta",
       mainValue: totalCompanies.toString(),
       icon: GaugeIcon,
-      chart: <LinechartChart employeeCounts={employeeCounts} className="aspect-[4/3]" />
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {cardData.map(({ title, description, mainValue, subValue, icon, chart }, index) => (
+    <section className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-5 mb-14">
+      {cardData.map(({ title, description, mainValue, subValue, icon }, index) => (
         <Card key={index} className="min-h-[500px] lg:min-h-[550px]">
-          <CardHeader>
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-center justify-center h-full">
-              <h2 className="text-4xl font-bold">{mainValue}</h2>
-              {subValue && <p className="text-muted-foreground">{subValue}</p>}
-            </div>
-            {chart}
-          </CardContent>
+          <div className="flex flex-col justify-between h-full">
+            <CardHeader>
+              <CardTitle>{title}</CardTitle>
+              <CardDescription>{description}</CardDescription>
+            </CardHeader>
+            <CardFooter className="flex items-center justify-between mt-auto">
+              <div className="grid gap-1">
+                <div className="text-4xl font-bold">{mainValue}</div>
+                {subValue && <div className="text-sm text-zinc-500 dark:text-zinc-400">{subValue}</div>}
+              </div>
+              <IconComponent IconComponent={icon} className="h-12 w-12 text-zinc-400 ml-4" />
+            </CardFooter>
+          </div>
         </Card>
       ))}
-    </div>
-  );
-}
-
-function BarchartChart({ employeeCounts, ...props }) {
-  return (
-    <div {...props}>
-      <ChartContainer
-        config={{
-          desktop: {
-            label: "Desktop",
-            color: "hsl(var(--chart-1))",
-          },
-        }}
-        className="min-h-[300px]"
-      >
-        <BarChart
-          accessibilityLayer
-          data={employeeCounts}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="date"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-          />
-          <YAxis
-            domain={[0, 'dataMax']}
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-          />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-          <Bar dataKey="count" fill="var(--color-desktop)" radius={8} />
-        </BarChart>
-      </ChartContainer>
-    </div>
-  );
-}
-
-function LinechartChart({ employeeCounts, ...props }) {
-  return (
-    <div {...props}>
-      <ChartContainer
-        config={{
-          desktop: {
-            label: "Desktop",
-            color: "hsl(var(--chart-1))",
-          },
-        }}
-      >
-        <LineChart
-          accessibilityLayer
-          data={employeeCounts}
-          margin={{
-            left: 12,
-            right: 12,
-          }}
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="date"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-          />
-          <YAxis
-            domain={[0, 'dataMax']}
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-          />
-          <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-          <Line dataKey="count" type="natural" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
-        </LineChart>
-      </ChartContainer>
-    </div>
+    </section>
   );
 }
