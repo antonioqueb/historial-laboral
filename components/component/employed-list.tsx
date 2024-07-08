@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
 import { getEmployeesByCompany, getCompaniesList, Employee, Company } from "@/utils/fetchData";
 import { Button } from "../ui/button";
-
+import CompanyCard from "@/components/component/CompanyCard";
+import Image from "next/image";
 export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -113,26 +113,10 @@ export default function DashboardEmployedList() {
             {companies.map((company) => (
               <div
                 key={company.id}
-                className={`bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden cursor-pointer ${selectedCompany === company.id ? 'border-2 border-indigo-500' : ''}`}
+                className={`cursor-pointer ${selectedCompany === company.id ? 'border-2 border-indigo-500' : ''}`}
                 onClick={() => setSelectedCompany(company.id)}
               >
-                <div className="aspect-square">
-                  <Image
-                    alt={`Logo de ${company.razonSocial}`}
-                    className="w-full h-full object-cover"
-                    height={400}
-                    src="/placeholder.svg"
-                    style={{
-                      aspectRatio: "400/400",
-                      objectFit: "cover",
-                    }}
-                    width={400}
-                    unoptimized
-                  />
-                </div>
-                <div className="p-4 space-y-2">
-                  <h3 className="text-lg font-semibold">{company.razonSocial}</h3>
-                </div>
+                <CompanyCard company={company} />
               </div>
             ))}
           </div>
