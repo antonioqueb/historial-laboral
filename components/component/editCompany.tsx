@@ -29,12 +29,6 @@ export default function EditCompany() {
   const [nombreComercial, setNombreComercial] = useState("");
   const [objetoSocial, setObjetoSocial] = useState("");
   const [representanteLegalNombre, setRepresentanteLegalNombre] = useState("");
-  const [representanteLegalCurp, setRepresentanteLegalCurp] = useState("");
-  const [capitalSocial, setCapitalSocial] = useState(0.0);
-  const [registrosImss, setRegistrosImss] = useState("");
-  const [registrosInfonavit, setRegistrosInfonavit] = useState("");
-  const [giroActividadEconomica, setGiroActividadEconomica] = useState("");
-  const [certificaciones, setCertificaciones] = useState("");
   const [logo, setLogo] = useState<File | null>(null);
 
   const [companies, setCompanies] = useState<string[]>([]);
@@ -67,14 +61,8 @@ export default function EditCompany() {
         setDomicilioFiscalEstado(data.domicilioFiscalEstado || "");
         setDomicilioFiscalCodigoPostal(data.domicilioFiscalCodigoPostal || "");
         setNombreComercial(data.nombreComercial || "");
-        setObjetoSocial(data.objetoSocial || "");
+        setObjetoSocial(data.objetoSocial.replace("Principal: ", "") || "");
         setRepresentanteLegalNombre(data.representanteLegalNombre || "");
-        setRepresentanteLegalCurp(data.representanteLegalCurp || "");
-        setCapitalSocial(data.capitalSocial || 0.0);
-        setRegistrosImss(data.registrosImss || "");
-        setRegistrosInfonavit(data.registrosInfonavit || "");
-        setGiroActividadEconomica(data.giroActividadEconomica || "");
-        setCertificaciones(data.certificaciones ? data.certificaciones.join(", ") : "");
       } else {
         setMessage("Failed to fetch company data.");
       }
@@ -107,26 +95,36 @@ export default function EditCompany() {
       return;
     }
 
+    const data = {
+      name,
+      userId,
+      razonSocial,
+      rfc,
+      domicilioFiscalCalle,
+      domicilioFiscalNumero,
+      domicilioFiscalColonia,
+      domicilioFiscalMunicipio,
+      domicilioFiscalEstado,
+      domicilioFiscalCodigoPostal,
+      nombreComercial,
+      objetoSocial: `Principal: ${objetoSocial}`,
+      representanteLegalNombre,
+      logo
+    };
+
+    try {
+      editCompanySchema.parse(data); // Validar datos con Zod
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setMessage(error.errors.map(err => err.message).join(", "));
+        return;
+      }
+    }
+
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("userId", userId);
-    formData.append("razonSocial", razonSocial);
-    formData.append("rfc", rfc);
-    formData.append("domicilioFiscalCalle", domicilioFiscalCalle);
-    formData.append("domicilioFiscalNumero", domicilioFiscalNumero);
-    formData.append("domicilioFiscalColonia", domicilioFiscalColonia);
-    formData.append("domicilioFiscalMunicipio", domicilioFiscalMunicipio);
-    formData.append("domicilioFiscalEstado", domicilioFiscalEstado);
-    formData.append("domicilioFiscalCodigoPostal", domicilioFiscalCodigoPostal);
-    formData.append("nombreComercial", nombreComercial);
-    formData.append("objetoSocial", objetoSocial);
-    formData.append("representanteLegalNombre", representanteLegalNombre);
-    formData.append("representanteLegalCurp", representanteLegalCurp);
-    formData.append("capitalSocial", capitalSocial.toString());
-    formData.append("registrosImss", registrosImss);
-    formData.append("registrosInfonavit", registrosInfonavit);
-    formData.append("giroActividadEconomica", giroActividadEconomica);
-    formData.append("certificaciones", certificaciones);
+    for (const key in data) {
+      formData.append(key, (data as any)[key]);
+    }
 
     if (logo) {
       const uploadResult = await uploadCompanyImage(logo, rfc);
@@ -227,7 +225,7 @@ export default function EditCompany() {
                 />
               </div>
               <div>
-                <Label htmlFor="objetoSocial">Objeto Social</Label>
+                <Label htmlFor="objetoSocial">Objeto Social (Principal)</Label>
                 <Input
                   id="objetoSocial"
                   type="text"
@@ -327,52 +325,6 @@ export default function EditCompany() {
 
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Información Adicional</h2>
-              <div>
-                <Label htmlFor="capitalSocial">Capital Social</Label>
-                <Input
-                  id="capitalSocial"
-                  type="number"
-                  value={capitalSocial}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCapitalSocial(parseFloat(e.target.value))}
-                />
-              </div>
-              <div>
-                <Label htmlFor="registrosImss">Registros IMSS</Label>
-                <Input
-                  id="registrosImss"
-                  type="text"
-                  value={registrosImss}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosImss(e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="registrosInfonavit">Registros Infonavit</Label>
-                <Input
-                  id="registrosInfonavit"
-                  type="text"
-                  value={registrosInfonavit}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRegistrosInfonavit(e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="giroActividadEconomica">Actividad Económica</Label>
-                <Input
-                  id="giroActividadEconomica"
-                  type="text"
-                  value={giroActividadEconomica}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGiroActividadEconomica(e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="certificaciones">Certificaciones</Label>
-                <Input
-                  id="certificaciones"
-                  type="text"
-                  value={certificaciones}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCertificaciones(e.target.value)}
-                  placeholder="Separar por comas"
-                />
-              </div>
               <div>
                 <Label htmlFor="logo">Logo</Label>
                 <Input
