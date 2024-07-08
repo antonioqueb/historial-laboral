@@ -1,7 +1,9 @@
+// app\api\editCompany\route.ts
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { uploadCompanyImage } from "@/utils/fetchData"; // Asegúrate de importar la función correcta
 
 const prisma = new PrismaClient();
 
@@ -29,9 +31,11 @@ export async function PATCH(req: Request) {
     }
 
     if (updateData.logo instanceof File) {
-        // Implement your logic to handle file upload and get the URL
-        const logoUrl = await uploadFileAndGetUrl(updateData.logo); // Implement this function
-        updateData.logoUrl = logoUrl;
+        const uploadResult = await uploadCompanyImage(updateData.logo, rfc);
+        if (uploadResult.error) {
+            return NextResponse.json({ error: `Error uploading image: ${uploadResult.error}` }, { status: 500 });
+        }
+        updateData.logoUrl = uploadResult.imageUrl;
         delete updateData.logo;
     }
 
@@ -59,11 +63,4 @@ export async function PATCH(req: Request) {
         }
         return NextResponse.json({ error: "Update failed", details: errorMessage }, { status: 500 });
     }
-}
-
-// Implementa la función uploadFileAndGetUrl para manejar la subida del archivo
-async function uploadFileAndGetUrl(file: File): Promise<string> {
-    // Lógica para subir el archivo y obtener la URL
-    // Este es un ejemplo placeholder, deberías implementar la lógica real
-    return 'https://cdn-company-images.historiallaboral.com/uploads/' + file.name;
 }

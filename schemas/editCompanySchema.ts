@@ -12,13 +12,13 @@ export const editCompanySchema = z.object({
   domicilioFiscalEstado: z.string().nonempty("Estado es requerido"),
   domicilioFiscalCodigoPostal: z.string().nonempty("Código Postal es requerido"),
   nombreComercial: z.string().optional(),
-  objetoSocial: z.string().nonempty("Objeto Social es requerido"),
+  objetoSocial: z.string().nonempty("Objeto Social es requerido").transform((val) => `Principal: ${val}`),
   representanteLegalNombre: z.string().nonempty("Nombre del Representante Legal es requerido"),
-  representanteLegalCurp: z.string().nonempty("CURP del Representante Legal es requerido"),
-  capitalSocial: z.preprocess((val) => parseFloat(val as string), z.number().positive("Capital Social debe ser mayor a cero")),
-  registrosImss: z.string().optional(),
-  registrosInfonavit: z.string().optional(),
-  giroActividadEconomica: z.string().nonempty("Actividad Económica es requerida"),
-  certificaciones: z.preprocess((val) => (val as string).split(',').map(cert => cert.trim()), z.array(z.string())).optional(),
-  logo: z.instanceof(File).optional()
+  representanteLegalCurp: z.string().optional(),  // No requerido
+  capitalSocial: z.number().optional(),           // No requerido
+  registrosImss: z.string().optional(),           // No requerido
+  registrosInfonavit: z.string().optional(),      // No requerido
+  giroActividadEconomica: z.string().optional(),  // No requerido
+  certificaciones: z.array(z.string()).optional(),
+  logo: z.any().optional()                        // No requerido, puede ser cualquier tipo
 });

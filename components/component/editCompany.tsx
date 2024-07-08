@@ -139,7 +139,7 @@ export default function EditCompany() {
 
     const result = await editCompanyData(formData);
 
-    if (result.company.name) {
+    if (result.company) {
       setMessage(`Company updated: ${result.company.name}`);
     } else {
       setMessage(result.error ?? "Failed to update company");
@@ -305,7 +305,7 @@ export default function EditCompany() {
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Representante Legal</h2>
               <div>
-                <Label htmlFor="representanteLegalNombre">Nombre</Label>
+                <Label htmlFor="representanteLegalNombre">Nombre Completo</Label>
                 <Input
                   id="representanteLegalNombre"
                   type="text"
@@ -321,7 +321,6 @@ export default function EditCompany() {
                   type="text"
                   value={representanteLegalCurp}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepresentanteLegalCurp(e.target.value)}
-                  required
                 />
               </div>
             </div>
@@ -335,7 +334,6 @@ export default function EditCompany() {
                   type="number"
                   value={capitalSocial}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCapitalSocial(parseFloat(e.target.value))}
-                  required
                 />
               </div>
               <div>
@@ -363,7 +361,6 @@ export default function EditCompany() {
                   type="text"
                   value={giroActividadEconomica}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGiroActividadEconomica(e.target.value)}
-                  required
                 />
               </div>
               <div>
