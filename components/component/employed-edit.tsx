@@ -230,7 +230,7 @@ export default function DashboardEmployedEdit() {
 
   const loadGenders = async () => {
     try {
-      const response = await fetch('/api/genders');
+      const response = await fetch('/api/Genders');
       const data = await response.json();
       setGenders(data.genders);
     } catch (error) {
