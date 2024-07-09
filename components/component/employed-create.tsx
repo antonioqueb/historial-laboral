@@ -109,16 +109,17 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
     }
   };
 
-  const loadNationalities = async () => {
-    try {
-      const response = await fetch('/api/Nationalities');
-      const data = await response.json();
-      setNationalities(data.nationalities);
-      setFilteredNationalities(data.nationalities);
-    } catch (error) {
-      console.error('Error loading nationalities:', error);
-    }
-  };
+const loadNationalities = async () => {
+  try {
+    const response = await fetch('/api/Nationalities');
+    const data = await response.json();
+    setNationalities(data.nationalities);
+    setFilteredNationalities(data.nationalities); // Inicializa con todas las nacionalidades
+  } catch (error) {
+    console.error('Error loading nationalities:', error);
+  }
+};
+
 
   useEffect(() => {
     loadCompanies();
@@ -216,6 +217,7 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
     );
     setFilteredNationalities(filtered);
   };
+  
   
 
   return (
@@ -337,18 +339,18 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
                   <SelectValue placeholder="Seleccionar nacionalidad" />
                 </SelectTrigger>
                 <SelectContent>
-                  <Input
-                    type="text"
-                    placeholder="Buscar..."
-                    onChange={(e) => handleNationalitySearch(e.target.value)}
-                    className="mb-2"
-                  />
-                  {filteredNationalities.map((nationality) => (
-                    <SelectItem key={nationality.sigla} value={nationality.nombre}>
-                      {nationality.nombre}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                <Input
+                  type="text"
+                  placeholder="Buscar..."
+                  onChange={(e) => handleNationalitySearch(e.target.value)}
+                  className="mb-2"
+                />
+                {filteredNationalities.map((nationality) => (
+                  <SelectItem key={nationality.sigla} value={nationality.nombre}>
+                    {nationality.nombre}
+                  </SelectItem>
+                ))}
+              </SelectContent>
               </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
