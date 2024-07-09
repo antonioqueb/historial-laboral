@@ -50,6 +50,7 @@ export default function DashboardEmployedEdit() {
   const [selectedCompanyRFC, setSelectedCompanyRFC] = useState<string | undefined>(undefined);
   const [selectedEmployeeNss, setSelectedEmployeeNss] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [genders, setGenders] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -226,9 +227,20 @@ export default function DashboardEmployedEdit() {
       console.error('Error loading blood types:', error);
     }
   };
+
+  const loadGenders = async () => {
+    try {
+      const response = await fetch('/api/genders');
+      const data = await response.json();
+      setGenders(data.genders);
+    } catch (error) {
+      console.error('Error loading genders:', error);
+    }
+  };
   
   useEffect(() => {
     loadBloodTypes();
+    loadGenders();
   }, []);
   
 
@@ -381,7 +393,18 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="gender">Género</Label>
-                <Input id="gender" name="gender" value={formData.gender} onChange={handleChange} required />
+                <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar género" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {genders.map((gender) => (
+                      <SelectItem key={gender} value={gender}>
+                        {gender}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="bloodType">Tipo de Sangre</Label>

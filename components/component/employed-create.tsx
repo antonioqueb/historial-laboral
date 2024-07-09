@@ -66,6 +66,8 @@ export default function DashboardEmployedAdmin() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
+  const [genders, setGenders] = useState<string[]>([]);
+
 
   const loadCompanies = async () => {
     const data = await getCompaniesList();
@@ -82,9 +84,20 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
+  const loadGenders = async () => {
+    try {
+      const response = await fetch('/api/genders');
+      const data = await response.json();
+      setGenders(data.genders);
+    } catch (error) {
+      console.error('Error loading genders:', error);
+    }
+  };
+
   useEffect(() => {
     loadCompanies();
     loadBloodTypes();
+    loadGenders();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -280,7 +293,18 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="gender">Género</Label>
-              <Input id="gender" name="gender" value={formData.gender} onChange={handleChange} required />
+              <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar género" />
+                </SelectTrigger>
+                <SelectContent>
+                  {genders.map((gender) => (
+                    <SelectItem key={gender} value={gender}>
+                      {gender}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="bloodType">Tipo de Sangre</Label>
