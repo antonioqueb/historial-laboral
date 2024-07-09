@@ -46,12 +46,9 @@ export interface Employee {
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
-  const [bloodTypes, setBloodTypes] = useState<string[]>([]);
   const [selectedCompanyRFC, setSelectedCompanyRFC] = useState<string | undefined>(undefined);
   const [selectedEmployeeNss, setSelectedEmployeeNss] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [genders, setGenders] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -82,9 +79,6 @@ export default function DashboardEmployedEdit() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
-const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
-
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -221,63 +215,6 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
       setError('Error de conexión');
     }
   };
-
-  const loadBloodTypes = async () => {
-    try {
-      const response = await fetch('/api/bloodTypes');
-      const data = await response.json();
-      setBloodTypes(data.bloodTypes);
-    } catch (error) {
-      console.error('Error loading blood types:', error);
-    }
-  };
-
-  const loadGenders = async () => {
-    try {
-      const response = await fetch('/api/Genders');
-      const data = await response.json();
-      setGenders(data.genders);
-    } catch (error) {
-      console.error('Error loading genders:', error);
-    }
-  };
-
-  const loadCivilStatuses = async () => {
-    try {
-      const response = await fetch('/api/CivilStatus');
-      const data = await response.json();
-      setCivilStatuses(data.civilStatuses);
-    } catch (error) {
-      console.error('Error loading civil statuses:', error);
-    }
-  };
-
-  const loadNationalities = async () => {
-    try {
-      const response = await fetch('/api/Nationalities');
-      const data = await response.json();
-      setNationalities(data.nationalities);
-      setFilteredNationalities(data.nationalities);
-    } catch (error) {
-      console.error('Error loading nationalities:', error);
-    }
-  };
-  
-  useEffect(() => {
-    loadBloodTypes();
-    loadGenders();
-    loadCivilStatuses();
-    loadNationalities();
-  }, []);
-
-  const handleNationalitySearch = (searchTerm: string) => {
-    const filtered = nationalities.filter(nationality =>
-      nationality.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredNationalities(filtered);
-  };
-  
-  
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
@@ -416,39 +353,11 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="maritalStatus">Estado Civil</Label>
-                <Select value={formData.maritalStatus} onValueChange={(value) => setFormData({ ...formData, maritalStatus: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar estado civil" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {civilStatuses.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input id="maritalStatus" name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="nationality">Nacionalidad</Label>
-                <Select value={formData.nationality} onValueChange={(value) => setFormData({ ...formData, nationality: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar nacionalidad" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <Input
-                      type="text"
-                      placeholder="Buscar..."
-                      onChange={(e) => handleNationalitySearch(e.target.value)}
-                      className="mb-2"
-                    />
-                    {filteredNationalities.map((nationality) => (
-                      <SelectItem key={nationality.sigla} value={nationality.nombre}>
-                        {nationality.nombre}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input id="nationality" name="nationality" value={formData.nationality} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="educationLevel">Nivel Educativo</Label>
@@ -456,34 +365,12 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="gender">Género</Label>
-                <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar género" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {genders.map((gender) => (
-                      <SelectItem key={gender} value={gender}>
-                        {gender}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input id="gender" name="gender" value={formData.gender} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="bloodType">Tipo de Sangre</Label>
-              <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar tipo de sangre" />
-                </SelectTrigger>
-                <SelectContent>
-                  {bloodTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                <Label htmlFor="bloodType">Tipo de Sangre</Label>
+                <Input id="bloodType" name="bloodType" value={formData.bloodType} onChange={handleChange} required />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="jobTitle">Título del Trabajo</Label>
                 <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
