@@ -67,6 +67,8 @@ export default function DashboardEmployedAdmin() {
   const [success, setSuccess] = useState<string | null>(null);
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
   const [genders, setGenders] = useState<string[]>([]);
+  const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
+
 
 
   const loadCompanies = async () => {
@@ -94,10 +96,21 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
+  const loadCivilStatuses = async () => {
+    try {
+      const response = await fetch('/api/CivilStatus');
+      const data = await response.json();
+      setCivilStatuses(data.civilStatuses);
+    } catch (error) {
+      console.error('Error loading civil statuses:', error);
+    }
+  };
+
   useEffect(() => {
     loadCompanies();
     loadBloodTypes();
     loadGenders();
+    loadCivilStatuses();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -280,9 +293,20 @@ export default function DashboardEmployedAdmin() {
               <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="maritalStatus">Estado Civil</Label>
-              <Input id="maritalStatus" name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} required />
-            </div>
+            <Label htmlFor="maritalStatus">Estado Civil</Label>
+            <Select value={formData.maritalStatus} onValueChange={(value) => setFormData({ ...formData, maritalStatus: value })} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar estado civil" />
+              </SelectTrigger>
+              <SelectContent>
+                {civilStatuses.map((status) => (
+                  <SelectItem key={status} value={status}>
+                    {status}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="nationality">Nacionalidad</Label>
               <Input id="nationality" name="nationality" value={formData.nationality} onChange={handleChange} required />
