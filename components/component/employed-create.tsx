@@ -68,6 +68,9 @@ export default function DashboardEmployedAdmin() {
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
   const [genders, setGenders] = useState<string[]>([]);
   const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
+  const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
+const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
+
 
 
 
@@ -106,11 +109,23 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
+  const loadNationalities = async () => {
+    try {
+      const response = await fetch('/api/Nationalities');
+      const data = await response.json();
+      setNationalities(data.nationalities);
+      setFilteredNationalities(data.nationalities);
+    } catch (error) {
+      console.error('Error loading nationalities:', error);
+    }
+  };
+
   useEffect(() => {
     loadCompanies();
     loadBloodTypes();
     loadGenders();
     loadCivilStatuses();
+    loadNationalities();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -194,6 +209,14 @@ export default function DashboardEmployedAdmin() {
       setError(result.error ?? null);
     }
   };
+
+  const handleNationalitySearch = (searchTerm: string) => {
+    const filtered = nationalities.filter(nationality =>
+      nationality.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredNationalities(filtered);
+  };
+  
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
@@ -307,9 +330,26 @@ export default function DashboardEmployedAdmin() {
               </SelectContent>
             </Select>
           </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="nationality">Nacionalidad</Label>
-              <Input id="nationality" name="nationality" value={formData.nationality} onChange={handleChange} required />
+              <Select value={formData.nationality} onValueChange={(value) => setFormData({ ...formData, nationality: value })} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar nacionalidad" />
+                </SelectTrigger>
+                <SelectContent>
+                  <Input
+                    type="text"
+                    placeholder="Buscar..."
+                    onChange={(e) => handleNationalitySearch(e.target.value)}
+                    className="mb-2"
+                  />
+                  {filteredNationalities.map((nationality) => (
+                    <SelectItem key={nationality.sigla} value={nationality.nombre}>
+                      {nationality.nombre}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="educationLevel">Nivel Educativo</Label>
