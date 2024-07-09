@@ -167,6 +167,10 @@ export default function DashboardEmployedAdmin() {
       <form onSubmit={handleSubmit}>
         <div className="grid gap-6 md:grid-cols-2 py-4">
           <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+              <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
+              <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="name">Nombre Completo</Label>
               <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
@@ -214,10 +218,7 @@ export default function DashboardEmployedAdmin() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
-              <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
-            </div>
+          
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="CURP">CURP</Label>
               <Input id="CURP" name="CURP" value={formData.CURP} onChange={handleChange} required />
