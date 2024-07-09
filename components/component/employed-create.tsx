@@ -1,5 +1,3 @@
-// components\component\employed-create.tsx
-
 'use client';
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
@@ -64,6 +62,7 @@ export default function DashboardEmployedAdmin() {
   });
 
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [bloodTypes, setBloodTypes] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
@@ -73,16 +72,27 @@ export default function DashboardEmployedAdmin() {
     setCompanies(data.companies);
   };
 
+  const loadBloodTypes = async () => {
+    try {
+      const response = await fetch('/api/bloodTypes');
+      const data = await response.json();
+      setBloodTypes(data.bloodTypes);
+    } catch (error) {
+      console.error('Error loading blood types:', error);
+    }
+  };
+
   useEffect(() => {
     loadCompanies();
+    loadBloodTypes();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSelectChange = (value: string) => {
-    setFormData({ ...formData, companyId: value });
+  const handleSelectChange = (value: string, field: keyof FormData) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +113,7 @@ export default function DashboardEmployedAdmin() {
     setSuccess(null);
 
     try {
-      createEmployedSchema.parse(formData); // Validar datos con Zod
+      createEmployedSchema.parse(formData);
     } catch (error) {
       if (error instanceof z.ZodError) {
         setError(error.errors.map(err => err.message).join(", "));
@@ -167,7 +177,7 @@ export default function DashboardEmployedAdmin() {
       <form onSubmit={handleSubmit}>
         <div className="grid gap-6 md:grid-cols-2 py-4">
           <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
               <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
             </div>
@@ -177,7 +187,7 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="role">Rol</Label>
-              <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })} required>
+              <Select value={formData.role} onValueChange={(value) => handleSelectChange(value, 'role')} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar rol" />
                 </SelectTrigger>
@@ -191,7 +201,7 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="department">Departamento</Label>
-              <Select value={formData.department} onValueChange={(value) => setFormData({ ...formData, department: value })} required>
+              <Select value={formData.department} onValueChange={(value) => handleSelectChange(value, 'department')} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar departamento" />
                 </SelectTrigger>
@@ -205,7 +215,7 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="companyId">Empresa</Label>
-              <Select value={formData.companyId} onValueChange={handleSelectChange} required>
+              <Select value={formData.companyId} onValueChange={(value) => handleSelectChange(value, 'companyId')} required>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar empresa" />
                 </SelectTrigger>
@@ -218,7 +228,6 @@ export default function DashboardEmployedAdmin() {
                 </SelectContent>
               </Select>
             </div>
-          
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="CURP">CURP</Label>
               <Input id="CURP" name="CURP" value={formData.CURP} onChange={handleChange} required />
@@ -275,7 +284,18 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="bloodType">Tipo de Sangre</Label>
-              <Input id="bloodType" name="bloodType" value={formData.bloodType} onChange={handleChange} required />
+              <Select value={formData.bloodType} onValueChange={(value) => handleSelectChange(value, 'bloodType')} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar tipo de sangre" />
+                </SelectTrigger>
+                <SelectContent>
+                  {bloodTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="jobTitle">Título del Trabajo</Label>
