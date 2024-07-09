@@ -46,6 +46,7 @@ export interface Employee {
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [bloodTypes, setBloodTypes] = useState<string[]>([]);
   const [selectedCompanyRFC, setSelectedCompanyRFC] = useState<string | undefined>(undefined);
   const [selectedEmployeeNss, setSelectedEmployeeNss] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -216,6 +217,21 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  const loadBloodTypes = async () => {
+    try {
+      const response = await fetch('/api/bloodTypes');
+      const data = await response.json();
+      setBloodTypes(data.bloodTypes);
+    } catch (error) {
+      console.error('Error loading blood types:', error);
+    }
+  };
+  
+  useEffect(() => {
+    loadBloodTypes();
+  }, []);
+  
+
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
@@ -368,9 +384,20 @@ export default function DashboardEmployedEdit() {
                 <Input id="gender" name="gender" value={formData.gender} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="bloodType">Tipo de Sangre</Label>
-                <Input id="bloodType" name="bloodType" value={formData.bloodType} onChange={handleChange} required />
-              </div>
+              <Label htmlFor="bloodType">Tipo de Sangre</Label>
+              <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar tipo de sangre" />
+                </SelectTrigger>
+                <SelectContent>
+                  {bloodTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="jobTitle">Título del Trabajo</Label>
                 <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
