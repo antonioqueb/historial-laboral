@@ -1,4 +1,3 @@
-// app\api\(employeed)\editEmployee\route.ts
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
@@ -71,6 +70,9 @@ export async function PATCH(req: Request) {
 
     // Eliminar campos que no deberían ser actualizados
     delete updateData.company;
+    delete updateData.description; // Eliminar description del objeto de actualización
+    delete updateData.bankAccountNumber; // Eliminar bankAccountNumber del objeto de actualización
+    delete updateData.clabeNumber; // Eliminar clabeNumber del objeto de actualización
 
     const updatedEmployee = await prisma.employee.update({
       where: { id: id as string },

@@ -64,7 +64,7 @@ model Employee {
   emergencyContact     String
   emergencyPhone       String
   bankAccountNumber    String
-  clabeNumber          String   @unique
+  clabeNumber          String   
   maritalStatus        String
   nationality          String
   educationLevel       String

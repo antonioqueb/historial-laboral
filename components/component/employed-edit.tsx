@@ -1,12 +1,10 @@
 'use client';
-
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
 import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema
 import { z } from "zod";
@@ -24,7 +22,6 @@ export interface Employee {
   name: string;
   role: string;
   department: string;
-  description: string;
   companyId: string;
   socialSecurityNumber: string;
   CURP: string;
@@ -36,8 +33,6 @@ export interface Employee {
   hireDate: string;
   emergencyContact: string;
   emergencyPhone: string;
-  bankAccountNumber: string;
-  clabeNumber: string;
   maritalStatus: string;
   nationality: string;
   educationLevel: string;
@@ -59,7 +54,6 @@ export default function DashboardEmployedEdit() {
     name: '',
     role: '',
     department: '',
-    description: '',
     companyId: '',
     socialSecurityNumber: '',
     CURP: '',
@@ -71,8 +65,6 @@ export default function DashboardEmployedEdit() {
     hireDate: '',
     emergencyContact: '',
     emergencyPhone: '',
-    bankAccountNumber: '',
-    clabeNumber: '',
     maritalStatus: '',
     nationality: '',
     educationLevel: '',
@@ -270,7 +262,7 @@ export default function DashboardEmployedEdit() {
           <div className="grid gap-6 md:grid-cols-2 py-4">
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="name">Nombre</Label>
+                <Label htmlFor="name">Nombre Completo</Label>
                 <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
@@ -300,10 +292,6 @@ export default function DashboardEmployedEdit() {
                     <SelectItem value="marketing">Mercadotecnia</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="description">Descripción</Label>
-                <Textarea id="description" name="description" value={formData.description} onChange={handleChange} placeholder="Ingrese una breve descripción del empleado" required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="companyId">Empresa</Label>
@@ -363,14 +351,6 @@ export default function DashboardEmployedEdit() {
                 <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="bankAccountNumber">Número de Cuenta Bancaria</Label>
-                <Input id="bankAccountNumber" name="bankAccountNumber" value={formData.bankAccountNumber} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="clabeNumber">CLABE</Label>
-                <Input id="clabeNumber" name="clabeNumber" value={formData.clabeNumber} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="maritalStatus">Estado Civil</Label>
                 <Input id="maritalStatus" name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} required />
               </div>
@@ -410,7 +390,7 @@ export default function DashboardEmployedEdit() {
           </div>
           {error && <div className="text-red-500 mb-4">{error}</div>}
           {success && <div className="text-green-500 mb-4">{success}</div>}
-          <div className="flex justify-end mt-4">           
+          <div className="flex justify-end mt-4">
             <Button type="submit">Actualizar</Button>
             <Link href="/tablero/empleados" className="ml-2">
               <Button type="button">Cancelar</Button>

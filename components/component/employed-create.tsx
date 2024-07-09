@@ -1,19 +1,19 @@
+// components\component\employed-create.tsx
+
 'use client';
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { getCompaniesList, createEmployee, Company, uploadEmployeeFiles } from "@/utils/fetchData";
 import { z } from "zod";
-import  createEmployedSchema  from "@/schemas/createEmployedSchema";
+import createEmployedSchema from "@/schemas/createEmployedSchema";
 
 interface FormData {
   name: string;
   role: string;
   department: string;
-  description: string;
   companyId: string;
   socialSecurityNumber: string;
   CURP: string;
@@ -25,8 +25,6 @@ interface FormData {
   hireDate: string;
   emergencyContact: string;
   emergencyPhone: string;
-  bankAccountNumber: string;
-  clabeNumber: string;
   maritalStatus: string;
   nationality: string;
   educationLevel: string;
@@ -43,7 +41,6 @@ export default function DashboardEmployedAdmin() {
     name: '',
     role: '',
     department: '',
-    description: '',
     companyId: '',
     socialSecurityNumber: '',
     CURP: '',
@@ -55,8 +52,6 @@ export default function DashboardEmployedAdmin() {
     hireDate: '',
     emergencyContact: '',
     emergencyPhone: '',
-    bankAccountNumber: '',
-    clabeNumber: '',
     maritalStatus: '',
     nationality: '',
     educationLevel: '',
@@ -137,7 +132,6 @@ export default function DashboardEmployedAdmin() {
         name: '',
         role: '',
         department: '',
-        description: '',
         companyId: '',
         socialSecurityNumber: '',
         CURP: '',
@@ -149,8 +143,6 @@ export default function DashboardEmployedAdmin() {
         hireDate: '',
         emergencyContact: '',
         emergencyPhone: '',
-        bankAccountNumber: '',
-        clabeNumber: '',
         maritalStatus: '',
         nationality: '',
         educationLevel: '',
@@ -176,7 +168,7 @@ export default function DashboardEmployedAdmin() {
         <div className="grid gap-6 md:grid-cols-2 py-4">
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="name">Nombre</Label>
+              <Label htmlFor="name">Nombre Completo</Label>
               <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
@@ -206,10 +198,6 @@ export default function DashboardEmployedAdmin() {
                   <SelectItem value="marketing">Mercadotecnia</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="description">Descripción</Label>
-              <Textarea id="description" name="description" value={formData.description} onChange={handleChange} placeholder="Ingrese una breve descripción del empleado" required />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="companyId">Empresa</Label>
@@ -267,14 +255,6 @@ export default function DashboardEmployedAdmin() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="emergencyPhone">Teléfono de Emergencia</Label>
               <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="bankAccountNumber">Número de Cuenta Bancaria</Label>
-              <Input id="bankAccountNumber" name="bankAccountNumber" value={formData.bankAccountNumber} onChange={handleChange} required />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="clabeNumber">CLABE</Label>
-              <Input id="clabeNumber" name="clabeNumber" value={formData.clabeNumber} onChange={handleChange} required />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="maritalStatus">Estado Civil</Label>
