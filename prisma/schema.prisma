@@ -50,21 +50,21 @@ model Employee {
   name                 String
   role                 String
   department           String
-  description          String
+  description          String?
   companyId            String
   company              Company  @relation(fields: [companyId], references: [id])
   socialSecurityNumber String   @unique
   CURP                 String   @unique
   RFC                  String   @unique
-  address              String
-  phoneNumber          String
+  address              String?
+  phoneNumber          String?
   email                String   @unique
   birthDate            DateTime
   hireDate             DateTime
-  emergencyContact     String
-  emergencyPhone       String
-  bankAccountNumber    String
-  clabeNumber          String   
+  emergencyContact     String?
+  emergencyPhone       String?
+  bankAccountNumber    String?
+  clabeNumber          String?   
   maritalStatus        String
   nationality          String
   educationLevel       String
