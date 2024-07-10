@@ -99,7 +99,7 @@ export default function Component() {
   return (
     <section className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-6 mb-14">
       {cardData.map(({ title, description, mainValue, subValue, icon }, index) => (
-        <Card key={index} className="min-h-[200px] p-6 bg-white shadow-lg rounded-lg">
+        <Card key={index} className="min-h-[200px] p-6 shadow-lg rounded-lg">
           <div className="flex flex-col justify-between h-full">
             <CardHeader>
               <CardTitle className="text-2xl font-semibold text-gray-800">{title}</CardTitle>
