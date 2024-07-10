@@ -156,9 +156,29 @@ export default function DashboardEmployedEdit() {
             const { employee } = await res.json();
             console.log('Employee data fetched:', employee); // Debugging line
             setFormData({
-              ...employee,
+              id: employee.id || '',
+              name: employee.name || '',
+              role: employee.role || '',
+              department: employee.department || '',
+              companyId: employee.companyId || '',
+              socialSecurityNumber: employee.socialSecurityNumber || '',
+              CURP: employee.CURP || '',
+              RFC: employee.RFC || '',
+              address: employee.address || '',
+              phoneNumber: employee.phoneNumber || '',
+              email: employee.email || '',
               birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
               hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+              emergencyContact: employee.emergencyContact || '',
+              emergencyPhone: employee.emergencyPhone || '',
+              maritalStatus: employee.maritalStatus || '',
+              nationality: employee.nationality || '',
+              educationLevel: employee.educationLevel || '',
+              gender: employee.gender || '',
+              bloodType: employee.bloodType || '',
+              jobTitle: employee.jobTitle || '',
+              workShift: employee.workShift || '',
+              contractType: employee.contractType || '',
               profileImage: null,
             });
           } else {
