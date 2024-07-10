@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import Link from 'next/link';
-import { editEmployeeSchema } from "@/schemas/editEmployeeSchema";
+import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema
 import { z } from "zod";
 
 export interface Company {
@@ -87,12 +87,13 @@ export default function DashboardEmployedEdit() {
   const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
 
   useEffect(() => {
+    console.log('Fetching user ID...');
     const fetchUserId = async () => {
       try {
         const res = await fetch('https://historiallaboral.com/api/getUserId');
         if (res.ok) {
           const data = await res.json();
-          console.log('User ID fetched:', data.id); // Debugging line
+          console.log('User ID fetched:', data.id);
           return data.id;
         } else {
           setError('Failed to fetch user ID');
@@ -108,8 +109,8 @@ export default function DashboardEmployedEdit() {
         if (res.ok) {
           const data = await res.json();
           const userCompanies = data.companies.filter((company: Company) => company.userId === userId);
+          console.log('Companies fetched:', userCompanies);
           setCompanies(userCompanies);
-          console.log('Companies fetched:', userCompanies); // Debugging line
           return userCompanies;
         } else {
           setError('Failed to fetch companies');
@@ -120,7 +121,6 @@ export default function DashboardEmployedEdit() {
     };
 
     const initializeData = async () => {
-      console.log('Fetching user ID...');
       const userId = await fetchUserId();
       if (userId) {
         await fetchCompanies(userId);
@@ -131,14 +131,15 @@ export default function DashboardEmployedEdit() {
   }, []);
 
   useEffect(() => {
+    console.log('Selected company RFC changed:', selectedCompanyRFC);
     if (selectedCompanyRFC) {
       const fetchEmployeesByCompanyRFC = async (rfc: string) => {
         try {
           const res = await fetch(`https://historiallaboral.com/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
           if (res.ok) {
             const data = await res.json();
+            console.log('Employees fetched:', data.employees);
             setEmployees(data.employees);
-            console.log('Employees fetched:', data.employees); // Debugging line
           } else {
             setError('Failed to fetch employees');
           }
@@ -147,12 +148,12 @@ export default function DashboardEmployedEdit() {
         }
       };
 
-      console.log('Selected company RFC changed:', selectedCompanyRFC); // Debugging line
       fetchEmployeesByCompanyRFC(selectedCompanyRFC);
     }
   }, [selectedCompanyRFC]);
 
   useEffect(() => {
+    console.log('Selected employee NSS changed:', selectedEmployeeNss);
     if (selectedEmployeeNss) {
       const fetchEmployee = async () => {
         try {
@@ -186,7 +187,32 @@ export default function DashboardEmployedEdit() {
               contractType: employee.contractType || '',
               profileImage: null,
             });
-            console.log('Form data set:', formData); // Debugging line
+            console.log('Form data set:', {
+              id: employee.id || '',
+              name: employee.name || '',
+              role: employee.role || '',
+              department: employee.department || '',
+              companyId: employee.companyId || '',
+              socialSecurityNumber: employee.socialSecurityNumber || '',
+              CURP: employee.CURP || '',
+              RFC: employee.RFC || '',
+              address: employee.address || '',
+              phoneNumber: employee.phoneNumber || '',
+              email: employee.email || '',
+              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+              emergencyContact: employee.emergencyContact || '',
+              emergencyPhone: employee.emergencyPhone || '',
+              maritalStatus: employee.maritalStatus || '',
+              nationality: employee.nationality || '',
+              educationLevel: employee.educationLevel || '',
+              gender: employee.gender || '',
+              bloodType: employee.bloodType || '',
+              jobTitle: employee.jobTitle || '',
+              workShift: employee.workShift || '',
+              contractType: employee.contractType || '',
+              profileImage: null,
+            }); // Debugging line
           } else {
             setError('Failed to fetch employee data');
           }
@@ -195,19 +221,19 @@ export default function DashboardEmployedEdit() {
         }
       };
 
-      console.log('Selected employee NSS changed:', selectedEmployeeNss); // Debugging line
       fetchEmployee();
     }
   }, [selectedEmployeeNss]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log('Form data updated:', { ...formData, [e.target.name]: e.target.value }); // Debugging line
+    console.log('Form data updated:', formData); // Debugging line
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormData({ ...formData, profileImage: e.target.files[0] });
+      console.log('Profile image set:', e.target.files[0]); // Debugging line
     }
   };
 
@@ -246,10 +272,11 @@ export default function DashboardEmployedEdit() {
         router.push('/tablero/empleados/editar'); // Redireccionar a la lista de empleados
       } else {
         const data = await response.json();
-        console.log('Error updating employee:', data.error); // Debugging line
+        console.log('Error updating employee:', data.error || 'Error al actualizar el empleado'); // Debugging line
         setError(data.error || 'Error al actualizar el empleado');
       }
     } catch (err) {
+      console.log('Connection error:', err); // Debugging line
       setError('Error de conexión');
     }
   };
@@ -258,8 +285,8 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/bloodTypes');
       const data = await response.json();
-      setBloodTypes(data.bloodTypes);
       console.log('Blood types loaded:', data.bloodTypes); // Debugging line
+      setBloodTypes(data.bloodTypes);
     } catch (error) {
       console.error('Error loading blood types:', error);
     }
@@ -269,8 +296,8 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/Genders');
       const data = await response.json();
-      setGenders(data.genders);
       console.log('Genders loaded:', data.genders); // Debugging line
+      setGenders(data.genders);
     } catch (error) {
       console.error('Error loading genders:', error);
     }
@@ -280,8 +307,8 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/CivilStatus');
       const data = await response.json();
-      setCivilStatuses(data.civilStatuses);
       console.log('Civil statuses loaded:', data.civilStatuses); // Debugging line
+      setCivilStatuses(data.civilStatuses);
     } catch (error) {
       console.error('Error loading civil statuses:', error);
     }
@@ -291,9 +318,9 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/Nationalities');
       const data = await response.json();
+      console.log('Nationalities loaded:', data.nationalities); // Debugging line
       setNationalities(data.nationalities);
       setFilteredNationalities(data.nationalities); // Inicializa con todas las nacionalidades
-      console.log('Nationalities loaded:', data.nationalities); // Debugging line
     } catch (error) {
       console.error('Error loading nationalities:', error);
     }
@@ -303,8 +330,8 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/EducationLevels');
       const data = await response.json();
-      setEducationLevels(data.educationLevels);
       console.log('Education levels loaded:', data.educationLevels); // Debugging line
+      setEducationLevels(data.educationLevels);
     } catch (error) {
       console.error('Error loading education levels:', error);
     }
@@ -323,6 +350,7 @@ export default function DashboardEmployedEdit() {
       nationality.nombre.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredNationalities(filtered);
+    console.log('Filtered nationalities:', filtered); // Debugging line
   };
 
   return (
