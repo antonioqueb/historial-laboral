@@ -53,9 +53,11 @@ export default function Header() {
       <div className="flex items-center gap-4 ml-auto">
         {session ? (
           <>
+          <Link href="/tablero">
             <Button>
-              <Link href="/tablero">Tablero</Link>
+              Tablero
             </Button>
+            </Link>
             <Button className="rounded-full" size="icon" variant="ghost">
               <ModeToggle />
             </Button>
