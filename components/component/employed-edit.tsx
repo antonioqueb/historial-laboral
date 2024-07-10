@@ -52,6 +52,7 @@ export default function DashboardEmployedEdit() {
   const [selectedEmployeeNss, setSelectedEmployeeNss] = useState<string | undefined>(undefined);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [genders, setGenders] = useState<string[]>([]);
+  const [educationLevels, setEducationLevels] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -263,11 +264,23 @@ export default function DashboardEmployedEdit() {
     }
   };
   
+  const loadEducationLevels = async () => {
+    try {
+      const response = await fetch('/api/EducationLevels');
+      const data = await response.json();
+      setEducationLevels(data.educationLevels);
+    } catch (error) {
+      console.error('Error loading education levels:', error);
+    }
+  };
+  
+  
   useEffect(() => {
     loadBloodTypes();
     loadGenders();
     loadCivilStatuses();
     loadNationalities();
+    loadEducationLevels();
   }, []);
 
   const handleNationalitySearch = (searchTerm: string) => {
@@ -449,7 +462,18 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="educationLevel">Nivel Educativo</Label>
-                <Input id="educationLevel" name="educationLevel" value={formData.educationLevel} onChange={handleChange} required />
+                <Select value={formData.educationLevel} onValueChange={(value) => setFormData({ ...formData, educationLevel: value })} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar nivel educativo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {educationLevels.map((level) => (
+                      <SelectItem key={level} value={level}>
+                        {level}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="gender">Género</Label>

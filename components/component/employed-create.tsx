@@ -60,7 +60,7 @@ export default function DashboardEmployedAdmin() {
     contractType: '',
     profileImage: null,
   });
-
+  const [educationLevels, setEducationLevels] = useState<string[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [bloodTypes, setBloodTypes] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -109,16 +109,26 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
     }
   };
 
-const loadNationalities = async () => {
-  try {
-    const response = await fetch('/api/Nationalities');
-    const data = await response.json();
-    setNationalities(data.nationalities);
-    setFilteredNationalities(data.nationalities); // Inicializa con todas las nacionalidades
-  } catch (error) {
-    console.error('Error loading nationalities:', error);
-  }
-};
+  const loadNationalities = async () => {
+    try {
+      const response = await fetch('/api/Nationalities');
+      const data = await response.json();
+      setNationalities(data.nationalities);
+      setFilteredNationalities(data.nationalities); // Inicializa con todas las nacionalidades
+    } catch (error) {
+      console.error('Error loading nationalities:', error);
+    }
+  };
+
+  const loadEducationLevels = async () => {
+    try {
+      const response = await fetch('/api/EducationLevels');
+      const data = await response.json();
+      setEducationLevels(data.educationLevels);
+    } catch (error) {
+      console.error('Error loading education levels:', error);
+    }
+  };
 
 
   useEffect(() => {
@@ -127,6 +137,7 @@ const loadNationalities = async () => {
     loadGenders();
     loadCivilStatuses();
     loadNationalities();
+    loadEducationLevels();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -355,7 +366,18 @@ const loadNationalities = async () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="educationLevel">Nivel Educativo</Label>
-              <Input id="educationLevel" name="educationLevel" value={formData.educationLevel} onChange={handleChange} required />
+              <Select value={formData.educationLevel} onValueChange={(value) => handleSelectChange(value, 'educationLevel')} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar nivel educativo" />
+                </SelectTrigger>
+                <SelectContent>
+                  {educationLevels.map((level) => (
+                    <SelectItem key={level} value={level}>
+                      {level}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="gender">Género</Label>
