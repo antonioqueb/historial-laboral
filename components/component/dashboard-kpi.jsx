@@ -1,8 +1,8 @@
-// components\component\dashboard-kpi.jsx
 'use client';
 import { useState, useEffect } from 'react';
 import { getEmployeesList, getCompaniesList, getUserId } from '@/utils/fetchData';
 import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
+import { useTheme } from 'next-themes';
 
 // Iconos
 function GaugeIcon(props) {
@@ -54,6 +54,7 @@ export default function Component() {
   const [employees, setEmployees] = useState([]);
   const [companies, setCompanies] = useState([]);
   const [userId, setUserId] = useState('');
+  const { theme } = useTheme();
 
   useEffect(() => {
     async function fetchData() {
@@ -99,18 +100,18 @@ export default function Component() {
   return (
     <section className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-6 mb-14">
       {cardData.map(({ title, description, mainValue, subValue, icon }, index) => (
-        <Card key={index} className="min-h-[200px] p-6 shadow-lg rounded-lg">
+        <Card key={index} className={`min-h-[200px] p-6 shadow-lg rounded-lg ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'}`}>
           <div className="flex flex-col justify-between h-full">
             <CardHeader>
-              <CardTitle className="text-2xl font-semibold text-gray-800">{title}</CardTitle>
-              <CardDescription className="text-gray-500">{description}</CardDescription>
+              <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
+              <CardDescription>{description}</CardDescription>
             </CardHeader>
             <CardFooter className="flex items-center justify-between mt-auto">
               <div className="grid gap-1">
-                <div className="text-4xl font-bold text-gray-900">{mainValue}</div>
-                {subValue && <div className="text-sm text-gray-500">{subValue}</div>}
+                <div className="text-4xl font-bold">{mainValue}</div>
+                {subValue && <div className="text-sm">{subValue}</div>}
               </div>
-              <IconComponent IconComponent={icon} className="h-12 w-12 text-gray-400 ml-4" />
+              <IconComponent IconComponent={icon} className="h-12 w-12 ml-4" />
             </CardFooter>
           </div>
         </Card>
