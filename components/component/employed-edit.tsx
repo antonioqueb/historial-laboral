@@ -187,7 +187,32 @@ export default function DashboardEmployedEdit() {
               contractType: employee.contractType || '',
               profileImage: null,
             });
-            console.log('Form data set:', formData); // Debugging line
+            console.log('Form data set:', {
+              id: employee.id || '',
+              name: employee.name || '',
+              role: employee.role || '',
+              department: employee.department || '',
+              companyId: employee.companyId || '',
+              socialSecurityNumber: employee.socialSecurityNumber || '',
+              CURP: employee.CURP || '',
+              RFC: employee.RFC || '',
+              address: employee.address || '',
+              phoneNumber: employee.phoneNumber || '',
+              email: employee.email || '',
+              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+              emergencyContact: employee.emergencyContact || '',
+              emergencyPhone: employee.emergencyPhone || '',
+              maritalStatus: employee.maritalStatus || '',
+              nationality: employee.nationality || '',
+              educationLevel: employee.educationLevel || '',
+              gender: employee.gender || '',
+              bloodType: employee.bloodType || '',
+              jobTitle: employee.jobTitle || '',
+              workShift: employee.workShift || '',
+              contractType: employee.contractType || '',
+              profileImage: null,
+            }); // Debugging line
           } else {
             setError('Failed to fetch employee data');
           }
@@ -242,17 +267,17 @@ export default function DashboardEmployedEdit() {
       });
 
       if (response.ok) {
-        setSuccess('Empleado actualizado exitosamente');
         console.log('Employee updated successfully'); // Debugging line
+        setSuccess('Empleado actualizado exitosamente');
         router.push('/tablero/empleados/editar'); // Redireccionar a la lista de empleados
       } else {
         const data = await response.json();
-        setError(data.error || 'Error al actualizar el empleado');
         console.log('Error updating employee:', data.error || 'Error al actualizar el empleado'); // Debugging line
+        setError(data.error || 'Error al actualizar el empleado');
       }
     } catch (err) {
-      setError('Error de conexión');
       console.log('Connection error:', err); // Debugging line
+      setError('Error de conexión');
     }
   };
 
