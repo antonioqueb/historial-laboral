@@ -100,7 +100,7 @@ export default function Component() {
   return (
     <section className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 p-6 mb-14">
       {cardData.map(({ title, description, mainValue, subValue, icon }, index) => (
-        <Card key={index} className={`min-h-[200px] p-6 shadow-lg rounded-lg ${theme === 'dark' ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-900'}`}>
+        <Card key={index} className={`min-h-[200px] p-6 shadow-lg rounded-lg ${theme === 'dark' ? 'bg-zinc-800 text-zinc-100' : 'bg-white text-zinc-900'}`}>
           <div className="flex flex-col justify-between h-full">
             <CardHeader>
               <CardTitle className="text-2xl font-semibold">{title}</CardTitle>
