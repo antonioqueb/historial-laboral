@@ -1,4 +1,3 @@
-// app\api\(employeed)\createEmployee\route.ts
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
@@ -26,10 +25,6 @@ export async function POST(req: Request) {
     const image = formData.get("profileImage") as File | null;
     const nss = formData.get("socialSecurityNumber") as string | null;
 
-    console.log("Form Data:", formData);
-    console.log("Image:", image);
-    console.log("NSS:", nss);
-
     let imageUrl: string | null = null;
     if (image && nss) {
       const uploadForm = new FormData();
@@ -48,15 +43,13 @@ export async function POST(req: Request) {
 
       const uploadResult = await response.json();
       imageUrl = uploadResult.imageUrl;
-      console.log("Image URL from upload:", imageUrl);
-
     }
 
     const {
       name,
       role,
       department,
-      description,
+      description, // description opcional
       companyId,
       CURP,
       RFC,
@@ -79,38 +72,40 @@ export async function POST(req: Request) {
       contractType,
     } = Object.fromEntries(formData.entries());
 
-    console.log("Profile Image URL to be saved:", imageUrl);
+    const employeeData: any = {
+      name: name as string,
+      role: role as string,
+      department: department as string,
+      companyId: companyId as string,
+      socialSecurityNumber: nss as string,
+      CURP: CURP as string,
+      RFC: RFC as string,
+      address: address as string,
+      phoneNumber: phoneNumber as string,
+      email: email as string,
+      birthDate: new Date(birthDate as string),
+      hireDate: new Date(hireDate as string),
+      emergencyContact: emergencyContact as string,
+      emergencyPhone: emergencyPhone as string,
+      bankAccountNumber: bankAccountNumber as string,
+      clabeNumber: clabeNumber as string,
+      maritalStatus: maritalStatus as string,
+      nationality: nationality as string,
+      educationLevel: educationLevel as string,
+      gender: gender as string,
+      bloodType: bloodType as string,
+      jobTitle: jobTitle as string,
+      workShift: workShift as string,
+      contractType: contractType as string,
+      profileImageUrl: imageUrl as string, // Guardar la URL de la imagen...
+    };
 
-    // Crear el empleado
+    if (description) {
+      employeeData.description = description as string;
+    }
+
     const employee = await prisma.employee.create({
-      data: {
-        name: name as string,
-        role: role as string,
-        department: department as string,
-        description: description as string,
-        companyId: companyId as string,
-        socialSecurityNumber: nss as string,
-        CURP: CURP as string,
-        RFC: RFC as string,
-        address: address as string,
-        phoneNumber: phoneNumber as string,
-        email: email as string,
-        birthDate: new Date(birthDate as string),
-        hireDate: new Date(hireDate as string),
-        emergencyContact: emergencyContact as string,
-        emergencyPhone: emergencyPhone as string,
-        bankAccountNumber: bankAccountNumber as string,
-        clabeNumber: clabeNumber as string,
-        maritalStatus: maritalStatus as string,
-        nationality: nationality as string,
-        educationLevel: educationLevel as string,
-        gender: gender as string,
-        bloodType: bloodType as string,
-        jobTitle: jobTitle as string,
-        workShift: workShift as string,
-        contractType: contractType as string,
-        profileImageUrl: imageUrl as string, // Guardar la URL de la imagen...
-      },
+      data: employeeData,
     });
 
     return NextResponse.json({ employee }, { status: 201 });
