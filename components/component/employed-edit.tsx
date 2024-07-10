@@ -83,8 +83,7 @@ export default function DashboardEmployedEdit() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
-const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
-
+  const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -154,6 +153,7 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
           const res = await fetch(`https://historiallaboral.com/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
           if (res.ok) {
             const { employee } = await res.json();
+            console.log('Employee data fetched:', employee); // Debugging line
             setFormData({
               ...employee,
               birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
@@ -263,7 +263,6 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
     }
   };
   
-  
   useEffect(() => {
     loadBloodTypes();
     loadGenders();
@@ -277,8 +276,6 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
     );
     setFilteredNationalities(filtered);
   };
-  
-  
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
@@ -325,7 +322,7 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
         <form onSubmit={handleSubmit}>
           <div className="grid gap-6 md:grid-cols-2 py-4">
             <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
                 <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
               </div>
@@ -376,7 +373,6 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
                   </SelectContent>
                 </Select>
               </div>
-             
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="CURP">CURP</Label>
                 <Input id="CURP" name="CURP" value={formData.CURP} onChange={handleChange} required />
@@ -437,18 +433,18 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
                     <SelectValue placeholder="Seleccionar nacionalidad" />
                   </SelectTrigger>
                   <SelectContent>
-                  <Input
-                    type="text"
-                    placeholder="Buscar..."
-                    onChange={(e) => handleNationalitySearch(e.target.value)}
-                    className="mb-2"
-                  />
-                  {filteredNationalities.map((nationality) => (
-                    <SelectItem key={nationality.sigla} value={nationality.nombre}>
-                      {nationality.nombre}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                    <Input
+                      type="text"
+                      placeholder="Buscar..."
+                      onChange={(e) => handleNationalitySearch(e.target.value)}
+                      className="mb-2"
+                    />
+                    {filteredNationalities.map((nationality) => (
+                      <SelectItem key={nationality.sigla} value={nationality.nombre}>
+                        {nationality.nombre}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
@@ -471,20 +467,20 @@ const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: stri
                 </Select>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="bloodType">Tipo de Sangre</Label>
-              <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar tipo de sangre" />
-                </SelectTrigger>
-                <SelectContent>
-                  {bloodTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                <Label htmlFor="bloodType">Tipo de Sangre</Label>
+                <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar tipo de sangre" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {bloodTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="jobTitle">Título del Trabajo</Label>
                 <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
