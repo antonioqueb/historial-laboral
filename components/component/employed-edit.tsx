@@ -1,12 +1,11 @@
-'use client';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import Link from 'next/link';
-import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema
+import { editEmployeeSchema } from "@/schemas/editEmployeeSchema";
 import { z } from "zod";
 
 export interface Company {
@@ -53,6 +52,8 @@ export default function DashboardEmployedEdit() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [genders, setGenders] = useState<string[]>([]);
   const [educationLevels, setEducationLevels] = useState<string[]>([]);
+  const [employeeData, setEmployeeData] = useState<Employee | null>(null);
+
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -160,59 +161,8 @@ export default function DashboardEmployedEdit() {
           const res = await fetch(`https://historiallaboral.com/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
           if (res.ok) {
             const { employee } = await res.json();
-            console.log('Employee data fetched:', employee); // Debugging line
-            setFormData({
-              id: employee.id || '',
-              name: employee.name || '',
-              role: employee.role || '',
-              department: employee.department || '',
-              companyId: employee.companyId || '',
-              socialSecurityNumber: employee.socialSecurityNumber || '',
-              CURP: employee.CURP || '',
-              RFC: employee.RFC || '',
-              address: employee.address || '',
-              phoneNumber: employee.phoneNumber || '',
-              email: employee.email || '',
-              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
-              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
-              emergencyContact: employee.emergencyContact || '',
-              emergencyPhone: employee.emergencyPhone || '',
-              maritalStatus: employee.maritalStatus || '',
-              nationality: employee.nationality || '',
-              educationLevel: employee.educationLevel || '',
-              gender: employee.gender || '',
-              bloodType: employee.bloodType || '',
-              jobTitle: employee.jobTitle || '',
-              workShift: employee.workShift || '',
-              contractType: employee.contractType || '',
-              profileImage: null,
-            });
-            console.log('Form data set:', {
-              id: employee.id || '',
-              name: employee.name || '',
-              role: employee.role || '',
-              department: employee.department || '',
-              companyId: employee.companyId || '',
-              socialSecurityNumber: employee.socialSecurityNumber || '',
-              CURP: employee.CURP || '',
-              RFC: employee.RFC || '',
-              address: employee.address || '',
-              phoneNumber: employee.phoneNumber || '',
-              email: employee.email || '',
-              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
-              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
-              emergencyContact: employee.emergencyContact || '',
-              emergencyPhone: employee.emergencyPhone || '',
-              maritalStatus: employee.maritalStatus || '',
-              nationality: employee.nationality || '',
-              educationLevel: employee.educationLevel || '',
-              gender: employee.gender || '',
-              bloodType: employee.bloodType || '',
-              jobTitle: employee.jobTitle || '',
-              workShift: employee.workShift || '',
-              contractType: employee.contractType || '',
-              profileImage: null,
-            }); // Debugging line
+            console.log('Employee data fetched:', employee);
+            setEmployeeData(employee);
           } else {
             setError('Failed to fetch employee data');
           }
@@ -220,24 +170,54 @@ export default function DashboardEmployedEdit() {
           setError('Failed to fetch employee data');
         }
       };
-  
+
       fetchEmployee();
     }
   }, [selectedEmployeeNss]);
-  
+
+  useEffect(() => {
+    if (employeeData) {
+      setFormData({
+        id: employeeData.id || '',
+        name: employeeData.name || '',
+        role: employeeData.role || '',
+        department: employeeData.department || '',
+        companyId: employeeData.companyId || '',
+        socialSecurityNumber: employeeData.socialSecurityNumber || '',
+        CURP: employeeData.CURP || '',
+        RFC: employeeData.RFC || '',
+        address: employeeData.address || '',
+        phoneNumber: employeeData.phoneNumber || '',
+        email: employeeData.email || '',
+        birthDate: employeeData.birthDate ? new Date(employeeData.birthDate).toISOString().split('T')[0] : '',
+        hireDate: employeeData.hireDate ? new Date(employeeData.hireDate).toISOString().split('T')[0] : '',
+        emergencyContact: employeeData.emergencyContact || '',
+        emergencyPhone: employeeData.emergencyPhone || '',
+        maritalStatus: employeeData.maritalStatus || '',
+        nationality: employeeData.nationality || '',
+        educationLevel: employeeData.educationLevel || '',
+        gender: employeeData.gender || '',
+        bloodType: employeeData.bloodType || '',
+        jobTitle: employeeData.jobTitle || '',
+        workShift: employeeData.workShift || '',
+        contractType: employeeData.contractType || '',
+        profileImage: null,
+      });
+      console.log('Form data set:', formData); // Debugging line
+    }
+  }, [employeeData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     console.log('Form data updated:', { ...formData, [e.target.name]: e.target.value }); // Debugging line
   };
-  
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormData({ ...formData, profileImage: e.target.files[0] });
       console.log('Profile image set:', e.target.files[0]); // Debugging line
     }
   };
-  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
