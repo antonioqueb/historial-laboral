@@ -97,8 +97,8 @@ export default function DashboardEmployedList() {
   };
 
   return (
-    <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
-      <div className="flex items-center justify-between mb-6">
+    <div className="w-full mx-auto px-4 md:px-6 py-12 mb-4">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-bold">Empleados</h1>
         {selectedCompany && (
           <Button onClick={handleChangeCompany} variant="secondary">
