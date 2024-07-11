@@ -1,12 +1,12 @@
 'use client';
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import Link from 'next/link';
-import { editEmployeeSchema } from "@/schemas/editEmployeeSchema";
+import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema
 import { z } from "zod";
 
 export interface Company {
@@ -54,7 +54,6 @@ export default function DashboardEmployedEdit() {
   const [genders, setGenders] = useState<string[]>([]);
   const [educationLevels, setEducationLevels] = useState<string[]>([]);
   const [employeeData, setEmployeeData] = useState<Employee | null>(null);
-
   const [formData, setFormData] = useState({
     id: '',
     name: '',
