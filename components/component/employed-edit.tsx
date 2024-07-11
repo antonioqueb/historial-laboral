@@ -220,22 +220,24 @@ export default function DashboardEmployedEdit() {
           setError('Failed to fetch employee data');
         }
       };
-
+  
       fetchEmployee();
     }
   }, [selectedEmployeeNss]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log('Form data updated:', formData); // Debugging line
+    console.log('Form data updated:', { ...formData, [e.target.name]: e.target.value }); // Debugging line
   };
-
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormData({ ...formData, profileImage: e.target.files[0] });
       console.log('Profile image set:', e.target.files[0]); // Debugging line
     }
   };
+  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
