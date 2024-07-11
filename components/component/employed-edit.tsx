@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import Link from 'next/link';
-import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema
+import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema..
 import { z } from "zod";
 
 export interface Company {
