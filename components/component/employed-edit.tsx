@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import Link from 'next/link';
-import { editEmployeeSchema } from "@/schemas/editEmployeeSchema";
+import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema
 import { z } from "zod";
 
 export interface Company {
@@ -220,6 +220,10 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -252,6 +256,7 @@ export default function DashboardEmployedEdit() {
       if (response.ok) {
         console.log('Employee updated successfully'); // Debugging line
         setSuccess('Empleado actualizado exitosamente');
+        setIsEditing(false);
         router.push('/tablero/empleados/editar'); // Redireccionar a la lista de empleados
       } else {
         const data = await response.json();
@@ -336,10 +341,6 @@ export default function DashboardEmployedEdit() {
     console.log('Filtered nationalities:', filtered); // Debugging line
   };
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
@@ -383,106 +384,7 @@ export default function DashboardEmployedEdit() {
         </div>
       ) : (
         <div>
-          <div className="grid gap-6 md:grid-cols-2 py-4">
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Número de Seguridad Social</Label>
-                <div>{formData.socialSecurityNumber}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Nombre Completo</Label>
-                <div>{formData.name}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Rol</Label>
-                <div>{formData.role}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Departamento</Label>
-                <div>{formData.department}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Empresa</Label>
-                <div>{formData.companyId}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>CURP</Label>
-                <div>{formData.CURP}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>RFC</Label>
-                <div>{formData.RFC}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Dirección</Label>
-                <div>{formData.address}</div>
-              </div>
-            </div>
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Número de Teléfono</Label>
-                <div>{formData.phoneNumber}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Correo Electrónico</Label>
-                <div>{formData.email}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Fecha de Nacimiento</Label>
-                <div>{formData.birthDate}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Fecha de Contratación</Label>
-                <div>{formData.hireDate}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Contacto de Emergencia</Label>
-                <div>{formData.emergencyContact}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Teléfono de Emergencia</Label>
-                <div>{formData.emergencyPhone}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Estado Civil</Label>
-                <div>{formData.maritalStatus}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Nacionalidad</Label>
-                <div>{formData.nationality}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Nivel Educativo</Label>
-                <div>{formData.educationLevel}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Género</Label>
-                <div>{formData.gender}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Tipo de Sangre</Label>
-                <div>{formData.bloodType}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Título del Trabajo</Label>
-                <div>{formData.jobTitle}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Turno de Trabajo</Label>
-                <div>{formData.workShift}</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label>Tipo de Contrato</Label>
-                <div>{formData.contractType}</div>
-              </div>
-            </div>
-          </div>
-          {!isEditing && (
-            <div className="flex justify-end mt-4">
-              <Button onClick={handleEditClick}>Editar</Button>
-            </div>
-          )}
-          {isEditing && (
+          {isEditing ? (
             <form onSubmit={handleSubmit}>
               <div className="grid gap-6 md:grid-cols-2 py-4">
                 <div>
@@ -678,11 +580,101 @@ export default function DashboardEmployedEdit() {
               {success && <div className="text-green-500 mb-4">{success}</div>}
               <div className="flex justify-end mt-4">
                 <Button type="submit">Actualizar</Button>
-                <Link href="/tablero/empleados" className="ml-2">
-                  <Button type="button">Cancelar</Button>
-                </Link>
+                <Button type="button" onClick={() => setIsEditing(false)} className="ml-2">Cancelar</Button>
               </div>
             </form>
+          ) : (
+            <div>
+              <div className="mb-4">
+                <Label>Número de Seguridad Social</Label>
+                <p>{formData.socialSecurityNumber}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Nombre Completo</Label>
+                <p>{formData.name}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Rol</Label>
+                <p>{formData.role}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Departamento</Label>
+                <p>{formData.department}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Empresa</Label>
+                <p>{formData.companyId}</p>
+              </div>
+              <div className="mb-4">
+                <Label>CURP</Label>
+                <p>{formData.CURP}</p>
+              </div>
+              <div className="mb-4">
+                <Label>RFC</Label>
+                <p>{formData.RFC}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Dirección</Label>
+                <p>{formData.address}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Número de Teléfono</Label>
+                <p>{formData.phoneNumber}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Correo Electrónico</Label>
+                <p>{formData.email}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Fecha de Nacimiento</Label>
+                <p>{formData.birthDate}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Fecha de Contratación</Label>
+                <p>{formData.hireDate}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Contacto de Emergencia</Label>
+                <p>{formData.emergencyContact}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Teléfono de Emergencia</Label>
+                <p>{formData.emergencyPhone}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Estado Civil</Label>
+                <p>{formData.maritalStatus}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Nacionalidad</Label>
+                <p>{formData.nationality}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Nivel Educativo</Label>
+                <p>{formData.educationLevel}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Género</Label>
+                <p>{formData.gender}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Tipo de Sangre</Label>
+                <p>{formData.bloodType}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Título del Trabajo</Label>
+                <p>{formData.jobTitle}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Turno de Trabajo</Label>
+                <p>{formData.workShift}</p>
+              </div>
+              <div className="mb-4">
+                <Label>Tipo de Contrato</Label>
+                <p>{formData.contractType}</p>
+              </div>
+              <Button type="button" onClick={handleEditClick}>Editar</Button>
+            </div>
           )}
         </div>
       )}
