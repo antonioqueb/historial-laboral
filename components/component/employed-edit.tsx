@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import Link from 'next/link';
-import { editEmployeeSchema } from "@/schemas/editEmployeeSchema"; // Import the schema..
+import { editEmployeeSchema } from "@/schemas/editEmployeeSchema";
 import { z } from "zod";
 
 export interface Company {
@@ -54,6 +54,7 @@ export default function DashboardEmployedEdit() {
   const [genders, setGenders] = useState<string[]>([]);
   const [educationLevels, setEducationLevels] = useState<string[]>([]);
   const [employeeData, setEmployeeData] = useState<Employee | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -335,6 +336,10 @@ export default function DashboardEmployedEdit() {
     console.log('Filtered nationalities:', filtered); // Debugging line
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
@@ -377,206 +382,309 @@ export default function DashboardEmployedEdit() {
           </Select>
         </div>
       ) : (
-        <form onSubmit={handleSubmit}>
+        <div>
           <div className="grid gap-6 md:grid-cols-2 py-4">
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
-                <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
+                <Label>Número de Seguridad Social</Label>
+                <div>{formData.socialSecurityNumber}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="name">Nombre Completo</Label>
-                <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
+                <Label>Nombre Completo</Label>
+                <div>{formData.name}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="role">Rol</Label>
-                <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar rol" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="manager">Gerente</SelectItem>
-                    <SelectItem value="developer">Desarrollador</SelectItem>
-                    <SelectItem value="designer">Diseñador</SelectItem>
-                    <SelectItem value="hr">Recursos Humanos</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label>Rol</Label>
+                <div>{formData.role}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="department">Departamento</Label>
-                <Select value={formData.department} onValueChange={(value) => setFormData({ ...formData, department: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar departamento" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="engineering">Ingeniería</SelectItem>
-                    <SelectItem value="design">Diseño</SelectItem>
-                    <SelectItem value="hr">Recursos Humanos</SelectItem>
-                    <SelectItem value="marketing">Mercadotecnia</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label>Departamento</Label>
+                <div>{formData.department}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="companyId">Empresa</Label>
-                <Select value={formData.companyId} onValueChange={(value) => setFormData({ ...formData, companyId: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar empresa" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {companies.map((company) => (
-                      <SelectItem key={company.id} value={company.id}>
-                        {company.razonSocial}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Empresa</Label>
+                <div>{formData.companyId}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="CURP">CURP</Label>
-                <Input id="CURP" name="CURP" value={formData.CURP} onChange={handleChange} required />
+                <Label>CURP</Label>
+                <div>{formData.CURP}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="RFC">RFC</Label>
-                <Input id="RFC" name="RFC" value={formData.RFC} onChange={handleChange} required />
+                <Label>RFC</Label>
+                <div>{formData.RFC}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="address">Dirección</Label>
-                <Input id="address" name="address" value={formData.address} onChange={handleChange} required />
+                <Label>Dirección</Label>
+                <div>{formData.address}</div>
               </div>
             </div>
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="phoneNumber">Número de Teléfono</Label>
-                <Input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
+                <Label>Número de Teléfono</Label>
+                <div>{formData.phoneNumber}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="email">Correo Electrónico</Label>
-                <Input id="email" name="email" value={formData.email} onChange={handleChange} required />
+                <Label>Correo Electrónico</Label>
+                <div>{formData.email}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
-                <Input type="date" id="birthDate" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
+                <Label>Fecha de Nacimiento</Label>
+                <div>{formData.birthDate}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="hireDate">Fecha de Contratación</Label>
-                <Input type="date" id="hireDate" name="hireDate" value={formData.hireDate} onChange={handleChange} required />
+                <Label>Fecha de Contratación</Label>
+                <div>{formData.hireDate}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="emergencyContact">Contacto de Emergencia</Label>
-                <Input id="emergencyContact" name="emergencyContact" value={formData.emergencyContact} onChange={handleChange} required />
+                <Label>Contacto de Emergencia</Label>
+                <div>{formData.emergencyContact}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="emergencyPhone">Teléfono de Emergencia</Label>
-                <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
+                <Label>Teléfono de Emergencia</Label>
+                <div>{formData.emergencyPhone}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="maritalStatus">Estado Civil</Label>
-                <Select value={formData.maritalStatus} onValueChange={(value) => setFormData({ ...formData, maritalStatus: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar estado civil" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {civilStatuses.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Estado Civil</Label>
+                <div>{formData.maritalStatus}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="nationality">Nacionalidad</Label>
-                <Select value={formData.nationality} onValueChange={(value) => setFormData({ ...formData, nationality: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar nacionalidad" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <Input
-                      type="text"
-                      placeholder="Buscar..."
-                      onChange={(e) => handleNationalitySearch(e.target.value)}
-                      className="mb-2"
-                    />
-                    {filteredNationalities.map((nationality) => (
-                      <SelectItem key={nationality.sigla} value={nationality.nombre}>
-                        {nationality.nombre}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Nacionalidad</Label>
+                <div>{formData.nationality}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="educationLevel">Nivel Educativo</Label>
-                <Select value={formData.educationLevel} onValueChange={(value) => setFormData({ ...formData, educationLevel: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar nivel educativo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {educationLevels.map((level) => (
-                      <SelectItem key={level} value={level}>
-                        {level}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Nivel Educativo</Label>
+                <div>{formData.educationLevel}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="gender">Género</Label>
-                <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar género" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {genders.map((gender) => (
-                      <SelectItem key={gender} value={gender}>
-                        {gender}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Género</Label>
+                <div>{formData.gender}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="bloodType">Tipo de Sangre</Label>
-                <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar tipo de sangre" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bloodTypes.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label>Tipo de Sangre</Label>
+                <div>{formData.bloodType}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="jobTitle">Título del Trabajo</Label>
-                <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
+                <Label>Título del Trabajo</Label>
+                <div>{formData.jobTitle}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="workShift">Turno de Trabajo</Label>
-                <Input id="workShift" name="workShift" value={formData.workShift} onChange={handleChange} required />
+                <Label>Turno de Trabajo</Label>
+                <div>{formData.workShift}</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="contractType">Tipo de Contrato</Label>
-                <Input id="contractType" name="contractType" value={formData.contractType} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="profileImage">Foto de Perfil</Label>
-                <Input type="file" id="profileImage" name="profileImage" onChange={handleFileChange} />
+                <Label>Tipo de Contrato</Label>
+                <div>{formData.contractType}</div>
               </div>
             </div>
           </div>
-          {error && <div className="text-red-500 mb-4">{error}</div>}
-          {success && <div className="text-green-500 mb-4">{success}</div>}
-          <div className="flex justify-end mt-4">
-            <Button type="submit">Actualizar</Button>
-            <Link href="/tablero/empleados" className="ml-2">
-              <Button type="button">Cancelar</Button>
-            </Link>
-          </div>
-        </form>
+          {!isEditing && (
+            <div className="flex justify-end mt-4">
+              <Button onClick={handleEditClick}>Editar</Button>
+            </div>
+          )}
+          {isEditing && (
+            <form onSubmit={handleSubmit}>
+              <div className="grid gap-6 md:grid-cols-2 py-4">
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
+                    <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="name">Nombre Completo</Label>
+                    <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="role">Rol</Label>
+                    <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar rol" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="manager">Gerente</SelectItem>
+                        <SelectItem value="developer">Desarrollador</SelectItem>
+                        <SelectItem value="designer">Diseñador</SelectItem>
+                        <SelectItem value="hr">Recursos Humanos</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="department">Departamento</Label>
+                    <Select value={formData.department} onValueChange={(value) => setFormData({ ...formData, department: value })} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar departamento" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="engineering">Ingeniería</SelectItem>
+                        <SelectItem value="design">Diseño</SelectItem>
+                        <SelectItem value="hr">Recursos Humanos</SelectItem>
+                        <SelectItem value="marketing">Mercadotecnia</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="companyId">Empresa</Label>
+                    <Select value={formData.companyId} onValueChange={(value) => setFormData({ ...formData, companyId: value })} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar empresa" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {companies.map((company) => (
+                          <SelectItem key={company.id} value={company.id}>
+                            {company.razonSocial}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="CURP">CURP</Label>
+                    <Input id="CURP" name="CURP" value={formData.CURP} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="RFC">RFC</Label>
+                    <Input id="RFC" name="RFC" value={formData.RFC} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="address">Dirección</Label>
+                    <Input id="address" name="address" value={formData.address} onChange={handleChange} required />
+                  </div>
+                </div>
+                <div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="phoneNumber">Número de Teléfono</Label>
+                    <Input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="email">Correo Electrónico</Label>
+                    <Input id="email" name="email" value={formData.email} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
+                    <Input type="date" id="birthDate" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="hireDate">Fecha de Contratación</Label>
+                    <Input type="date" id="hireDate" name="hireDate" value={formData.hireDate} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="emergencyContact">Contacto de Emergencia</Label>
+                    <Input id="emergencyContact" name="emergencyContact" value={formData.emergencyContact} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="emergencyPhone">Teléfono de Emergencia</Label>
+                    <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="maritalStatus">Estado Civil</Label>
+                    <Select value={formData.maritalStatus} onValueChange={(value) => setFormData({ ...formData, maritalStatus: value })} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar estado civil" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {civilStatuses.map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {status}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="nationality">Nacionalidad</Label>
+                    <Select value={formData.nationality} onValueChange={(value) => setFormData({ ...formData, nationality: value })} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar nacionalidad" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <Input
+                          type="text"
+                          placeholder="Buscar..."
+                          onChange={(e) => handleNationalitySearch(e.target.value)}
+                          className="mb-2"
+                        />
+                        {filteredNationalities.map((nationality) => (
+                          <SelectItem key={nationality.sigla} value={nationality.nombre}>
+                            {nationality.nombre}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="educationLevel">Nivel Educativo</Label>
+                    <Select value={formData.educationLevel} onValueChange={(value) => setFormData({ ...formData, educationLevel: value })} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar nivel educativo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {educationLevels.map((level) => (
+                          <SelectItem key={level} value={level}>
+                            {level}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="gender">Género</Label>
+                    <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar género" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {genders.map((gender) => (
+                          <SelectItem key={gender} value={gender}>
+                            {gender}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="bloodType">Tipo de Sangre</Label>
+                    <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleccionar tipo de sangre" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {bloodTypes.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="jobTitle">Título del Trabajo</Label>
+                    <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="workShift">Turno de Trabajo</Label>
+                    <Input id="workShift" name="workShift" value={formData.workShift} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="contractType">Tipo de Contrato</Label>
+                    <Input id="contractType" name="contractType" value={formData.contractType} onChange={handleChange} required />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                    <Label htmlFor="profileImage">Foto de Perfil</Label>
+                    <Input type="file" id="profileImage" name="profileImage" onChange={handleFileChange} />
+                  </div>
+                </div>
+              </div>
+              {error && <div className="text-red-500 mb-4">{error}</div>}
+              {success && <div className="text-green-500 mb-4">{success}</div>}
+              <div className="flex justify-end mt-4">
+                <Button type="submit">Actualizar</Button>
+                <Link href="/tablero/empleados" className="ml-2">
+                  <Button type="button">Cancelar</Button>
+                </Link>
+              </div>
+            </form>
+          )}
+        </div>
       )}
     </div>
   );
