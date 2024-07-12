@@ -312,13 +312,29 @@ export default function DashboardEmployedAdmin() {
               </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="emergencyContact">Nombre Contacto Emergencias</Label>
-              <Input id="emergencyContact" name="emergencyContact" value={formData.emergencyContact} onChange={handleChange} required />
+              <h2>Contacto de emergencia</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="emergencyPhone">Teléfono Contacto Emergencias</Label>
-              <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
+              <Label htmlFor="emergencyContact">Nombre</Label>
+              <Input 
+                id="emergencyContact" 
+                name="emergencyContact" 
+                value={formData.emergencyContact} 
+                onChange={handleChange} 
+                required 
+              />
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+              <Label htmlFor="emergencyPhone">Teléfono</Label>
+              <Input 
+                id="emergencyPhone" 
+                name="emergencyPhone" 
+                value={formData.emergencyPhone} 
+                onChange={handleChange} 
+                required 
+              />
+            </div>
+
           </div>
         </div>
         <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>

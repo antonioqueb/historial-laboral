@@ -4,7 +4,7 @@ export function HeaderEmployedProfile() {
   return (
     <div className="w-full">
       <div>
-        <div className="relative h-[90px]  lg:h-[280px] xl:h-[290px] overflow-hidden ">
+        <div className="relative h-[90px]  lg:h-[240px] xl:h-[250px] overflow-hidden ">
           <img
             src="/placeholder.svg"
             alt="Cover image"

@@ -66,7 +66,7 @@ const ScoreGraph: React.FC<ScoreGraphProps> = ({ value = 70 }) => {
             },
             detail: {
               valueAnimation: true,
-              fontSize: 45,
+              fontSize: 33,
               offsetCenter: [0, '70%'],
               color: theme === 'dark' ? '#fff' : '#333'
             },
