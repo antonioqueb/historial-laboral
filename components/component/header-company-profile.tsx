@@ -4,7 +4,7 @@ export function HeaderCompanyProfile() {
   return (
     <div className="w-full">
       <div>
-        <div className="relative h-[90px]  lg:h-[390px] overflow-hidden ">
+        <div className="relative h-[90px]  lg:h-[280px] xl:h-[390px] overflow-hidden ">
           <img
             src="/placeholder.svg"
             alt="Cover image"

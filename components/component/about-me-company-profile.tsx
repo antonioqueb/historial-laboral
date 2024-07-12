@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link"; // Importa el componente Link de Next.js
-
+import { Button } from "../ui/button";
 export function AboutMeCompanyProfile() {
   return (
     <div className="w-full">
@@ -21,9 +21,9 @@ export function AboutMeCompanyProfile() {
               </p>
               {/* Botón de enlace */}
               <Link href="https://www.acmeinc.com">
-                <span className="inline-block mt-4 px-4 md:px-6 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">
-                  Visit our website
-                </span>
+                <Button>
+                  Página Web
+                </Button>
               </Link>
             </div>
             <div className="relative w-full h-48 md:h-64 lg:h-auto">
