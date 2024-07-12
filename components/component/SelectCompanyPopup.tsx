@@ -63,7 +63,7 @@ export function SelectCompanyPopup() {
   if (selectedCompany) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-zinc-500 bg-opacity-75 flex justify-center items-center z-50">
       <div className="bg-white p-4 rounded shadow-md">
         <h2 className="text-xl font-bold mb-4">Select a Company</h2>
         {error && <p className="text-red-500">{error}</p>}

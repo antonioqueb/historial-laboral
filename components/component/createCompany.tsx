@@ -120,7 +120,7 @@ export default function CreateCompany() {
           <p className="text-lg font-medium text-black">You are not signed in</p>
           <button
             onClick={() => signIn()}
-            className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+            className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-zinc-800"
           >
             Sign in
           </button>

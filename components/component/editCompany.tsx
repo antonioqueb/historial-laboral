@@ -157,7 +157,7 @@ export default function EditCompany() {
           <p className="text-lg font-medium text-black">You are not signed in</p>
           <button
             onClick={() => signIn()}
-            className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+            className="mt-4 px-4 py-2 bg-black text-white rounded hover:bg-zinc-800"
           >
             Sign in
           </button>
@@ -172,7 +172,7 @@ export default function EditCompany() {
               id="companySelect"
               value={rfc}
               onChange={handleCompanySelect}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-zinc-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
               <option value="">Seleccionar...</option>
               {companies.map((companyRfc) => (

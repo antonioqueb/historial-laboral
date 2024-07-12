@@ -112,7 +112,7 @@ const ProfilePage: React.FC = () => {
                 id="email"
                 value={userData.email}
                 onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-                className="block w-full text-sm border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
+                className="block w-full text-sm border-zinc-300 rounded-lg dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400"
               />
             </div>
             <div className="grid grid-cols-1 gap-4 items-center mb-4">
@@ -122,11 +122,11 @@ const ProfilePage: React.FC = () => {
                 id="name"
                 value={userData.name}
                 onChange={(e) => setUserData({ ...userData, name: e.target.value })}
-                className="block w-full text-sm border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
+                className="block w-full text-sm border-zinc-300 rounded-lg dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-400"
               />
             </div>
             <Button onClick={handleUpdate} className="w-full">Actualizar Perfil</Button>
-            {updateStatus && <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{updateStatus}</p>}
+            {updateStatus && <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-2">{updateStatus}</p>}
           </div>
         </Card>
         <Card className="p-4 shadow-lg">
