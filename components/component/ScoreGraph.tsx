@@ -1,6 +1,5 @@
-// ScoreGraph.tsx
 'use client';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as echarts from 'echarts';
 import { useTheme } from 'next-themes';
 
@@ -11,6 +10,21 @@ interface ScoreGraphProps {
 const ScoreGraph: React.FC<ScoreGraphProps> = ({ value = 70 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const { theme } = useTheme();
+  const [size, setSize] = useState({ width: 400, height: 400 });
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (window.innerWidth < 768) {
+        setSize({ width: window.innerWidth - 40, height: window.innerWidth - 40 });
+      } else {
+        setSize({ width: 400, height: 400 });
+      }
+    };
+
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   useEffect(() => {
     if (chartRef.current) {
@@ -49,14 +63,14 @@ const ScoreGraph: React.FC<ScoreGraphProps> = ({ value = 70 }) => {
               }
             },
             axisLabel: {
-              distance: 25,
+              distance: 35,
               color: theme === 'dark' ? '#aaa' : '#333',
-              fontSize: 20
+              fontSize: 13
             },
             anchor: {
               show: true,
               showAbove: true,
-              size: 25,
+              size: 10,
               itemStyle: {
                 borderWidth: 10,
               }
@@ -66,7 +80,7 @@ const ScoreGraph: React.FC<ScoreGraphProps> = ({ value = 70 }) => {
             },
             detail: {
               valueAnimation: true,
-              fontSize: 33,
+              fontSize: 36,
               offsetCenter: [0, '70%'],
               color: theme === 'dark' ? '#fff' : '#333'
             },
@@ -87,11 +101,11 @@ const ScoreGraph: React.FC<ScoreGraphProps> = ({ value = 70 }) => {
         myChart.dispose();
       };
     }
-  }, [value, theme]);
+  }, [value, theme, size]);
 
   return (
     <div className="flex items-center justify-center h-fit">
-      <div ref={chartRef} style={{ width: 400, height: 400 }} />
+      <div ref={chartRef} style={{ width: size.width, height: size.height }} />
     </div>
   );
 };

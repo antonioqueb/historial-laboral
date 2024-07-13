@@ -13,7 +13,7 @@ export function HeaderEmployedProfile() {
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="relative -mt-[10px] sm:-mt-[17px] md:-mt-[19px] lg:-mt-[90px] px-4 flex items-center justify-between flex-wrap">
+        <div className="relative -mt-[50px] sm:-mt-[50px] md:-mt-[19px] lg:-mt-[90px] px-4 flex items-center justify-between flex-wrap">
           <div className="flex items-end gap-4">
             <div className="relative h-[100px] w-[100px] sm:h-[120px] sm:w-[120px] md:h-[140px] md:w-[140px] lg:h-[160px] lg:w-[160px] rounded-full border-4 border-background">
               <img

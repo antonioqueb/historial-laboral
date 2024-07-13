@@ -3,12 +3,12 @@ generator client {
   previewFeatures = ["driverAdapters"]
 }
 
-
 datasource db {
   provider          = "postgresql"
   url               = env("DATABASE_URL")
   directUrl         = env("DIRECT_URL")
 }
+
 model User {
   id             String    @id @default(cuid())
   email          String    @unique
@@ -42,8 +42,12 @@ model Company {
   certificaciones        String[] @default([])   // No requerido
   reviewsGiven           Review[] // Relación con las reviews que esta compañía ha dado
   logoUrl                String?  // Campo para almacenar la URL del logo
+  roles                  Role[]   // Relación con Roles
+  workShifts             WorkShift[] // Relación con Turno de Trabajo
+  departments            Department[] // Relación con Departamentos
+  contractTypes          ContractType[] // Relación con Tipo de Contrato
+  jobTitles              JobTitle[] // Relación con Título del Trabajo
 }
-
 
 model Employee {
   id                   String   @id @default(cuid())
@@ -70,17 +74,19 @@ model Employee {
   educationLevel       String
   gender               String
   bloodType            String
-  jobTitle             String
-  workShift            String
-  contractType         String
+  jobTitle             JobTitle @relation(fields: [jobTitleId], references: [id])
+  jobTitleId           String
+  workShift            WorkShift @relation(fields: [workShiftId], references: [id])
+  workShiftId          String
+  contractType         ContractType @relation(fields: [contractTypeId], references: [id])
+  contractTypeId       String
   profileImageUrl      String?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   reviewsReceived      Review[] // Relación con las reviews que ha recibido este empleado
   uploadedFiles        String[] @default([]) // Añadido: lista de archivos subidos
+  latestRating         Int?     // Campo para almacenar la calificación más reciente
 }
-
-
 
 model Review {
   id            String    @id @default(cuid())
@@ -97,3 +103,35 @@ model Review {
   updatedAt     DateTime  @updatedAt
 }
 
+model Role {
+  id         String   @id @default(cuid())
+  name       String
+  companies  Company[] // Role: Define los roles en la empresa
+}
+
+model WorkShift {
+  id         String   @id @default(cuid())
+  name       String
+  companies  Company[] // WorkShift: Define los turnos de trabajo
+  employees  Employee[] // Relación con Employee
+}
+
+model Department {
+  id         String   @id @default(cuid())
+  name       String
+  companies  Company[] // Department: Define los departamentos en la empresa
+}
+
+model ContractType {
+  id         String   @id @default(cuid())
+  name       String
+  companies  Company[] // ContractType: Define los tipos de contrato
+  employees  Employee[] // Relación con Employee
+}
+
+model JobTitle {
+  id         String   @id @default(cuid())
+  name       String
+  companies  Company[] // JobTitle: Define los títulos de trabajo
+  employees  Employee[] // Relación con Employee
+}
