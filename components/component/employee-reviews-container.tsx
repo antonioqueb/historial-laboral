@@ -4,11 +4,11 @@ import { EmployeeReviewCard } from "./EmployeeReviewCard";
 export function EmployeeReviewsContainer() {
   return (
     <div className="flex justify-center py-8">
-      <div className="grid gap-8 w-full max-w-4xl p-4">
+      <div className="grid gap-12 w-full max-w-7xl p-4">
         <EmployeeReviewCard 
           name="Google Inc." 
-          role="Empresa de Software" 
-          overallRating={4.9}
+          actividad="Empresa de Software" 
+          overallRating={4.8}
           reviews={[
             {
               rating: 4.9,
@@ -24,8 +24,8 @@ export function EmployeeReviewsContainer() {
         />
         <EmployeeReviewCard 
           name="Microsoft Corporation" 
-          role="Empresa de Tecnología" 
-          overallRating={4.6}
+          actividad="Empresa de Tecnología" 
+          overallRating={4.5}
           reviews={[
             {
               rating: 4.7,
@@ -41,8 +41,8 @@ export function EmployeeReviewsContainer() {
         />
         <EmployeeReviewCard 
           name="Amazon" 
-          role="Empresa de Comercio Electrónico" 
-          overallRating={4.4}
+          actividad="Empresa de Comercio Electrónico" 
+          overallRating={0.3}
           reviews={[
             {
               rating: 4.4,

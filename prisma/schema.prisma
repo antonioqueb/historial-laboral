@@ -15,6 +15,8 @@ model User {
   name           String?
   companies      Company[]
   profileImageUrl String?  // Nuevo campo para la URL de la foto de perfil
+  createdAt      DateTime  @default(now()) // Registro de creación
+  updatedAt      DateTime  @updatedAt // Registro de actualización
 }
 
 model Company {
@@ -47,6 +49,8 @@ model Company {
   departments            Department[] // Relación con Departamentos
   contractTypes          ContractType[] // Relación con Tipo de Contrato
   jobTitles              JobTitle[] // Relación con Título del Trabajo
+  createdAt              DateTime  @default(now()) // Registro de creación
+  updatedAt              DateTime  @updatedAt // Registro de actualización
 }
 
 model Employee {
@@ -81,8 +85,8 @@ model Employee {
   contractType         ContractType @relation(fields: [contractTypeId], references: [id])
   contractTypeId       String
   profileImageUrl      String?
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  createdAt            DateTime @default(now()) // Registro de creación
+  updatedAt            DateTime @updatedAt // Registro de actualización
   reviewsReceived      Review[] // Relación con las reviews que ha recibido este empleado
   uploadedFiles        String[] @default([]) // Añadido: lista de archivos subidos
   latestRating         Int?     // Campo para almacenar la calificación más reciente
@@ -100,14 +104,16 @@ model Review {
   rating        Int       @default(0) // Puedes ajustar el valor por defecto según sea necesario
   positive      Boolean   @default(true)
   documentation String?   // Enlace o ruta a la documentación de respaldo
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now()) // Registro de creación
+  updatedAt     DateTime  @updatedAt // Registro de actualización
 }
 
 model Role {
   id         String   @id @default(cuid())
   name       String
   companies  Company[] // Role: Define los roles en la empresa
+  createdAt  DateTime  @default(now()) // Registro de creación
+  updatedAt  DateTime  @updatedAt // Registro de actualización
 }
 
 model WorkShift {
@@ -115,6 +121,8 @@ model WorkShift {
   name       String
   companies  Company[] // WorkShift: Define los turnos de trabajo
   employees  Employee[] // Relación con Employee
+  createdAt  DateTime  @default(now()) // Registro de creación
+  updatedAt  DateTime  @updatedAt // Registro de actualización
 }
 
 model Department {
@@ -122,6 +130,8 @@ model Department {
   name       String
   companies  Company[] // Department: Define los departamentos en la empresa
   employeeDepartments EmployeeDepartment[] // Relación con el modelo intermedio EmployeeDepartment
+  createdAt  DateTime  @default(now()) // Registro de creación
+  updatedAt  DateTime  @updatedAt // Registro de actualización
 }
 
 model ContractType {
@@ -129,6 +139,8 @@ model ContractType {
   name       String
   companies  Company[] // ContractType: Define los tipos de contrato
   employees  Employee[] // Relación con Employee
+  createdAt  DateTime  @default(now()) // Registro de creación
+  updatedAt  DateTime  @updatedAt // Registro de actualización
 }
 
 model JobTitle {
@@ -136,6 +148,8 @@ model JobTitle {
   name       String
   companies  Company[] // JobTitle: Define los títulos de trabajo
   employees  Employee[] // Relación con Employee
+  createdAt  DateTime  @default(now()) // Registro de creación
+  updatedAt  DateTime  @updatedAt // Registro de actualización
 }
 
 model EmployeeDepartment {
@@ -146,4 +160,6 @@ model EmployeeDepartment {
   department   Department @relation(fields: [departmentId], references: [id])
   startDate    DateTime
   endDate      DateTime?
+  createdAt    DateTime   @default(now()) // Registro de creación
+  updatedAt    DateTime   @updatedAt // Registro de actualización
 }

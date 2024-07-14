@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export function ExternalFooter() {
   return (
-    <footer className="bg-muted py-8 md:py-12">
-      <div className="container max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+    <footer className="py-8 md:py-12 pt-4">
+      <div className="container max-w-7xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 ">
         <div className="flex flex-col items-start gap-4">
           <Link href="#" className="flex items-center gap-2" prefetch={false}>
             <MountainIcon className="h-6 w-6" />

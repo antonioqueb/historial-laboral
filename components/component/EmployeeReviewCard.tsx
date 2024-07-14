@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card"; // Asegúrate de que este component
 // Definimos una interfaz para las props
 interface EmployeeReviewCardProps {
   name: string;
-  role: string;
+  actividad: string;
   overallRating: number;
   reviews: {
     rating: number;
@@ -27,10 +27,10 @@ const gradientAnimation = `
   }
 `;
 
-export function EmployeeReviewCard({ name, role, overallRating, reviews, avatarUrl }: EmployeeReviewCardProps) {
+export function EmployeeReviewCard({ name, actividad, overallRating, reviews, avatarUrl }: EmployeeReviewCardProps) {
   return (
     <Card className="flex flex-col md:flex-row items-center gap-6 p-6 shadow-md rounded-lg text-white transition-transform transform hover:scale-105 hover:shadow-xl" style={{
-      background: 'linear-gradient(270deg, #007BFF, #6C757D)',
+      background: 'linear-gradient(270deg,  #6C757D98, #6C757D)',
       backgroundSize: '400% 400%',
       animation: 'gradient-x 35s ease infinite'
     }}>
@@ -40,7 +40,7 @@ export function EmployeeReviewCard({ name, role, overallRating, reviews, avatarU
       {avatarUrl ? (
         <img src={avatarUrl} alt="Employee Avatar" width={80} height={80} className="rounded-full border-4 border-white shadow-lg" />
       ) : (
-        <div className="flex items-center justify-center w-20 h-20 rounded-full border-4 border-white shadow-lg bg-gray-300">
+        <div className="flex items-center justify-center w-20 h-20 rounded-full border-4 border-white shadow-lg bg-zinc-300">
           <FaUser className="w-10 h-10 text-white" />
         </div>
       )}
@@ -48,7 +48,7 @@ export function EmployeeReviewCard({ name, role, overallRating, reviews, avatarU
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div>
             <h3 className="text-xl font-bold">{name}</h3>
-            <p className="text-sm">{role}</p>
+            <p className="text-sm">{actividad}</p>
           </div>
           <div className="flex items-center gap-2 text-sm font-medium mt-2 md:mt-0">
             <StarRating rating={overallRating} />
@@ -74,7 +74,7 @@ function ReviewCard({ rating, review, date }: ReviewCardProps) {
     <div className="p-4 border border-white rounded-md bg-white bg-opacity-10">
       <div className="flex items-center justify-between">
         <StarRating rating={rating} />
-        <span className="text-xs text-gray-300">{date}</span>
+        <span className="text-xs text-zinc-300">{date}</span>
       </div>
       <p className="text-sm mt-2">{review}</p>
     </div>
@@ -96,18 +96,18 @@ function StarRating({ rating }: StarRatingProps) {
       stars.push(
         <div key={i} className="relative">
           <FaStarHalfAlt className="w-6 h-6 text-yellow-500" />
-          <FaRegStar className="w-6 h-6 text-gray-400 absolute top-0 left-0" />
+          <FaRegStar className="w-6 h-6 text-zinc-400 absolute top-0 left-0" />
         </div>
       );
     } else if (rating >= i + 0.25) {
       stars.push(
         <div key={i} className="relative">
           <FaStarHalfAlt className="w-6 h-6 text-yellow-500" style={{ clipPath: 'polygon(0 0, 50% 0, 50% 100%, 0% 100%)' }} />
-          <FaRegStar className="w-6 h-6 text-gray-400 absolute top-0 left-0" />
+          <FaRegStar className="w-6 h-6 text-zinc-400 absolute top-0 left-0" />
         </div>
       );
     } else {
-      stars.push(<FaRegStar key={i} className="w-6 h-6 text-gray-400" />);
+      stars.push(<FaRegStar key={i} className="w-6 h-6 text-zinc-400" />);
     }
   }
 
