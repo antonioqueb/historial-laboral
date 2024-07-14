@@ -86,6 +86,7 @@ model Employee {
   reviewsReceived      Review[] // Relación con las reviews que ha recibido este empleado
   uploadedFiles        String[] @default([]) // Añadido: lista de archivos subidos
   latestRating         Int?     // Campo para almacenar la calificación más reciente
+  employeeDepartments  EmployeeDepartment[] // Relación con el modelo intermedio EmployeeDepartment
 }
 
 model Review {
@@ -120,6 +121,7 @@ model Department {
   id         String   @id @default(cuid())
   name       String
   companies  Company[] // Department: Define los departamentos en la empresa
+  employeeDepartments EmployeeDepartment[] // Relación con el modelo intermedio EmployeeDepartment
 }
 
 model ContractType {
@@ -134,4 +136,14 @@ model JobTitle {
   name       String
   companies  Company[] // JobTitle: Define los títulos de trabajo
   employees  Employee[] // Relación con Employee
+}
+
+model EmployeeDepartment {
+  id           String     @id @default(cuid())
+  employeeId   String
+  employee     Employee   @relation(fields: [employeeId], references: [id])
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  startDate    DateTime
+  endDate      DateTime?
 }
