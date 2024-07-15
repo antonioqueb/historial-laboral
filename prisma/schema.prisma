@@ -15,8 +15,6 @@ model User {
   name           String?
   companies      Company[]
   profileImageUrl String?  // Nuevo campo para la URL de la foto de perfil
-  createdAt      DateTime  @default(now()) // Registro de creación
-  updatedAt      DateTime  @updatedAt // Registro de actualización
 }
 
 model Company {
@@ -49,8 +47,6 @@ model Company {
   departments            Department[] // Relación con Departamentos
   contractTypes          ContractType[] // Relación con Tipo de Contrato
   jobTitles              JobTitle[] // Relación con Título del Trabajo
-  createdAt              DateTime  @default(now()) // Registro de creación
-  updatedAt              DateTime  @updatedAt // Registro de actualización
 }
 
 model Employee {
