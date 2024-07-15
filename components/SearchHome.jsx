@@ -1,3 +1,4 @@
+// components/SearchHome.jsx
 'use client';
 import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
@@ -6,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ResponseSearch from "@/components/ResponseSearch";
 import { getReviewsByNSS } from "@/utils/fetchData";
-import { searchNssSchema } from "@/schemas/searchNssSchema"; // Importar el esquema
+import { searchEmployeeSchema } from "@/schemas/searchEmployeeSchema"; // Importar el esquema correcto
 import { z } from "zod";
 
 export default function Component() {
@@ -31,7 +32,7 @@ export default function Component() {
 
     // Validar NSS con Zod
     try {
-      searchNssSchema.parse({ nss });
+      searchEmployeeSchema.parse({ employeeNss: nss }); // Validar con el esquema correcto
     } catch (error) {
       if (error instanceof z.ZodError) {
         setError(error.errors.map(err => err.message).join(", "));
