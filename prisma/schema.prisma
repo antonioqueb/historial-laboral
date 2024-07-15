@@ -46,6 +46,7 @@ model Company {
   workShifts             WorkShift[] // Relación con Turno de Trabajo
   departments            Department[] // Relación con Departamentos
   contractTypes          ContractType[] // Relación con Tipo de Contrato
+  jobTitles              JobTitle[] // Relación con Título del Trabajo
 }
 
 model Employee {
@@ -73,6 +74,8 @@ model Employee {
   educationLevel       String
   gender               String
   bloodType            String
+  jobTitle             JobTitle @relation(fields: [jobTitleId], references: [id])
+  jobTitleId           String
   workShift            WorkShift @relation(fields: [workShiftId], references: [id])
   workShiftId          String
   contractType         ContractType @relation(fields: [contractTypeId], references: [id])
@@ -136,6 +139,14 @@ model ContractType {
   updatedAt  DateTime  @updatedAt // Registro de actualización
 }
 
+model JobTitle {
+  id         String   @id @default(cuid())
+  name       String
+  companies  Company[] // JobTitle: Define los títulos de trabajo
+  employees  Employee[] // Relación con Employee
+  createdAt  DateTime  @default(now()) // Registro de creación
+  updatedAt  DateTime  @updatedAt // Registro de actualización
+}
 
 model EmployeeDepartment {
   id           String     @id @default(cuid())

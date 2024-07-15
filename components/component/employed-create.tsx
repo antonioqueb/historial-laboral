@@ -29,6 +29,7 @@ interface FormData {
   educationLevel: string;
   gender: string;
   bloodType: string;
+  jobTitle: string;
   workShift: string;
   contractType: string;
   profileImage: File | null;
@@ -55,6 +56,7 @@ export default function DashboardEmployedAdmin() {
     educationLevel: '',
     gender: '',
     bloodType: '',
+    jobTitle: '',
     workShift: '',
     contractType: '',
     profileImage: null,
@@ -206,6 +208,7 @@ export default function DashboardEmployedAdmin() {
         educationLevel: '',
         gender: '',
         bloodType: '',
+        jobTitle: '',
         workShift: '',
         contractType: '',
         profileImage: null,
@@ -381,10 +384,10 @@ export default function DashboardEmployedAdmin() {
                 </SelectContent>
               </Select>
             </div>
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="jobTitle">Título del Trabajo</Label>
               <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
-            </div> */}
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="workShift">Turno de Trabajo</Label>
               <Input id="workShift" name="workShift" value={formData.workShift} onChange={handleChange} required />
