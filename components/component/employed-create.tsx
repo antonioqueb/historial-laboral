@@ -304,15 +304,18 @@ export default function DashboardEmployedAdmin() {
     setRoleInput(value);
     setFilteredRoles(roles.filter(role => role.name.toLowerCase().includes(value.toLowerCase())));
   };
+
   
   const handleRoleSelect = async (roleName: string) => {
-    if (roleName === "new") {
-      setRoleInput('');
-      return;
-    }
-    
     if (!formData.RFC) {
       setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
+      return;
+    }
+  
+    if (roleName === "new") {
+      // Clear the role input field to allow the user to enter a new role
+      setRoleInput('');
+      setFormData({ ...formData, role: '' });
       return;
     }
   
@@ -322,6 +325,7 @@ export default function DashboardEmployedAdmin() {
       setRoleInput('');
     }
   };
+  
   
   
 
@@ -345,7 +349,7 @@ export default function DashboardEmployedAdmin() {
           </SelectTrigger>
           <SelectContent>
             {roles.map((role) => (
-              <SelectItem key={role.id} value={role.name}>
+              <SelectItem key={role.id} value={role.name || role.id}>
                 {role.name}
               </SelectItem>
             ))}
@@ -374,6 +378,7 @@ export default function DashboardEmployedAdmin() {
       );
     }
   };
+  
   
   
 
