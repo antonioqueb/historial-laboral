@@ -401,20 +401,36 @@ export default function DashboardEmployedAdmin() {
       }
     }
   
-    const form = new FormData();
-    Object.keys(formData).forEach((key) => {
-      const value = formData[key as keyof FormData];
-      if (value !== null && value !== undefined && value !== '') {
-        if (key === 'jobTitle' || key === 'workShift' || key === 'contractType') {
-          // Convertir en JSON
-          form.append(key, JSON.stringify({ connect: { id: value } }));
-        } else {
-          form.append(key, value);
-        }
-      }
-    });
+    const employeeData: any = {
+      ...formData,
+      birthDate: new Date(formData.birthDate),
+      hireDate: new Date(formData.hireDate),
+      jobTitle: { connect: { id: formData.jobTitle } },
+      workShift: { connect: { id: formData.workShift } },
+      contractType: { connect: { id: formData.contractType } },
+      company: { connect: { id: formData.companyId } },
+    };
   
-    const result = await createEmployee(form);
+    if (formData.profileImage) {
+      const uploadForm = new FormData();
+      uploadForm.append("image", formData.profileImage);
+      uploadForm.append("nss", formData.socialSecurityNumber);
+  
+      const response = await fetch(`${process.env.LOCAL_IP}/upload`, {
+        method: "POST",
+        body: uploadForm,
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        return NextResponse.json({ error: `Failed to upload image: ${errorText}` }, { status: response.status });
+      }
+  
+      const uploadResult = await response.json();
+      employeeData.profileImageUrl = uploadResult.imageUrl;
+    }
+  
+    const result = await createEmployee(employeeData);
     if (result.success) {
       if (formData.RFC && additionalFiles.length > 0) {
         const uploadResult = await uploadEmployeeFiles(formData.RFC, additionalFiles);
