@@ -71,6 +71,46 @@ export default function DashboardEmployedAdmin() {
   const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
   const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
   const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
+  const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
+  const [roleInput, setRoleInput] = useState<string>('');
+  const [filteredRoles, setFilteredRoles] = useState<{ id: string; name: string }[]>(roles);
+
+  const getRoles = async (rfc: string) => {
+    const response = await fetch(`/api/Roles?rfc=${rfc}`);
+    if (!response.ok) {
+      throw new Error('Error fetching roles');
+    }
+    return response.json();
+  };
+  
+
+  const loadRoles = async () => {
+    const data = await getRoles(formData.RFC);
+    setRoles(data);
+  };
+
+  const createRoleIfNotExists = async (roleName: string) => {
+    const existingRole = roles.find(role => role.name.toLowerCase() === roleName.toLowerCase());
+    if (existingRole) {
+      return existingRole;
+    }
+    
+    const response = await fetch(`/api/Roles?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: roleName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setRoles([...roles, result]);
+      return result;
+    }
+    return null;
+  };
+  
+
 
   const loadCompanies = async () => {
     const data = await getCompaniesList();
@@ -135,6 +175,7 @@ export default function DashboardEmployedAdmin() {
     loadCivilStatuses();
     loadNationalities();
     loadEducationLevels();
+    loadRoles(); 
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -225,6 +266,26 @@ export default function DashboardEmployedAdmin() {
     );
     setFilteredNationalities(filtered);
   };
+
+
+  useEffect(() => {
+    setFilteredRoles(roles);
+  }, [roles]);
+  
+  const handleRoleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setRoleInput(value);
+    setFilteredRoles(roles.filter(role => role.name.toLowerCase().includes(value.toLowerCase())));
+  };
+  
+  const handleRoleSelect = async (roleName: string) => {
+    const role = await createRoleIfNotExists(roleName);
+    if (role) {
+      setFormData({ ...formData, role: role.name });
+      setRoleInput('');
+    }
+  };
+  
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
@@ -341,19 +402,29 @@ export default function DashboardEmployedAdmin() {
         <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
         <div className="grid gap-6 md:grid-cols-2 py-4">
           <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="role">Rol</Label>
-              <Select value={formData.role} onValueChange={(value) => handleSelectChange(value, 'role')} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar rol" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="manager">Gerente</SelectItem>
-                  <SelectItem value="developer">Desarrollador</SelectItem>
-                  <SelectItem value="designer">Diseñador</SelectItem>
-                  <SelectItem value="hr">Recursos Humanos</SelectItem>
-                </SelectContent>
-              </Select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+              <Label htmlFor="roleInput">Rol</Label>
+              <Input
+                id="roleInput"
+                name="roleInput"
+                value={roleInput}
+                onChange={handleRoleInputChange}
+                onBlur={() => handleRoleSelect(roleInput)}
+                required
+              />
+              {roleInput && (
+                <ul className="absolute bg-white border mt-1">
+                  {filteredRoles.map(role => (
+                    <li
+                      key={role.id}
+                      className="cursor-pointer p-2 hover:bg-gray-200"
+                      onMouseDown={() => handleRoleSelect(role.name)}
+                    >
+                      {role.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="department">Departamento</Label>
@@ -466,3 +537,4 @@ export default function DashboardEmployedAdmin() {
     </div>
   );
 }
+
