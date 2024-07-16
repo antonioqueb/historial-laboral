@@ -101,6 +101,7 @@ export default function DashboardEmployedAdmin() {
     }
   };
   
+  
   const createDepartmentIfNotExists = async (departmentName: string) => {
     const existingDepartment = departments.find(dept => dept.name.toLowerCase() === departmentName.toLowerCase());
     if (existingDepartment) {
@@ -233,13 +234,13 @@ export default function DashboardEmployedAdmin() {
     loadCivilStatuses();
     loadNationalities();
     loadEducationLevels();
-    loadDepartments(); // Cargar departamentos cuando se seleccione una empresa
-   
   }, []);
 
   useEffect(() => {
     if (formData.RFC) {
       loadRoles();
+      loadDepartments(); // Cargar departamentos cuando se seleccione una empresa
+
     }
   }, [formData.RFC]);
   
@@ -455,7 +456,7 @@ export default function DashboardEmployedAdmin() {
             </SelectTrigger>
             <SelectContent>
               {departments.map((dept) => (
-                <SelectItem key={dept.id} value={dept.name || dept.id}>
+                <SelectItem key={dept.id} value={dept.name}>
                   {dept.name}
                 </SelectItem>
               ))}
