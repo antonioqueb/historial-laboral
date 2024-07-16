@@ -85,10 +85,18 @@ export default function DashboardEmployedAdmin() {
   
 
   const loadRoles = async () => {
-    const data = await getRoles(formData.RFC);
-    setRoles(data);
+    if (!formData.RFC) {
+      setRoles([]); // Limpiar roles si no hay RFC
+      return;
+    }
+    try {
+      const data = await getRoles(formData.RFC);
+      setRoles(data);
+    } catch (error) {
+      setError('Error al cargar los roles');
+    }
   };
-
+  
   const createRoleIfNotExists = async (roleName: string) => {
     const existingRole = roles.find(role => role.name.toLowerCase() === roleName.toLowerCase());
     if (existingRole) {
@@ -175,8 +183,15 @@ export default function DashboardEmployedAdmin() {
     loadCivilStatuses();
     loadNationalities();
     loadEducationLevels();
-    loadRoles(); 
+   
   }, []);
+
+  useEffect(() => {
+    if (formData.RFC) {
+      loadRoles();
+    }
+  }, [formData.RFC]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
