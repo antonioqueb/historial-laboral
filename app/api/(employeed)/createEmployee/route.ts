@@ -93,7 +93,7 @@ export async function POST(req: Request) {
       educationLevel: educationLevel as string,
       gender: gender as string,
       bloodType: bloodType as string,
-      jobTitle: JSON.parse(jobTitle as string),
+      jobTitle: { connect: { name: jobTitle as string } },
       workShift: workShift as string,
       contractType: contractType as string,
       profileImageUrl: imageUrl as string, // Guardar la URL de la imagen...

@@ -402,12 +402,7 @@ export default function DashboardEmployedAdmin() {
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof FormData];
       if (value !== null && value !== undefined && value !== '') {
-        if (key === 'jobTitle') {
-          // Convertir el jobTitle en JSON
-          form.append(key, JSON.stringify({ connect: { name: value } }));
-        } else {
-          form.append(key, value);
-        }
+        form.append(key, value);
       }
     });
   
@@ -450,6 +445,7 @@ export default function DashboardEmployedAdmin() {
       setError(result.error ?? null);
     }
   };
+  
   
   
 
