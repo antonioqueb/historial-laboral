@@ -78,6 +78,8 @@ export default function DashboardEmployedAdmin() {
   const [contractTypes, setContractTypes] = useState<{ id: string; name: string }[]>([]);
   const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
   const [workShifts, setWorkShifts] = useState<{ id: string; name: string }[]>([]);
+  const [companyRFC, setCompanyRFC] = useState('');
+
 
   // Estados auxiliares para entradas dinámicas
   const [error, setError] = useState<string | null>(null);
@@ -352,7 +354,7 @@ export default function DashboardEmployedAdmin() {
     if (field === 'companyId') {
       const selectedCompany = companies.find(company => company.id === value);
       if (selectedCompany) {
-        updatedFormData.RFC = selectedCompany.rfc;
+        setCompanyRFC(selectedCompany.rfc);
         setFormData(updatedFormData);
         loadRoles();
         loadDepartments();
@@ -364,6 +366,7 @@ export default function DashboardEmployedAdmin() {
       setFormData(updatedFormData);
     }
   };
+  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
