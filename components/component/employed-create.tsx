@@ -9,6 +9,7 @@ import { getCompaniesList, createEmployee, Company, uploadEmployeeFiles } from "
 import { z } from "zod";
 import createEmployedSchema from "@/schemas/createEmployedSchema";
 
+// Definición de la estructura de los datos del formulario
 interface FormData {
   name: string;
   role: string;
@@ -36,6 +37,7 @@ interface FormData {
 }
 
 export default function DashboardEmployedAdmin() {
+  // Estados del formulario
   const [formData, setFormData] = useState<FormData>({
     name: '',
     role: '',
@@ -61,261 +63,38 @@ export default function DashboardEmployedAdmin() {
     contractType: '',
     profileImage: null,
   });
+
+  // Estados para datos adicionales
   const [educationLevels, setEducationLevels] = useState<string[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [bloodTypes, setBloodTypes] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
   const [genders, setGenders] = useState<string[]>([]);
   const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
   const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
   const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
   const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
-  const [roleInput, setRoleInput] = useState<string>('');
   const [filteredRoles, setFilteredRoles] = useState<{ id: string; name: string }[]>(roles);
-  const [showInput, setShowInput] = useState(false);
-  // Departament
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
+  const [contractTypes, setContractTypes] = useState<{ id: string; name: string }[]>([]);
+  const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
+  const [workShifts, setWorkShifts] = useState<{ id: string; name: string }[]>([]);
+
+  // Estados auxiliares para entradas dinámicas
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [additionalFiles, setAdditionalFiles] = useState<File[]>([]);
+  const [roleInput, setRoleInput] = useState<string>('');
+  const [showInput, setShowInput] = useState(false);
   const [departmentInput, setDepartmentInput] = useState<string>('');
   const [showDepartmentInput, setShowDepartmentInput] = useState(false);
-  // Contrato
-  const [contractTypes, setContractTypes] = useState<{ id: string; name: string }[]>([]);
   const [contractTypeInput, setContractTypeInput] = useState<string>('');
   const [showContractTypeInput, setShowContractTypeInput] = useState(false);
-  // Titulo de trabajo
-  const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
   const [jobTitleInput, setJobTitleInput] = useState<string>('');
   const [showJobTitleInput, setShowJobTitleInput] = useState(false);
-  // WorkShift | Turno de trabajo
-  const [workShifts, setWorkShifts] = useState<{ id: string; name: string }[]>([]);
   const [workShiftInput, setWorkShiftInput] = useState<string>('');
   const [showWorkShiftInput, setShowWorkShiftInput] = useState(false);
 
-  const getWorkShifts = async (rfc: string) => {
-    const response = await fetch(`/api/WorkShift?rfc=${rfc}`);
-    if (!response.ok) {
-      throw new Error('Error fetching work shifts');
-    }
-    return response.json();
-  };
-  
-  const loadWorkShifts = async () => {
-    if (!formData.RFC) {
-      setWorkShifts([]); // Limpiar turnos de trabajo si no hay RFC
-      return;
-    }
-    try {
-      const data = await getWorkShifts(formData.RFC);
-      setWorkShifts(data);
-    } catch (error) {
-      setError('Error al cargar los turnos de trabajo');
-    }
-  };
-  
-  const createWorkShiftIfNotExists = async (workShiftName: string) => {
-    const existingWorkShift = workShifts.find(ws => ws.name.toLowerCase() === workShiftName.toLowerCase());
-    if (existingWorkShift) {
-      return existingWorkShift;
-    }
-  
-    const response = await fetch(`/api/WorkShift?rfc=${formData.RFC}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: workShiftName }),
-    });
-    const result = await response.json();
-    if (result.id) {
-      setWorkShifts([...workShifts, result]);
-      return result;
-    }
-    return null;
-  };
-  
-
-
-
-  const getJobTitles = async (rfc: string) => {
-    const response = await fetch(`/api/JobTitle?rfc=${rfc}`);
-    if (!response.ok) {
-      throw new Error('Error fetching job titles');
-    }
-    return response.json();
-  };
-  
-  const loadJobTitles = async () => {
-    if (!formData.RFC) {
-      setJobTitles([]); // Limpiar títulos de trabajo si no hay RFC
-      return;
-    }
-    try {
-      const data = await getJobTitles(formData.RFC);
-      setJobTitles(data);
-    } catch (error) {
-      setError('Error al cargar los títulos de trabajo');
-    }
-  };
-  
-  const createJobTitleIfNotExists = async (jobTitleName: string) => {
-    const existingJobTitle = jobTitles.find(jt => jt.name.toLowerCase() === jobTitleName.toLowerCase());
-    if (existingJobTitle) {
-      return existingJobTitle;
-    }
-  
-    const response = await fetch(`/api/JobTitle?rfc=${formData.RFC}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: jobTitleName }),
-    });
-    const result = await response.json();
-    if (result.id) {
-      setJobTitles([...jobTitles, result]);
-      return result;
-    }
-    return null;
-  };
-  
-
-
-  const getContractTypes = async (rfc: string) => {
-    const response = await fetch(`/api/ContractType?rfc=${rfc}`);
-    if (!response.ok) {
-      throw new Error('Error fetching contract types');
-    }
-    return response.json();
-  };
-  
-  const loadContractTypes = async () => {
-    if (!formData.RFC) {
-      setContractTypes([]); // Limpiar tipos de contrato si no hay RFC
-      return;
-    }
-    try {
-      const data = await getContractTypes(formData.RFC);
-      setContractTypes(data);
-    } catch (error) {
-      setError('Error al cargar los tipos de contrato');
-    }
-  };
-  
-  const createContractTypeIfNotExists = async (contractTypeName: string) => {
-    const existingContractType = contractTypes.find(ct => ct.name.toLowerCase() === contractTypeName.toLowerCase());
-    if (existingContractType) {
-      return existingContractType;
-    }
-  
-    const response = await fetch(`/api/ContractType?rfc=${formData.RFC}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: contractTypeName }),
-    });
-    const result = await response.json();
-    if (result.id) {
-      setContractTypes([...contractTypes, result]);
-      return result;
-    }
-    return null;
-  };
-  
-
-
-  const getDepartments = async (rfc: string) => {
-    const response = await fetch(`/api/Department?rfc=${rfc}`);
-    if (!response.ok) {
-      throw new Error('Error fetching departments');
-    }
-    return response.json();
-  };
-  
-  const loadDepartments = async () => {
-    if (!formData.RFC) {
-      setDepartments([]); // Limpiar departamentos si no hay RFC
-      return;
-    }
-    try {
-      const data = await getDepartments(formData.RFC);
-      setDepartments(data);
-    } catch (error) {
-      setError('Error al cargar los departamentos');
-    }
-  };
-  
-  
-  const createDepartmentIfNotExists = async (departmentName: string) => {
-    const existingDepartment = departments.find(dept => dept.name.toLowerCase() === departmentName.toLowerCase());
-    if (existingDepartment) {
-      return existingDepartment;
-    }
-  
-    const response = await fetch(`/api/Department?rfc=${formData.RFC}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: departmentName }),
-    });
-    const result = await response.json();
-    if (result.id) {
-      setDepartments([...departments, result]);
-      return result;
-    }
-    return null;
-  };
-  
-
-
-
-  const getRoles = async (rfc: string) => {
-    const response = await fetch(`/api/Roles?rfc=${rfc}`);
-    if (!response.ok) {
-      throw new Error('Error fetching roles');
-    }
-    return response.json();
-  };
-  
-
-  const loadRoles = async () => {
-    if (!formData.RFC) {
-      setRoles([]); // Limpiar roles si no hay RFC
-      return;
-    }
-    try {
-      const data = await getRoles(formData.RFC);
-      setRoles(data);
-    } catch (error) {
-      setError('Error al cargar los roles');
-    }
-  };
-  
-  const createRoleIfNotExists = async (roleName: string) => {
-    const existingRole = roles.find(role => role.name.toLowerCase() === roleName.toLowerCase());
-    if (existingRole) {
-      return existingRole;
-    }
-    
-    const response = await fetch(`/api/Roles?rfc=${formData.RFC}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: roleName }),
-    });
-    const result = await response.json();
-    if (result.id) {
-      setRoles([...roles, result]);
-      return result;
-    }
-    return null;
-  };
-  
-
-
+  // Funciones para cargar datos desde la API
   const loadCompanies = async () => {
     const data = await getCompaniesList();
     setCompanies(data.companies);
@@ -372,6 +151,178 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
+  const loadRoles = async () => {
+    if (!formData.RFC) {
+      setRoles([]);
+      return;
+    }
+    try {
+      const data = await fetch(`/api/Roles?rfc=${formData.RFC}`).then(res => res.json());
+      setRoles(data);
+    } catch (error) {
+      setError('Error al cargar los roles');
+    }
+  };
+
+  const loadDepartments = async () => {
+    if (!formData.RFC) {
+      setDepartments([]);
+      return;
+    }
+    try {
+      const data = await fetch(`/api/Department?rfc=${formData.RFC}`).then(res => res.json());
+      setDepartments(data);
+    } catch (error) {
+      setError('Error al cargar los departamentos');
+    }
+  };
+
+  const loadContractTypes = async () => {
+    if (!formData.RFC) {
+      setContractTypes([]);
+      return;
+    }
+    try {
+      const data = await fetch(`/api/ContractType?rfc=${formData.RFC}`).then(res => res.json());
+      setContractTypes(data);
+    } catch (error) {
+      setError('Error al cargar los tipos de contrato');
+    }
+  };
+
+  const loadJobTitles = async () => {
+    if (!formData.RFC) {
+      setJobTitles([]);
+      return;
+    }
+    try {
+      const data = await fetch(`/api/JobTitle?rfc=${formData.RFC}`).then(res => res.json());
+      setJobTitles(data);
+    } catch (error) {
+      setError('Error al cargar los títulos de trabajo');
+    }
+  };
+
+  const loadWorkShifts = async () => {
+    if (!formData.RFC) {
+      setWorkShifts([]);
+      return;
+    }
+    try {
+      const data = await fetch(`/api/WorkShift?rfc=${formData.RFC}`).then(res => res.json());
+      setWorkShifts(data);
+    } catch (error) {
+      setError('Error al cargar los turnos de trabajo');
+    }
+  };
+
+  // Funciones para crear datos si no existen
+  const createRoleIfNotExists = async (roleName: string) => {
+    const existingRole = roles.find(role => role.name.toLowerCase() === roleName.toLowerCase());
+    if (existingRole) {
+      return existingRole;
+    }
+
+    const response = await fetch(`/api/Roles?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: roleName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setRoles([...roles, result]);
+      return result;
+    }
+    return null;
+  };
+
+  const createDepartmentIfNotExists = async (departmentName: string) => {
+    const existingDepartment = departments.find(dept => dept.name.toLowerCase() === departmentName.toLowerCase());
+    if (existingDepartment) {
+      return existingDepartment;
+    }
+
+    const response = await fetch(`/api/Department?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: departmentName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setDepartments([...departments, result]);
+      return result;
+    }
+    return null;
+  };
+
+  const createContractTypeIfNotExists = async (contractTypeName: string) => {
+    const existingContractType = contractTypes.find(ct => ct.name.toLowerCase() === contractTypeName.toLowerCase());
+    if (existingContractType) {
+      return existingContractType;
+    }
+
+    const response = await fetch(`/api/ContractType?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: contractTypeName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setContractTypes([...contractTypes, result]);
+      return result;
+    }
+    return null;
+  };
+
+  const createJobTitleIfNotExists = async (jobTitleName: string) => {
+    const existingJobTitle = jobTitles.find(jt => jt.name.toLowerCase() === jobTitleName.toLowerCase());
+    if (existingJobTitle) {
+      return existingJobTitle;
+    }
+
+    const response = await fetch(`/api/JobTitle?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: jobTitleName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setJobTitles([...jobTitles, result]);
+      return result;
+    }
+    return null;
+  };
+
+  const createWorkShiftIfNotExists = async (workShiftName: string) => {
+    const existingWorkShift = workShifts.find(ws => ws.name.toLowerCase() === workShiftName.toLowerCase());
+    if (existingWorkShift) {
+      return existingWorkShift;
+    }
+
+    const response = await fetch(`/api/WorkShift?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: workShiftName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setWorkShifts([...workShifts, result]);
+      return result;
+    }
+    return null;
+  };
+
+  // Efectos para cargar datos iniciales
   useEffect(() => {
     loadCompanies();
     loadBloodTypes();
@@ -384,16 +335,14 @@ export default function DashboardEmployedAdmin() {
   useEffect(() => {
     if (formData.RFC) {
       loadRoles();
-      loadDepartments(); // Cargar departamentos cuando se seleccione una empresa
-      loadContractTypes(); // Cargar tipos de contrato cuando se seleccione una empresa
-      loadJobTitles(); // Cargar títulos de trabajo cuando se seleccione una empresa
-      loadWorkShifts(); // Cargar turnos de trabajo cuando se seleccione una empresa
-
-
+      loadDepartments();
+      loadContractTypes();
+      loadJobTitles();
+      loadWorkShifts();
     }
   }, [formData.RFC]);
-  
 
+  // Manejadores de eventos
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -405,22 +354,16 @@ export default function DashboardEmployedAdmin() {
       if (selectedCompany) {
         updatedFormData.RFC = selectedCompany.rfc;
         setFormData(updatedFormData);
-        loadRoles();  // Cargar roles después de seleccionar la empresa
-        loadDepartments(); // Cargar departamentos después de seleccionar la empresa
-        loadJobTitles(); // Cargar títulos de trabajo después de seleccionar la empresa
-        loadContractTypes(); // Cargar tipos de contrato después de seleccionar la empresa
-        loadWorkShifts(); // Cargar turnos de trabajo después de seleccionar la empresa
-
+        loadRoles();
+        loadDepartments();
+        loadJobTitles();
+        loadContractTypes();
+        loadWorkShifts();
       }
-      
     } else {
       setFormData(updatedFormData);
     }
   };
-  
-  
-  
-  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -496,6 +439,7 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
+  // Función de búsqueda de nacionalidades
   const handleNationalitySearch = (searchTerm: string) => {
     const filtered = nationalities.filter(nationality =>
       nationality.nombre.toLowerCase().includes(searchTerm.toLowerCase())
@@ -503,29 +447,28 @@ export default function DashboardEmployedAdmin() {
     setFilteredNationalities(filtered);
   };
 
-
+  // Manejadores de roles
   useEffect(() => {
     setFilteredRoles(roles);
   }, [roles]);
-  
+
   const handleRoleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setRoleInput(value);
     setFilteredRoles(roles.filter(role => role.name.toLowerCase().includes(value.toLowerCase())));
   };
 
-
   const handleRoleSelect = async (roleName: string) => {
     if (!formData.RFC) {
       setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
       return;
     }
-  
+
     if (roleName.trim() === "") {
       setRoleInput('');
       return;
     }
-  
+
     const role = await createRoleIfNotExists(roleName);
     if (role) {
       setRoles([...roles, role]);
@@ -534,12 +477,8 @@ export default function DashboardEmployedAdmin() {
       setShowInput(false); // Ocultar el input después de agregar el nuevo rol
     }
   };
-  
-  
-  
-  
 
-
+  // Renderizado de selección de roles
   const renderRoleSelection = () => {
     return (
       <>
@@ -588,9 +527,29 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
 
+  // Manejadores de departamentos
+  const handleDepartmentSelect = async (departmentName: string) => {
+    if (!formData.RFC) {
+      setError('Debes seleccionar una empresa antes de agregar un nuevo departamento');
+      return;
+    }
 
+    if (departmentName.trim() === "") {
+      setDepartmentInput('');
+      return;
+    }
+
+    const department = await createDepartmentIfNotExists(departmentName);
+    if (department) {
+      setDepartments([...departments, department]);
+      setFormData({ ...formData, department: department.name });
+      setDepartmentInput('');
+      setShowDepartmentInput(false); // Ocultar el input después de agregar el nuevo departamento
+    }
+  };
+
+  // Renderizado de selección de departamentos
   const renderDepartmentSelection = () => {
     return (
       <>
@@ -639,27 +598,29 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
-  const handleDepartmentSelect = async (departmentName: string) => {
+
+  // Manejadores de tipos de contrato
+  const handleContractTypeSelect = async (contractTypeName: string) => {
     if (!formData.RFC) {
-      setError('Debes seleccionar una empresa antes de agregar un nuevo departamento');
+      setError('Debes seleccionar una empresa antes de agregar un nuevo tipo de contrato');
       return;
     }
-  
-    if (departmentName.trim() === "") {
-      setDepartmentInput('');
+
+    if (contractTypeName.trim() === "") {
+      setContractTypeInput('');
       return;
     }
-  
-    const department = await createDepartmentIfNotExists(departmentName);
-    if (department) {
-      setDepartments([...departments, department]);
-      setFormData({ ...formData, department: department.name });
-      setDepartmentInput('');
-      setShowDepartmentInput(false); // Ocultar el input después de agregar el nuevo departamento
+
+    const contractType = await createContractTypeIfNotExists(contractTypeName);
+    if (contractType) {
+      setContractTypes([...contractTypes, contractType]);
+      setFormData({ ...formData, contractType: contractType.name });
+      setContractTypeInput('');
+      setShowContractTypeInput(false); // Ocultar el input después de agregar el nuevo tipo de contrato
     }
   };
-  
+
+  // Renderizado de selección de tipos de contrato
   const renderContractTypeSelection = () => {
     return (
       <>
@@ -708,27 +669,29 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
-  const handleContractTypeSelect = async (contractTypeName: string) => {
+
+  // Manejadores de títulos de trabajo
+  const handleJobTitleSelect = async (jobTitleName: string) => {
     if (!formData.RFC) {
-      setError('Debes seleccionar una empresa antes de agregar un nuevo tipo de contrato');
+      setError('Debes seleccionar una empresa antes de agregar un nuevo título de trabajo');
       return;
     }
-  
-    if (contractTypeName.trim() === "") {
-      setContractTypeInput('');
+
+    if (jobTitleName.trim() === "") {
+      setJobTitleInput('');
       return;
     }
-  
-    const contractType = await createContractTypeIfNotExists(contractTypeName);
-    if (contractType) {
-      setContractTypes([...contractTypes, contractType]);
-      setFormData({ ...formData, contractType: contractType.name });
-      setContractTypeInput('');
-      setShowContractTypeInput(false); // Ocultar el input después de agregar el nuevo tipo de contrato
+
+    const jobTitle = await createJobTitleIfNotExists(jobTitleName);
+    if (jobTitle) {
+      setJobTitles([...jobTitles, jobTitle]);
+      setFormData({ ...formData, jobTitle: jobTitle.name });
+      setJobTitleInput('');
+      setShowJobTitleInput(false); // Ocultar el input después de agregar el nuevo título de trabajo
     }
   };
 
+  // Renderizado de selección de títulos de trabajo
   const renderJobTitleSelection = () => {
     return (
       <>
@@ -777,27 +740,29 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
-  const handleJobTitleSelect = async (jobTitleName: string) => {
+
+  // Manejadores de turnos de trabajo
+  const handleWorkShiftSelect = async (workShiftName: string) => {
     if (!formData.RFC) {
-      setError('Debes seleccionar una empresa antes de agregar un nuevo título de trabajo');
+      setError('Debes seleccionar una empresa antes de agregar un nuevo turno de trabajo');
       return;
     }
-  
-    if (jobTitleName.trim() === "") {
-      setJobTitleInput('');
+
+    if (workShiftName.trim() === "") {
+      setWorkShiftInput('');
       return;
     }
-  
-    const jobTitle = await createJobTitleIfNotExists(jobTitleName);
-    if (jobTitle) {
-      setJobTitles([...jobTitles, jobTitle]);
-      setFormData({ ...formData, jobTitle: jobTitle.name });
-      setJobTitleInput('');
-      setShowJobTitleInput(false); // Ocultar el input después de agregar el nuevo título de trabajo
+
+    const workShift = await createWorkShiftIfNotExists(workShiftName);
+    if (workShift) {
+      setWorkShifts([...workShifts, workShift]);
+      setFormData({ ...formData, workShift: workShift.name });
+      setWorkShiftInput('');
+      setShowWorkShiftInput(false); // Ocultar el input después de agregar el nuevo turno de trabajo
     }
   };
-  
+
+  // Renderizado de selección de turnos de trabajo
   const renderWorkShiftSelection = () => {
     return (
       <>
@@ -845,26 +810,6 @@ export default function DashboardEmployedAdmin() {
         )}
       </>
     );
-  };
-  
-  const handleWorkShiftSelect = async (workShiftName: string) => {
-    if (!formData.RFC) {
-      setError('Debes seleccionar una empresa antes de agregar un nuevo turno de trabajo');
-      return;
-    }
-  
-    if (workShiftName.trim() === "") {
-      setWorkShiftInput('');
-      return;
-    }
-  
-    const workShift = await createWorkShiftIfNotExists(workShiftName);
-    if (workShift) {
-      setWorkShifts([...workShifts, workShift]);
-      setFormData({ ...formData, workShift: workShift.name });
-      setWorkShiftInput('');
-      setShowWorkShiftInput(false); // Ocultar el input después de agregar el nuevo turno de trabajo
-    }
   };
   
   
