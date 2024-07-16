@@ -22,9 +22,6 @@ export async function GET(req: Request) {
             company: true, // Incluye la información de la empresa en cada reseña recibida
           }
         },
-        jobTitle: true, // Incluye la relación del título de trabajo del empleado
-        workShift: true, // Incluye la relación del turno de trabajo del empleado
-        contractType: true, // Incluye la relación del tipo de contrato del empleado
         company: true, // Incluye la información de la empresa a la que pertenece el empleado
         employeeDepartments: true // Incluye la relación del empleado con los departamentos
       }
@@ -46,9 +43,6 @@ export async function GET(req: Request) {
         nationality: employee.nationality,
         educationLevel: employee.educationLevel,
         gender: employee.gender,
-        jobTitle: employee.jobTitle?.name, // Accede al nombre del título de trabajo a través de la relación
-        workShift: employee.workShift?.name, // Accede al nombre del turno de trabajo a través de la relación
-        contractType: employee.contractType?.name, // Accede al nombre del tipo de contrato a través de la relación
         profileImageUrl: employee.profileImageUrl,
         reviewsReceived: employee.reviewsReceived,
         employeeDepartments: employee.employeeDepartments
