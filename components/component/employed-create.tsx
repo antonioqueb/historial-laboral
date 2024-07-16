@@ -30,11 +30,12 @@ interface FormData {
   educationLevel: string;
   gender: string;
   bloodType: string;
-  jobTitle: string;
-  workShift: string;
-  contractType: string;
+  jobTitle: string; // Cambiado para asegurar que almacene el id
+  workShift: string; // Cambiado para asegurar que almacene el id
+  contractType: string; // Cambiado para asegurar que almacene el id
   profileImage: File | null;
 }
+
 
 export default function DashboardEmployedAdmin() {
   // Estados del formulario
@@ -370,6 +371,7 @@ export default function DashboardEmployedAdmin() {
   };
   
   
+  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -402,8 +404,8 @@ export default function DashboardEmployedAdmin() {
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof FormData];
       if (value !== null && value !== undefined && value !== '') {
-        if (key === 'jobTitle') {
-          // Convertir el jobTitle en JSON
+        if (key === 'jobTitle' || key === 'workShift' || key === 'contractType') {
+          // Convertir en JSON
           form.append(key, JSON.stringify({ connect: { id: value } }));
         } else {
           form.append(key, value);
@@ -708,6 +710,8 @@ export default function DashboardEmployedAdmin() {
       setShowJobTitleInput(false); // Ocultar el input después de agregar el nuevo título de trabajo
     }
   };
+  
+  
   
 
   // Renderizado de selección de títulos de trabajo
