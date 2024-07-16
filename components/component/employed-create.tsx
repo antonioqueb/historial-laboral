@@ -79,6 +79,54 @@ export default function DashboardEmployedAdmin() {
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
   const [departmentInput, setDepartmentInput] = useState<string>('');
   const [showDepartmentInput, setShowDepartmentInput] = useState(false);
+  // Contrato
+  const [contractTypes, setContractTypes] = useState<{ id: string; name: string }[]>([]);
+  const [contractTypeInput, setContractTypeInput] = useState<string>('');
+  const [showContractTypeInput, setShowContractTypeInput] = useState(false);
+
+  const getContractTypes = async (rfc: string) => {
+    const response = await fetch(`/api/ContractType?rfc=${rfc}`);
+    if (!response.ok) {
+      throw new Error('Error fetching contract types');
+    }
+    return response.json();
+  };
+  
+  const loadContractTypes = async () => {
+    if (!formData.RFC) {
+      setContractTypes([]); // Limpiar tipos de contrato si no hay RFC
+      return;
+    }
+    try {
+      const data = await getContractTypes(formData.RFC);
+      setContractTypes(data);
+    } catch (error) {
+      setError('Error al cargar los tipos de contrato');
+    }
+  };
+  
+  const createContractTypeIfNotExists = async (contractTypeName: string) => {
+    const existingContractType = contractTypes.find(ct => ct.name.toLowerCase() === contractTypeName.toLowerCase());
+    if (existingContractType) {
+      return existingContractType;
+    }
+  
+    const response = await fetch(`/api/ContractType?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: contractTypeName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setContractTypes([...contractTypes, result]);
+      return result;
+    }
+    return null;
+  };
+  
+
 
   const getDepartments = async (rfc: string) => {
     const response = await fetch(`/api/Department?rfc=${rfc}`);
@@ -240,6 +288,7 @@ export default function DashboardEmployedAdmin() {
     if (formData.RFC) {
       loadRoles();
       loadDepartments(); // Cargar departamentos cuando se seleccione una empresa
+      loadContractTypes(); // Cargar tipos de contrato cuando se seleccione una empresa
 
     }
   }, [formData.RFC]);
@@ -258,11 +307,13 @@ export default function DashboardEmployedAdmin() {
         setFormData(updatedFormData);
         loadRoles();  // Cargar roles después de seleccionar la empresa
         loadDepartments(); // Cargar departamentos después de seleccionar la empresa
+        loadContractTypes(); // Cargar tipos de contrato después de seleccionar la empresa
       }
     } else {
       setFormData(updatedFormData);
     }
   };
+  
   
   
   
@@ -505,6 +556,74 @@ export default function DashboardEmployedAdmin() {
     }
   };
   
+  const renderContractTypeSelection = () => {
+    return (
+      <>
+        {!showContractTypeInput ? (
+          <Select
+            value={formData.contractType}
+            onValueChange={(value) => {
+              if (value === "new") {
+                setShowContractTypeInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo tipo de contrato"
+              } else {
+                setFormData({ ...formData, contractType: value });
+              }
+            }}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar tipo de contrato" />
+            </SelectTrigger>
+            <SelectContent>
+              {contractTypes.map((ct) => (
+                <SelectItem key={ct.id} value={ct.name}>
+                  {ct.name}
+                </SelectItem>
+              ))}
+              <SelectItem value="new">
+                <span className="text-blue-600">Agregar nuevo tipo de contrato</span>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        ) : (
+          <Input
+            id="contractTypeInput"
+            name="contractTypeInput"
+            value={contractTypeInput}
+            onChange={(e) => setContractTypeInput(e.target.value)}
+            onBlur={() => handleContractTypeSelect(contractTypeInput)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleContractTypeSelect(contractTypeInput);
+                e.preventDefault();
+              }
+            }}
+            required
+          />
+        )}
+      </>
+    );
+  };
+  
+  const handleContractTypeSelect = async (contractTypeName: string) => {
+    if (!formData.RFC) {
+      setError('Debes seleccionar una empresa antes de agregar un nuevo tipo de contrato');
+      return;
+    }
+  
+    if (contractTypeName.trim() === "") {
+      setContractTypeInput('');
+      return;
+    }
+  
+    const contractType = await createContractTypeIfNotExists(contractTypeName);
+    if (contractType) {
+      setContractTypes([...contractTypes, contractType]);
+      setFormData({ ...formData, contractType: contractType.name });
+      setContractTypeInput('');
+      setShowContractTypeInput(false); // Ocultar el input después de agregar el nuevo tipo de contrato
+    }
+  };
   
   
 
@@ -655,9 +774,9 @@ export default function DashboardEmployedAdmin() {
               <Input id="workShift" name="workShift" value={formData.workShift} onChange={handleChange} required />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="contractType">Tipo de Contrato</Label>
-              <Input id="contractType" name="contractType" value={formData.contractType} onChange={handleChange} required />
-            </div>
+            <Label htmlFor="contractType">Tipo de Contrato</Label>
+            {renderContractTypeSelection()}
+          </div>
           </div>
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
