@@ -104,13 +104,17 @@ model Review {
   updatedAt     DateTime  @updatedAt // Registro de actualización
 }
 
+/// The `Role` model represents different roles within a company.
+/// Each role has a unique identifier, a name, and is associated with multiple companies.
+/// The model also includes timestamps for when the role was created and last updated.
 model Role {
-  id         String   @id @default(cuid())
-  name       String
-  companies  Company[] // Role: Define los roles en la empresa
-  createdAt  DateTime  @default(now()) // Registro de creación
-  updatedAt  DateTime  @updatedAt // Registro de actualización
+  id        String   @id @default(cuid())
+  name      String
+  companies Company[] // Role: Define los roles en la empresa
+  createdAt DateTime  @default(now()) // Registro de creación
+  updatedAt DateTime  @updatedAt // Registro de actualización
 }
+
 
 model WorkShift {
   id         String   @id @default(cuid())
