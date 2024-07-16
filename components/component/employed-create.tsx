@@ -305,26 +305,27 @@ export default function DashboardEmployedAdmin() {
     setFilteredRoles(roles.filter(role => role.name.toLowerCase().includes(value.toLowerCase())));
   };
 
-  
+
   const handleRoleSelect = async (roleName: string) => {
     if (!formData.RFC) {
       setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
       return;
     }
-  
+
     if (roleName === "new") {
-      // Clear the role input field to allow the user to enter a new role
       setRoleInput('');
       setFormData({ ...formData, role: '' });
       return;
     }
-  
+
     const role = await createRoleIfNotExists(roleName);
     if (role) {
       setFormData({ ...formData, role: role.name });
+      setRoles([...roles, role]); // Añadir el nuevo rol a la lista de roles
       setRoleInput('');
     }
   };
+
   
   
   
@@ -333,31 +334,50 @@ export default function DashboardEmployedAdmin() {
   const renderRoleSelection = () => {
     if (roles.length > 0) {
       return (
-        <Select
-          value={formData.role}
-          onValueChange={(value) => {
-            if (value === "new") {
-              setRoleInput('');
-            } else {
-              setFormData({ ...formData, role: value });
-            }
-          }}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Seleccionar rol" />
-          </SelectTrigger>
-          <SelectContent>
-            {roles.map((role) => (
-              <SelectItem key={role.id} value={role.name || role.id}>
-                {role.name}
+        <>
+          <Select
+            value={formData.role}
+            onValueChange={(value) => {
+              if (value === "new") {
+                setRoleInput('');
+                setFormData({ ...formData, role: '' });
+              } else {
+                setFormData({ ...formData, role: value });
+              }
+            }}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar rol" />
+            </SelectTrigger>
+            <SelectContent>
+              {roles.map((role) => (
+                <SelectItem key={role.id} value={role.name || role.id}>
+                  {role.name}
+                </SelectItem>
+              ))}
+              <SelectItem value="new">
+                <span className="text-blue-600">Agregar nuevo rol</span>
               </SelectItem>
-            ))}
-            <SelectItem value="new">
-              <span className="text-blue-600">Agregar nuevo rol</span>
-            </SelectItem>
-          </SelectContent>
-        </Select>
+            </SelectContent>
+          </Select>
+          {formData.role === '' && (
+            <Input
+              id="roleInput"
+              name="roleInput"
+              value={roleInput}
+              onChange={handleRoleInputChange}
+              onBlur={() => handleRoleSelect(roleInput)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleRoleSelect(roleInput);
+                  e.preventDefault();
+                }
+              }}
+              required
+            />
+          )}
+        </>
       );
     } else {
       return (
