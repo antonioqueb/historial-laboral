@@ -306,16 +306,75 @@ export default function DashboardEmployedAdmin() {
   };
   
   const handleRoleSelect = async (roleName: string) => {
+    if (roleName === "new") {
+      setRoleInput('');
+      return;
+    }
+    
     if (!formData.RFC) {
       setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
       return;
     }
+  
     const role = await createRoleIfNotExists(roleName);
     if (role) {
       setFormData({ ...formData, role: role.name });
       setRoleInput('');
     }
   };
+  
+  
+
+
+  const renderRoleSelection = () => {
+    if (roles.length > 0) {
+      return (
+        <Select
+          value={formData.role}
+          onValueChange={(value) => {
+            if (value === "new") {
+              setRoleInput('');
+            } else {
+              setFormData({ ...formData, role: value });
+            }
+          }}
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Seleccionar rol" />
+          </SelectTrigger>
+          <SelectContent>
+            {roles.map((role) => (
+              <SelectItem key={role.id} value={role.name}>
+                {role.name}
+              </SelectItem>
+            ))}
+            <SelectItem value="new">
+              <span className="text-blue-600">Agregar nuevo rol</span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      );
+    } else {
+      return (
+        <Input
+          id="roleInput"
+          name="roleInput"
+          value={roleInput}
+          onChange={handleRoleInputChange}
+          onBlur={() => handleRoleSelect(roleInput)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleRoleSelect(roleInput);
+              e.preventDefault();
+            }
+          }}
+          required
+        />
+      );
+    }
+  };
+  
   
 
   return (
@@ -434,35 +493,9 @@ export default function DashboardEmployedAdmin() {
         <div className="grid gap-6 md:grid-cols-2 py-4">
           <div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="roleInput">Rol</Label>
-              <Input
-                id="roleInput"
-                name="roleInput"
-                value={roleInput}
-                onChange={handleRoleInputChange}
-                onBlur={() => handleRoleSelect(roleInput)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleRoleSelect(roleInput);
-                    e.preventDefault();  // Previene el envío del formulario si se presiona Enter
-                  }
-                }}
-                required
-              />
-              {roleInput && (
-                <ul className="absolute bg-white border mt-1">
-                  {filteredRoles.map(role => (
-                    <li
-                      key={role.id}
-                      className="cursor-pointer p-2 hover:bg-gray-200"
-                      onMouseDown={() => handleRoleSelect(role.name)}
-                    >
-                      {role.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            <Label htmlFor="role">Rol</Label>
+            {renderRoleSelection()}
+          </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="department">Departamento</Label>
               <Select value={formData.department} onValueChange={(value) => handleSelectChange(value, 'department')} required>
