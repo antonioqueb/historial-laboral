@@ -74,6 +74,8 @@ export default function DashboardEmployedAdmin() {
   const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
   const [roleInput, setRoleInput] = useState<string>('');
   const [filteredRoles, setFilteredRoles] = useState<{ id: string; name: string }[]>(roles);
+  const [showInput, setShowInput] = useState(false);
+
 
   const getRoles = async (rfc: string) => {
     const response = await fetch(`/api/Roles?rfc=${rfc}`);
@@ -311,36 +313,35 @@ export default function DashboardEmployedAdmin() {
       setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
       return;
     }
-
-    if (roleName === "new") {
+  
+    if (roleName.trim() === "") {
       setRoleInput('');
-      setFormData({ ...formData, role: '' });
       return;
     }
-
+  
     const role = await createRoleIfNotExists(roleName);
     if (role) {
+      setRoles([...roles, role]);
       setFormData({ ...formData, role: role.name });
-      setRoles([...roles, role]); // Añadir el nuevo rol a la lista de roles
       setRoleInput('');
+      setShowInput(false); // Ocultar el input después de agregar el nuevo rol
     }
   };
-
+  
   
   
   
 
 
   const renderRoleSelection = () => {
-    if (roles.length > 0) {
-      return (
-        <>
+    return (
+      <>
+        {!showInput ? (
           <Select
             value={formData.role}
             onValueChange={(value) => {
               if (value === "new") {
-                setRoleInput('');
-                setFormData({ ...formData, role: '' });
+                setShowInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo rol"
               } else {
                 setFormData({ ...formData, role: value });
               }
@@ -361,43 +362,26 @@ export default function DashboardEmployedAdmin() {
               </SelectItem>
             </SelectContent>
           </Select>
-          {formData.role === '' && (
-            <Input
-              id="roleInput"
-              name="roleInput"
-              value={roleInput}
-              onChange={handleRoleInputChange}
-              onBlur={() => handleRoleSelect(roleInput)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleRoleSelect(roleInput);
-                  e.preventDefault();
-                }
-              }}
-              required
-            />
-          )}
-        </>
-      );
-    } else {
-      return (
-        <Input
-          id="roleInput"
-          name="roleInput"
-          value={roleInput}
-          onChange={handleRoleInputChange}
-          onBlur={() => handleRoleSelect(roleInput)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleRoleSelect(roleInput);
-              e.preventDefault();
-            }
-          }}
-          required
-        />
-      );
-    }
+        ) : (
+          <Input
+            id="roleInput"
+            name="roleInput"
+            value={roleInput}
+            onChange={handleRoleInputChange}
+            onBlur={() => handleRoleSelect(roleInput)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleRoleSelect(roleInput);
+                e.preventDefault();
+              }
+            }}
+            required
+          />
+        )}
+      </>
+    );
   };
+  
   
   
   
