@@ -383,6 +383,7 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -404,6 +405,9 @@ export default function DashboardEmployedAdmin() {
         form.append(key, value);
       }
     });
+  
+    // Formatear el título del trabajo como un objeto para Prisma
+    form.append('jobTitle', JSON.stringify({ connect: { name: formData.jobTitle } }));
   
     const result = await createEmployee(form);
     if (result.success) {
@@ -444,6 +448,7 @@ export default function DashboardEmployedAdmin() {
       setError(result.error ?? null);
     }
   };
+  
   
 
 
