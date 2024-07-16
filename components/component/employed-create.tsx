@@ -183,8 +183,20 @@ export default function DashboardEmployedAdmin() {
   };
 
   const handleSelectChange = (value: string, field: keyof FormData) => {
-    setFormData({ ...formData, [field]: value });
+    const updatedFormData = { ...formData, [field]: value };
+    if (field === 'companyId') {
+      const selectedCompany = companies.find(company => company.id === value);
+      if (selectedCompany) {
+        updatedFormData.RFC = selectedCompany.rfc;
+        setFormData(updatedFormData);
+        loadRoles();  // Cargar roles después de seleccionar la empresa
+      }
+    } else {
+      setFormData(updatedFormData);
+    }
   };
+  
+  
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -279,6 +291,10 @@ export default function DashboardEmployedAdmin() {
   };
   
   const handleRoleSelect = async (roleName: string) => {
+    if (!formData.RFC) {
+      setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
+      return;
+    }
     const role = await createRoleIfNotExists(roleName);
     if (role) {
       setFormData({ ...formData, role: role.name });
@@ -410,6 +426,12 @@ export default function DashboardEmployedAdmin() {
                 value={roleInput}
                 onChange={handleRoleInputChange}
                 onBlur={() => handleRoleSelect(roleInput)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleRoleSelect(roleInput);
+                    e.preventDefault();  // Previene el envío del formulario si se presiona Enter
+                  }
+                }}
                 required
               />
               {roleInput && (
