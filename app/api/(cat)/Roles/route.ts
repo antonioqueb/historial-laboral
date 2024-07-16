@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Handler to create a new role
+// Handler para crear un nuevo rol
 export async function POST(req: NextRequest) {
   try {
     const rfc = req.nextUrl.searchParams.get('rfc');
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       data: {
         name,
         companies: {
-          connect: { rfc: rfc as string },
+          connect: { id: company.id },
         },
       },
     });
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Handler to edit an existing role
+// Handler para editar un rol existente
 export async function PUT(req: NextRequest) {
   try {
     const rfc = req.nextUrl.searchParams.get('rfc');
@@ -55,7 +55,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const updatedRole = await prisma.role.updateMany({
-      where: { id, companies: { some: { rfc: rfc as string } } },
+      where: { id, companies: { some: { id: company.id } } },
       data: { name },
     });
 
@@ -70,7 +70,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-// Handler to delete an existing role
+// Handler para eliminar un rol existente
 export async function DELETE(req: NextRequest) {
   try {
     const rfc = req.nextUrl.searchParams.get('rfc');
@@ -89,7 +89,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     const deletedRole = await prisma.role.deleteMany({
-      where: { id, companies: { some: { rfc: rfc as string } } },
+      where: { id, companies: { some: { id: company.id } } },
     });
 
     if (deletedRole.count === 0) {
@@ -103,7 +103,7 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-// Handler to get all roles of a company
+// Handler para obtener todos los roles de una empresa
 export async function GET(req: NextRequest) {
   try {
     const rfc = req.nextUrl.searchParams.get('rfc');
@@ -121,7 +121,7 @@ export async function GET(req: NextRequest) {
     }
 
     const roles = await prisma.role.findMany({
-      where: { companies: { some: { rfc: rfc as string } } },
+      where: { companies: { some: { id: company.id } } },
     });
 
     return NextResponse.json(roles, { status: 200 });
