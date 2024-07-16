@@ -402,7 +402,12 @@ export default function DashboardEmployedAdmin() {
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof FormData];
       if (value !== null && value !== undefined && value !== '') {
-        form.append(key, value);
+        if (key === 'jobTitle') {
+          // Convertir el jobTitle en JSON
+          form.append(key, JSON.stringify({ connect: { id: value } }));
+        } else {
+          form.append(key, value);
+        }
       }
     });
   
@@ -445,6 +450,7 @@ export default function DashboardEmployedAdmin() {
       setError(result.error ?? null);
     }
   };
+  
   
   
   
@@ -688,20 +694,21 @@ export default function DashboardEmployedAdmin() {
       setError('Debes seleccionar una empresa antes de agregar un nuevo título de trabajo');
       return;
     }
-
+  
     if (jobTitleName.trim() === "") {
       setJobTitleInput('');
       return;
     }
-
+  
     const jobTitle = await createJobTitleIfNotExists(jobTitleName);
     if (jobTitle) {
       setJobTitles([...jobTitles, jobTitle]);
-      setFormData({ ...formData, jobTitle: jobTitle.name });
+      setFormData({ ...formData, jobTitle: jobTitle.id }); // Guardar el ID del título de trabajo en lugar del nombre
       setJobTitleInput('');
       setShowJobTitleInput(false); // Ocultar el input después de agregar el nuevo título de trabajo
     }
   };
+  
 
   // Renderizado de selección de títulos de trabajo
   const renderJobTitleSelection = () => {
