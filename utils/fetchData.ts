@@ -152,6 +152,8 @@ export async function getCompaniesList(): Promise<{ companies: Company[] }> {
 }
 
 // Función para crear un empleado
+
+
 export async function createEmployee(form: FormData): Promise<{ success: boolean; error?: string }> {
   try {
     const response = await fetch('/api/createEmployee', {
@@ -170,6 +172,7 @@ export async function createEmployee(form: FormData): Promise<{ success: boolean
     return { success: false, error: 'Error de conexión' };
   }
 }
+
 
 // Función para obtener la lista de empleados
 export async function getEmployeesList(): Promise<{ employees: Employee[] }> {

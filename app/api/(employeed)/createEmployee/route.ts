@@ -76,7 +76,6 @@ export async function POST(req: Request) {
       name: name as string,
       role: role as string,
       department: department as string,
-      companyId: companyId as string,
       socialSecurityNumber: nss as string,
       CURP: CURP as string,
       RFC: RFC as string,
@@ -98,6 +97,11 @@ export async function POST(req: Request) {
       workShift: workShift as string,
       contractType: contractType as string,
       profileImageUrl: imageUrl as string, // Guardar la URL de la imagen...
+      company: {
+        connect: {
+          id: companyId as string,
+        }
+      }
     };
 
     if (description) {
