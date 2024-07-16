@@ -75,6 +75,54 @@ export default function DashboardEmployedAdmin() {
   const [roleInput, setRoleInput] = useState<string>('');
   const [filteredRoles, setFilteredRoles] = useState<{ id: string; name: string }[]>(roles);
   const [showInput, setShowInput] = useState(false);
+  // Departament
+  const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
+  const [departmentInput, setDepartmentInput] = useState<string>('');
+  const [showDepartmentInput, setShowDepartmentInput] = useState(false);
+
+  const getDepartments = async (rfc: string) => {
+    const response = await fetch(`/api/Department?rfc=${rfc}`);
+    if (!response.ok) {
+      throw new Error('Error fetching departments');
+    }
+    return response.json();
+  };
+  
+  const loadDepartments = async () => {
+    if (!formData.RFC) {
+      setDepartments([]); // Limpiar departamentos si no hay RFC
+      return;
+    }
+    try {
+      const data = await getDepartments(formData.RFC);
+      setDepartments(data);
+    } catch (error) {
+      setError('Error al cargar los departamentos');
+    }
+  };
+  
+  const createDepartmentIfNotExists = async (departmentName: string) => {
+    const existingDepartment = departments.find(dept => dept.name.toLowerCase() === departmentName.toLowerCase());
+    if (existingDepartment) {
+      return existingDepartment;
+    }
+  
+    const response = await fetch(`/api/Department?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: departmentName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setDepartments([...departments, result]);
+      return result;
+    }
+    return null;
+  };
+  
+
 
 
   const getRoles = async (rfc: string) => {
@@ -185,6 +233,7 @@ export default function DashboardEmployedAdmin() {
     loadCivilStatuses();
     loadNationalities();
     loadEducationLevels();
+    loadDepartments(); // Cargar departamentos cuando se seleccione una empresa
    
   }, []);
 
@@ -207,11 +256,13 @@ export default function DashboardEmployedAdmin() {
         updatedFormData.RFC = selectedCompany.rfc;
         setFormData(updatedFormData);
         loadRoles();  // Cargar roles después de seleccionar la empresa
+        loadDepartments(); // Cargar departamentos después de seleccionar la empresa
       }
     } else {
       setFormData(updatedFormData);
     }
   };
+  
   
   
 
@@ -382,6 +433,76 @@ export default function DashboardEmployedAdmin() {
     );
   };
   
+
+
+  const renderDepartmentSelection = () => {
+    return (
+      <>
+        {!showDepartmentInput ? (
+          <Select
+            value={formData.department}
+            onValueChange={(value) => {
+              if (value === "new") {
+                setShowDepartmentInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo departamento"
+              } else {
+                setFormData({ ...formData, department: value });
+              }
+            }}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar departamento" />
+            </SelectTrigger>
+            <SelectContent>
+              {departments.map((dept) => (
+                <SelectItem key={dept.id} value={dept.name || dept.id}>
+                  {dept.name}
+                </SelectItem>
+              ))}
+              <SelectItem value="new">
+                <span className="text-blue-600">Agregar nuevo departamento</span>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        ) : (
+          <Input
+            id="departmentInput"
+            name="departmentInput"
+            value={departmentInput}
+            onChange={(e) => setDepartmentInput(e.target.value)}
+            onBlur={() => handleDepartmentSelect(departmentInput)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleDepartmentSelect(departmentInput);
+                e.preventDefault();
+              }
+            }}
+            required
+          />
+        )}
+      </>
+    );
+  };
+  
+  const handleDepartmentSelect = async (departmentName: string) => {
+    if (!formData.RFC) {
+      setError('Debes seleccionar una empresa antes de agregar un nuevo departamento');
+      return;
+    }
+  
+    if (departmentName.trim() === "") {
+      setDepartmentInput('');
+      return;
+    }
+  
+    const department = await createDepartmentIfNotExists(departmentName);
+    if (department) {
+      setDepartments([...departments, department]);
+      setFormData({ ...formData, department: department.name });
+      setDepartmentInput('');
+      setShowDepartmentInput(false); // Ocultar el input después de agregar el nuevo departamento
+    }
+  };
   
   
   
@@ -505,19 +626,9 @@ export default function DashboardEmployedAdmin() {
             <Label htmlFor="role">Rol</Label>
             {renderRoleSelection()}
           </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="department">Departamento</Label>
-              <Select value={formData.department} onValueChange={(value) => handleSelectChange(value, 'department')} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar departamento" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="engineering">Ingeniería</SelectItem>
-                  <SelectItem value="design">Diseño</SelectItem>
-                  <SelectItem value="hr">Recursos Humanos</SelectItem>
-                  <SelectItem value="marketing">Mercadotecnia</SelectItem>
-                </SelectContent>
-              </Select>
+              {renderDepartmentSelection()}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="companyId">Empresa</Label>
