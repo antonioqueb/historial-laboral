@@ -154,69 +154,70 @@ export default function DashboardEmployedAdmin() {
   };
 
   const loadRoles = async () => {
-    if (!formData.RFC) {
+    if (!companyRFC) {
       setRoles([]);
       return;
     }
     try {
-      const data = await fetch(`/api/Roles?rfc=${formData.RFC}`).then(res => res.json());
+      const data = await fetch(`/api/Roles?rfc=${companyRFC}`).then(res => res.json());
       setRoles(data);
     } catch (error) {
       setError('Error al cargar los roles');
     }
   };
-
+  
   const loadDepartments = async () => {
-    if (!formData.RFC) {
+    if (!companyRFC) {
       setDepartments([]);
       return;
     }
     try {
-      const data = await fetch(`/api/Department?rfc=${formData.RFC}`).then(res => res.json());
+      const data = await fetch(`/api/Department?rfc=${companyRFC}`).then(res => res.json());
       setDepartments(data);
     } catch (error) {
       setError('Error al cargar los departamentos');
     }
   };
-
+  
   const loadContractTypes = async () => {
-    if (!formData.RFC) {
+    if (!companyRFC) {
       setContractTypes([]);
       return;
     }
     try {
-      const data = await fetch(`/api/ContractType?rfc=${formData.RFC}`).then(res => res.json());
+      const data = await fetch(`/api/ContractType?rfc=${companyRFC}`).then(res => res.json());
       setContractTypes(data);
     } catch (error) {
       setError('Error al cargar los tipos de contrato');
     }
   };
-
+  
   const loadJobTitles = async () => {
-    if (!formData.RFC) {
+    if (!companyRFC) {
       setJobTitles([]);
       return;
     }
     try {
-      const data = await fetch(`/api/JobTitle?rfc=${formData.RFC}`).then(res => res.json());
+      const data = await fetch(`/api/JobTitle?rfc=${companyRFC}`).then(res => res.json());
       setJobTitles(data);
     } catch (error) {
       setError('Error al cargar los títulos de trabajo');
     }
   };
-
+  
   const loadWorkShifts = async () => {
-    if (!formData.RFC) {
+    if (!companyRFC) {
       setWorkShifts([]);
       return;
     }
     try {
-      const data = await fetch(`/api/WorkShift?rfc=${formData.RFC}`).then(res => res.json());
+      const data = await fetch(`/api/WorkShift?rfc=${companyRFC}`).then(res => res.json());
       setWorkShifts(data);
     } catch (error) {
       setError('Error al cargar los turnos de trabajo');
     }
   };
+  
 
   // Funciones para crear datos si no existen
   const createRoleIfNotExists = async (roleName: string) => {
@@ -335,14 +336,15 @@ export default function DashboardEmployedAdmin() {
   }, []);
 
   useEffect(() => {
-    if (formData.RFC) {
+    if (companyRFC) {
       loadRoles();
       loadDepartments();
       loadContractTypes();
       loadJobTitles();
       loadWorkShifts();
     }
-  }, [formData.RFC]);
+  }, [companyRFC]);
+  
 
   // Manejadores de eventos
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -366,6 +368,7 @@ export default function DashboardEmployedAdmin() {
       setFormData(updatedFormData);
     }
   };
+  
   
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
