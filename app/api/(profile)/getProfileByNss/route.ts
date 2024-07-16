@@ -15,16 +15,7 @@ export async function GET(req: Request) {
   try {
     // Busca el empleado en la base de datos utilizando el NSS proporcionado
     const employee = await prisma.employee.findUnique({
-      where: { socialSecurityNumber: nss }, // Condición de búsqueda por NSS
-      include: { // Incluye relaciones y campos adicionales en la consulta
-        reviewsReceived: {
-          include: {
-            company: true, // Incluye la información de la empresa en cada reseña recibida
-          }
-        },
-        company: true, // Incluye la información de la empresa a la que pertenece el empleado
-        employeeDepartments: true // Incluye la relación del empleado con los departamentos
-      }
+      where: { socialSecurityNumber: nss } // Condición de búsqueda por NSS
     });
 
     // Verifica si el empleado fue encontrado
@@ -33,21 +24,7 @@ export async function GET(req: Request) {
     }
 
     // Responde con los datos completos del empleado
-    return NextResponse.json({ 
-      employee: {
-        name: employee.name,
-        role: employee.role,
-        department: employee.department,
-        birthDate: employee.birthDate,
-        hireDate: employee.hireDate,
-        nationality: employee.nationality,
-        educationLevel: employee.educationLevel,
-        gender: employee.gender,
-        profileImageUrl: employee.profileImageUrl,
-        reviewsReceived: employee.reviewsReceived,
-        employeeDepartments: employee.employeeDepartments
-      }
-    }, { status: 200 }); // Responde con un objeto JSON que contiene todos los datos del empleado
+    return NextResponse.json({ employee }, { status: 200 }); // Responde con un objeto JSON que contiene todos los datos del empleado
   } catch (error) {
     console.error(error); // Imprime el error en la consola para depuración
     return NextResponse.json({ error: 'Error al obtener los datos del empleado' }, { status: 500 }); // Responde con un error en caso de fallo en la consulta
