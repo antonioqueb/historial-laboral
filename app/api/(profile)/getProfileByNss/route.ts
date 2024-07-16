@@ -22,9 +22,9 @@ export async function GET(req: Request) {
             company: true, // Incluye la información de la empresa en cada reseña recibida
           }
         },
-        jobTitle: true, // Incluye la información del puesto de trabajo del empleado
-        workShift: true, // Incluye la información del turno de trabajo del empleado
-        contractType: true, // Incluye la información del tipo de contrato del empleado
+        jobTitle: true, // Incluye la relación del título de trabajo del empleado
+        workShift: true, // Incluye la relación del turno de trabajo del empleado
+        contractType: true, // Incluye la relación del tipo de contrato del empleado
         company: true, // Incluye la información de la empresa a la que pertenece el empleado
         employeeDepartments: true // Incluye la relación del empleado con los departamentos
       }
