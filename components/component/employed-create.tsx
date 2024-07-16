@@ -1,3 +1,4 @@
+// components\component\employed-create.tsx
 'use client';
 
 import { useState, useEffect } from "react";
@@ -456,6 +457,7 @@ export default function DashboardEmployedAdmin() {
   
   
   
+  
 
 
 
@@ -713,6 +715,7 @@ export default function DashboardEmployedAdmin() {
   
   
   
+  
 
   // Renderizado de selección de títulos de trabajo
   const renderJobTitleSelection = () => {
@@ -735,7 +738,7 @@ export default function DashboardEmployedAdmin() {
             </SelectTrigger>
             <SelectContent>
               {jobTitles.map((jt) => (
-                <SelectItem key={jt.id} value={jt.name}>
+                <SelectItem key={jt.id} value={jt.id}>
                   {jt.name}
                 </SelectItem>
               ))}
@@ -763,6 +766,7 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
+  
 
   // Manejadores de turnos de trabajo
   const handleWorkShiftSelect = async (workShiftName: string) => {
