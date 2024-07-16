@@ -87,6 +87,54 @@ export default function DashboardEmployedAdmin() {
   const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
   const [jobTitleInput, setJobTitleInput] = useState<string>('');
   const [showJobTitleInput, setShowJobTitleInput] = useState(false);
+  // WorkShift | Turno de trabajo
+  const [workShifts, setWorkShifts] = useState<{ id: string; name: string }[]>([]);
+  const [workShiftInput, setWorkShiftInput] = useState<string>('');
+  const [showWorkShiftInput, setShowWorkShiftInput] = useState(false);
+
+  const getWorkShifts = async (rfc: string) => {
+    const response = await fetch(`/api/WorkShift?rfc=${rfc}`);
+    if (!response.ok) {
+      throw new Error('Error fetching work shifts');
+    }
+    return response.json();
+  };
+  
+  const loadWorkShifts = async () => {
+    if (!formData.RFC) {
+      setWorkShifts([]); // Limpiar turnos de trabajo si no hay RFC
+      return;
+    }
+    try {
+      const data = await getWorkShifts(formData.RFC);
+      setWorkShifts(data);
+    } catch (error) {
+      setError('Error al cargar los turnos de trabajo');
+    }
+  };
+  
+  const createWorkShiftIfNotExists = async (workShiftName: string) => {
+    const existingWorkShift = workShifts.find(ws => ws.name.toLowerCase() === workShiftName.toLowerCase());
+    if (existingWorkShift) {
+      return existingWorkShift;
+    }
+  
+    const response = await fetch(`/api/WorkShift?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: workShiftName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setWorkShifts([...workShifts, result]);
+      return result;
+    }
+    return null;
+  };
+  
+
 
 
   const getJobTitles = async (rfc: string) => {
@@ -339,6 +387,7 @@ export default function DashboardEmployedAdmin() {
       loadDepartments(); // Cargar departamentos cuando se seleccione una empresa
       loadContractTypes(); // Cargar tipos de contrato cuando se seleccione una empresa
       loadJobTitles(); // Cargar títulos de trabajo cuando se seleccione una empresa
+      loadWorkShifts(); // Cargar turnos de trabajo cuando se seleccione una empresa
 
 
     }
@@ -360,6 +409,8 @@ export default function DashboardEmployedAdmin() {
         loadDepartments(); // Cargar departamentos después de seleccionar la empresa
         loadJobTitles(); // Cargar títulos de trabajo después de seleccionar la empresa
         loadContractTypes(); // Cargar tipos de contrato después de seleccionar la empresa
+        loadWorkShifts(); // Cargar turnos de trabajo después de seleccionar la empresa
+
       }
       
     } else {
@@ -747,6 +798,74 @@ export default function DashboardEmployedAdmin() {
     }
   };
   
+  const renderWorkShiftSelection = () => {
+    return (
+      <>
+        {!showWorkShiftInput ? (
+          <Select
+            value={formData.workShift}
+            onValueChange={(value) => {
+              if (value === "new") {
+                setShowWorkShiftInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo turno de trabajo"
+              } else {
+                setFormData({ ...formData, workShift: value });
+              }
+            }}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar turno de trabajo" />
+            </SelectTrigger>
+            <SelectContent>
+              {workShifts.map((ws) => (
+                <SelectItem key={ws.id} value={ws.name}>
+                  {ws.name}
+                </SelectItem>
+              ))}
+              <SelectItem value="new">
+                <span className="text-blue-600">Agregar nuevo turno de trabajo</span>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        ) : (
+          <Input
+            id="workShiftInput"
+            name="workShiftInput"
+            value={workShiftInput}
+            onChange={(e) => setWorkShiftInput(e.target.value)}
+            onBlur={() => handleWorkShiftSelect(workShiftInput)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleWorkShiftSelect(workShiftInput);
+                e.preventDefault();
+              }
+            }}
+            required
+          />
+        )}
+      </>
+    );
+  };
+  
+  const handleWorkShiftSelect = async (workShiftName: string) => {
+    if (!formData.RFC) {
+      setError('Debes seleccionar una empresa antes de agregar un nuevo turno de trabajo');
+      return;
+    }
+  
+    if (workShiftName.trim() === "") {
+      setWorkShiftInput('');
+      return;
+    }
+  
+    const workShift = await createWorkShiftIfNotExists(workShiftName);
+    if (workShift) {
+      setWorkShifts([...workShifts, workShift]);
+      setFormData({ ...formData, workShift: workShift.name });
+      setWorkShiftInput('');
+      setShowWorkShiftInput(false); // Ocultar el input después de agregar el nuevo turno de trabajo
+    }
+  };
   
   
 
@@ -894,7 +1013,7 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="workShift">Turno de Trabajo</Label>
-              <Input id="workShift" name="workShift" value={formData.workShift} onChange={handleChange} required />
+              {renderWorkShiftSelection()}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
             <Label htmlFor="contractType">Tipo de Contrato</Label>
