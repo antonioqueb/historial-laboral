@@ -83,6 +83,55 @@ export default function DashboardEmployedAdmin() {
   const [contractTypes, setContractTypes] = useState<{ id: string; name: string }[]>([]);
   const [contractTypeInput, setContractTypeInput] = useState<string>('');
   const [showContractTypeInput, setShowContractTypeInput] = useState(false);
+  // Titulo de trabajo
+  const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
+  const [jobTitleInput, setJobTitleInput] = useState<string>('');
+  const [showJobTitleInput, setShowJobTitleInput] = useState(false);
+
+
+  const getJobTitles = async (rfc: string) => {
+    const response = await fetch(`/api/JobTitle?rfc=${rfc}`);
+    if (!response.ok) {
+      throw new Error('Error fetching job titles');
+    }
+    return response.json();
+  };
+  
+  const loadJobTitles = async () => {
+    if (!formData.RFC) {
+      setJobTitles([]); // Limpiar títulos de trabajo si no hay RFC
+      return;
+    }
+    try {
+      const data = await getJobTitles(formData.RFC);
+      setJobTitles(data);
+    } catch (error) {
+      setError('Error al cargar los títulos de trabajo');
+    }
+  };
+  
+  const createJobTitleIfNotExists = async (jobTitleName: string) => {
+    const existingJobTitle = jobTitles.find(jt => jt.name.toLowerCase() === jobTitleName.toLowerCase());
+    if (existingJobTitle) {
+      return existingJobTitle;
+    }
+  
+    const response = await fetch(`/api/JobTitle?rfc=${formData.RFC}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: jobTitleName }),
+    });
+    const result = await response.json();
+    if (result.id) {
+      setJobTitles([...jobTitles, result]);
+      return result;
+    }
+    return null;
+  };
+  
+
 
   const getContractTypes = async (rfc: string) => {
     const response = await fetch(`/api/ContractType?rfc=${rfc}`);
@@ -289,6 +338,8 @@ export default function DashboardEmployedAdmin() {
       loadRoles();
       loadDepartments(); // Cargar departamentos cuando se seleccione una empresa
       loadContractTypes(); // Cargar tipos de contrato cuando se seleccione una empresa
+      loadJobTitles(); // Cargar títulos de trabajo cuando se seleccione una empresa
+
 
     }
   }, [formData.RFC]);
@@ -307,8 +358,10 @@ export default function DashboardEmployedAdmin() {
         setFormData(updatedFormData);
         loadRoles();  // Cargar roles después de seleccionar la empresa
         loadDepartments(); // Cargar departamentos después de seleccionar la empresa
+        loadJobTitles(); // Cargar títulos de trabajo después de seleccionar la empresa
         loadContractTypes(); // Cargar tipos de contrato después de seleccionar la empresa
       }
+      
     } else {
       setFormData(updatedFormData);
     }
@@ -624,6 +677,76 @@ export default function DashboardEmployedAdmin() {
       setShowContractTypeInput(false); // Ocultar el input después de agregar el nuevo tipo de contrato
     }
   };
+
+  const renderJobTitleSelection = () => {
+    return (
+      <>
+        {!showJobTitleInput ? (
+          <Select
+            value={formData.jobTitle}
+            onValueChange={(value) => {
+              if (value === "new") {
+                setShowJobTitleInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo título de trabajo"
+              } else {
+                setFormData({ ...formData, jobTitle: value });
+              }
+            }}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar título de trabajo" />
+            </SelectTrigger>
+            <SelectContent>
+              {jobTitles.map((jt) => (
+                <SelectItem key={jt.id} value={jt.name}>
+                  {jt.name}
+                </SelectItem>
+              ))}
+              <SelectItem value="new">
+                <span className="text-blue-600">Agregar nuevo título de trabajo</span>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        ) : (
+          <Input
+            id="jobTitleInput"
+            name="jobTitleInput"
+            value={jobTitleInput}
+            onChange={(e) => setJobTitleInput(e.target.value)}
+            onBlur={() => handleJobTitleSelect(jobTitleInput)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleJobTitleSelect(jobTitleInput);
+                e.preventDefault();
+              }
+            }}
+            required
+          />
+        )}
+      </>
+    );
+  };
+  
+  const handleJobTitleSelect = async (jobTitleName: string) => {
+    if (!formData.RFC) {
+      setError('Debes seleccionar una empresa antes de agregar un nuevo título de trabajo');
+      return;
+    }
+  
+    if (jobTitleName.trim() === "") {
+      setJobTitleInput('');
+      return;
+    }
+  
+    const jobTitle = await createJobTitleIfNotExists(jobTitleName);
+    if (jobTitle) {
+      setJobTitles([...jobTitles, jobTitle]);
+      setFormData({ ...formData, jobTitle: jobTitle.name });
+      setJobTitleInput('');
+      setShowJobTitleInput(false); // Ocultar el input después de agregar el nuevo título de trabajo
+    }
+  };
+  
   
   
 
@@ -767,7 +890,7 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="jobTitle">Título del Trabajo</Label>
-              <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
+              {renderJobTitleSelection()}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="workShift">Turno de Trabajo</Label>
