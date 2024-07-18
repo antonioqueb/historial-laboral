@@ -839,9 +839,9 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-console.log("Selected JobTitle ID:", formData.jobTitle);
-console.log("WorkShift ID:", formData.workShift);
-console.log("ContractType ID:", formData.contractType);
+  console.log("Selected JobTitle ID:", formData.jobTitle);
+  console.log("WorkShift ID:", formData.workShift);
+  console.log("ContractType ID:", formData.contractType);
   
   
 
