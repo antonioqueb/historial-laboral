@@ -22,7 +22,8 @@ export async function POST(req: Request) {
 
   try {
     const formData = await req.formData();
-    console.log("Received form data:", Object.fromEntries(formData));
+    console.log("Received form data:", Object.fromEntries(formData.entries()));
+
     const image = formData.get("profileImage") as File | null;
     const nss = formData.get("socialSecurityNumber") as string | null;
 
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
       name,
       role,
       department,
-      description, // description opcional
+      description,
       companyId,
       CURP,
       RFC,
@@ -124,7 +125,7 @@ export async function POST(req: Request) {
       jobTitle: { connect: { id: jobTitle as string } },
       workShift: { connect: { id: workShift as string } },
       contractType: { connect: { id: contractType as string } },
-      profileImageUrl: imageUrl as string, // Guardar la URL de la imagen...
+      profileImageUrl: imageUrl as string,
       company: {
         connect: {
           id: companyId as string,
@@ -135,7 +136,9 @@ export async function POST(req: Request) {
     if (description) {
       employeeData.description = description as string;
     }
+
     console.log("Employee data to be created:", employeeData);
+
     const employee = await prisma.employee.create({
       data: employeeData,
     });

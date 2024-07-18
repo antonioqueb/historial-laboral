@@ -353,7 +353,6 @@ export default function DashboardEmployedAdmin() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  
   const handleSelectChange = (value: string, field: keyof FormData) => {
     const updatedFormData = { ...formData, [field]: value };
     if (field === 'companyId') {
@@ -371,6 +370,7 @@ export default function DashboardEmployedAdmin() {
       setFormData(updatedFormData);
     }
   };
+  
   
   
   
@@ -655,7 +655,7 @@ export default function DashboardEmployedAdmin() {
               if (value === "new") {
                 setShowContractTypeInput(true);
               } else {
-                handleSelectChange(value, 'contractType');
+                handleSelectChange(value, 'contractType'); // Aquí ya se está enviando el id
               }
             }}
             required
@@ -665,7 +665,7 @@ export default function DashboardEmployedAdmin() {
             </SelectTrigger>
             <SelectContent>
               {contractTypes.map((ct) => (
-                <SelectItem key={ct.id} value={ct.id}>
+                <SelectItem key={ct.id} value={ct.id}> {/* Asegurando que el value sea el id */}
                   {ct.name}
                 </SelectItem>
               ))}
@@ -800,7 +800,7 @@ export default function DashboardEmployedAdmin() {
               if (value === "new") {
                 setShowWorkShiftInput(true);
               } else {
-                handleSelectChange(value, 'workShift');
+                handleSelectChange(value, 'workShift'); // Aquí ya se está enviando el id
               }
             }}
             required
@@ -810,7 +810,7 @@ export default function DashboardEmployedAdmin() {
             </SelectTrigger>
             <SelectContent>
               {workShifts.map((ws) => (
-                <SelectItem key={ws.id} value={ws.id}>
+                <SelectItem key={ws.id} value={ws.id}> {/* Asegurando que el value sea el id */}
                   {ws.name}
                 </SelectItem>
               ))}
