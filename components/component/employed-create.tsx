@@ -402,7 +402,7 @@ export default function DashboardEmployedAdmin() {
         return;
       }
     }
-
+  
     console.log("Form data being sent:", formData); // Para depuración
   
     const form = new FormData();
@@ -453,6 +453,7 @@ export default function DashboardEmployedAdmin() {
       setError(result.error ?? null);
     }
   };
+  
   
   
   
@@ -627,16 +628,16 @@ export default function DashboardEmployedAdmin() {
       setError('Debes seleccionar una empresa antes de agregar un nuevo tipo de contrato');
       return;
     }
-
+  
     if (contractTypeName.trim() === "") {
       setContractTypeInput('');
       return;
     }
-
+  
     const contractType = await createContractTypeIfNotExists(contractTypeName);
     if (contractType) {
       setContractTypes([...contractTypes, contractType]);
-      setFormData({ ...formData, contractType: contractType.id });
+      handleSelectChange(contractType.id, 'contractType');
       setContractTypeInput('');
       setShowContractTypeInput(false); // Ocultar el input después de agregar el nuevo tipo de contrato
     }
@@ -692,7 +693,6 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
 
   // Manejadores de títulos de trabajo
   const handleJobTitleSelect = async (jobTitleName: string) => {
@@ -774,16 +774,16 @@ export default function DashboardEmployedAdmin() {
       setError('Debes seleccionar una empresa antes de agregar un nuevo turno de trabajo');
       return;
     }
-
+  
     if (workShiftName.trim() === "") {
       setWorkShiftInput('');
       return;
     }
-
+  
     const workShift = await createWorkShiftIfNotExists(workShiftName);
     if (workShift) {
       setWorkShifts([...workShifts, workShift]);
-      setFormData({ ...formData, workShift: workShift.id });
+      handleSelectChange(workShift.id, 'workShift');
       setWorkShiftInput('');
       setShowWorkShiftInput(false); // Ocultar el input después de agregar el nuevo turno de trabajo
     }
@@ -838,7 +838,6 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
   
   
 
