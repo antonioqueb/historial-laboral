@@ -695,6 +695,7 @@ export default function DashboardEmployedAdmin() {
   };
   
   
+  
   // Manejadores de títulos de trabajo
   const handleJobTitleSelect = async (jobTitleName: string) => {
     if (!formData.RFC) {
@@ -839,6 +840,7 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
+  
   console.log("Selected JobTitle ID:", formData.jobTitle);
   console.log("WorkShift ID:", formData.workShift);
   console.log("ContractType ID:", formData.contractType);
