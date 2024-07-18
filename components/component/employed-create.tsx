@@ -492,7 +492,7 @@ export default function DashboardEmployedAdmin() {
     const role = await createRoleIfNotExists(roleName);
     if (role) {
       setRoles([...roles, role]);
-      setFormData({ ...formData, role: role.name });
+      setFormData({ ...formData, role: role.id });
       setRoleInput('');
       setShowInput(false); // Ocultar el input después de agregar el nuevo rol
     }
@@ -563,7 +563,7 @@ export default function DashboardEmployedAdmin() {
     const department = await createDepartmentIfNotExists(departmentName);
     if (department) {
       setDepartments([...departments, department]);
-      setFormData({ ...formData, department: department.name });
+      setFormData({ ...formData, department: department.id });
       setDepartmentInput('');
       setShowDepartmentInput(false); // Ocultar el input después de agregar el nuevo departamento
     }
@@ -634,7 +634,7 @@ export default function DashboardEmployedAdmin() {
     const contractType = await createContractTypeIfNotExists(contractTypeName);
     if (contractType) {
       setContractTypes([...contractTypes, contractType]);
-      setFormData({ ...formData, contractType: contractType.name });
+      setFormData({ ...formData, contractType: contractType.id });
       setContractTypeInput('');
       setShowContractTypeInput(false); // Ocultar el input después de agregar el nuevo tipo de contrato
     }
