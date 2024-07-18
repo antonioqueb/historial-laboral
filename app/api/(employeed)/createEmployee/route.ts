@@ -73,7 +73,7 @@ export async function POST(req: Request) {
       contractType,
     } = Object.fromEntries(formData.entries());
 
-    // Agregar la verificación de jobTitle aquí
+    // Verificar que jobTitle exista
     const jobTitleExists = await prisma.jobTitle.findUnique({
       where: { id: jobTitle as string },
     });

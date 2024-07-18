@@ -353,6 +353,7 @@ export default function DashboardEmployedAdmin() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  
   const handleSelectChange = (value: string, field: keyof FormData) => {
     const updatedFormData = { ...formData, [field]: value };
     if (field === 'companyId') {
@@ -370,6 +371,7 @@ export default function DashboardEmployedAdmin() {
       setFormData(updatedFormData);
     }
   };
+  
   
   
   
@@ -650,9 +652,9 @@ export default function DashboardEmployedAdmin() {
             value={formData.contractType}
             onValueChange={(value) => {
               if (value === "new") {
-                setShowContractTypeInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo tipo de contrato"
+                setShowContractTypeInput(true);
               } else {
-                setFormData({ ...formData, contractType: value });
+                handleSelectChange(value, 'contractType');
               }
             }}
             required
@@ -690,6 +692,7 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
+  
 
   // Manejadores de títulos de trabajo
   const handleJobTitleSelect = async (jobTitleName: string) => {
@@ -795,9 +798,9 @@ export default function DashboardEmployedAdmin() {
             value={formData.workShift}
             onValueChange={(value) => {
               if (value === "new") {
-                setShowWorkShiftInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo turno de trabajo"
+                setShowWorkShiftInput(true);
               } else {
-                setFormData({ ...formData, workShift: value });
+                handleSelectChange(value, 'workShift');
               }
             }}
             required
@@ -835,7 +838,7 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-
+  
   
   
 
