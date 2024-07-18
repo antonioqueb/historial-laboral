@@ -640,6 +640,7 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
+
   // Renderizado de selección de tipos de contrato
   const renderContractTypeSelection = () => {
     return (
@@ -661,7 +662,7 @@ export default function DashboardEmployedAdmin() {
             </SelectTrigger>
             <SelectContent>
               {contractTypes.map((ct) => (
-                <SelectItem key={ct.id} value={ct.name}>
+                <SelectItem key={ct.id} value={ct.id}>
                   {ct.name}
                 </SelectItem>
               ))}
@@ -806,7 +807,7 @@ export default function DashboardEmployedAdmin() {
             </SelectTrigger>
             <SelectContent>
               {workShifts.map((ws) => (
-                <SelectItem key={ws.id} value={ws.name}>
+                <SelectItem key={ws.id} value={ws.id}>
                   {ws.name}
                 </SelectItem>
               ))}
@@ -834,6 +835,7 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
+
   
   
 

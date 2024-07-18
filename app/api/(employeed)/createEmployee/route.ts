@@ -1,4 +1,3 @@
-// app/api/(employeed)/createEmployee/route.ts
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
@@ -74,7 +73,6 @@ export async function POST(req: Request) {
       contractType,
     } = Object.fromEntries(formData.entries());
 
-
     // Agregar la verificación de jobTitle aquí
     const jobTitleExists = await prisma.jobTitle.findUnique({
       where: { id: jobTitle as string },
@@ -84,7 +82,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `JobTitle with id ${jobTitle} does not exist` }, { status: 400 });
     }
 
-    // Hacer lo mismo para workShift y contractType
+    // Verificar que workShift exista
     const workShiftExists = await prisma.workShift.findUnique({
       where: { id: workShift as string },
     });
@@ -93,6 +91,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `WorkShift with id ${workShift} does not exist` }, { status: 400 });
     }
 
+    // Verificar que contractType exista
     const contractTypeExists = await prisma.contractType.findUnique({
       where: { id: contractType as string },
     });
@@ -100,7 +99,6 @@ export async function POST(req: Request) {
     if (!contractTypeExists) {
       return NextResponse.json({ error: `ContractType with id ${contractType} does not exist` }, { status: 400 });
     }
-
 
     const employeeData: any = {
       name: name as string,
