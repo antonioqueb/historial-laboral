@@ -8,10 +8,8 @@ export async function GET(req: Request) {
     // Parsear los parámetros de consulta
     const url = new URL(req.url);
     const userId = url.searchParams.get('id');
-    console.log("User ID fetched from query:", userId);
     
     if (!userId) {
-      console.log("User ID not found");
       return NextResponse.json({ message: 'User ID not found' }, { status: 404 });
     }
 

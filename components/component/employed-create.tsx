@@ -593,7 +593,7 @@ export default function DashboardEmployedAdmin() {
             </SelectTrigger>
             <SelectContent>
               {departments.map((dept) => (
-                <SelectItem key={dept.id} value={dept.name}>
+                <SelectItem key={dept.id} value={dept.id}>
                   {dept.name}
                 </SelectItem>
               ))}
@@ -839,7 +839,9 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
+console.log("Selected JobTitle ID:", formData.jobTitle);
+console.log("WorkShift ID:", formData.workShift);
+console.log("ContractType ID:", formData.contractType);
   
   
 
