@@ -400,6 +400,8 @@ export default function DashboardEmployedAdmin() {
         return;
       }
     }
+
+    console.log("Form data being sent:", formData); // Para depuración
   
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
@@ -704,6 +706,7 @@ export default function DashboardEmployedAdmin() {
     if (jobTitle) {
       setJobTitles([...jobTitles, jobTitle]);
       setFormData({ ...formData, jobTitle: jobTitle.id }); // Guardar el ID
+      console.log("Selected JobTitle ID:", jobTitle.id); // Para depuración
       setJobTitleInput('');
       setShowJobTitleInput(false);
     }

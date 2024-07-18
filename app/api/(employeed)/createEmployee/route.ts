@@ -23,6 +23,7 @@ export async function POST(req: Request) {
 
   try {
     const formData = await req.formData();
+    console.log("Received form data:", Object.fromEntries(formData));
     const image = formData.get("profileImage") as File | null;
     const nss = formData.get("socialSecurityNumber") as string | null;
 
@@ -73,6 +74,34 @@ export async function POST(req: Request) {
       contractType,
     } = Object.fromEntries(formData.entries());
 
+
+    // Agregar la verificación de jobTitle aquí
+    const jobTitleExists = await prisma.jobTitle.findUnique({
+      where: { id: jobTitle as string },
+    });
+
+    if (!jobTitleExists) {
+      return NextResponse.json({ error: `JobTitle with id ${jobTitle} does not exist` }, { status: 400 });
+    }
+
+    // Hacer lo mismo para workShift y contractType
+    const workShiftExists = await prisma.workShift.findUnique({
+      where: { id: workShift as string },
+    });
+
+    if (!workShiftExists) {
+      return NextResponse.json({ error: `WorkShift with id ${workShift} does not exist` }, { status: 400 });
+    }
+
+    const contractTypeExists = await prisma.contractType.findUnique({
+      where: { id: contractType as string },
+    });
+
+    if (!contractTypeExists) {
+      return NextResponse.json({ error: `ContractType with id ${contractType} does not exist` }, { status: 400 });
+    }
+
+
     const employeeData: any = {
       name: name as string,
       role: role as string,
@@ -108,7 +137,7 @@ export async function POST(req: Request) {
     if (description) {
       employeeData.description = description as string;
     }
-
+    console.log("Employee data to be created:", employeeData);
     const employee = await prisma.employee.create({
       data: employeeData,
     });
