@@ -95,8 +95,8 @@ export async function POST(req: Request) {
       gender: gender as string,
       bloodType: bloodType as string,
       jobTitle: { connect: { id: jobTitle as string } },
-      workShift: workShift as string,
-      contractType: contractType as string,
+      workShift: { connect: { id: workShift as string } },
+      contractType: { connect: { id: contractType as string } },
       profileImageUrl: imageUrl as string, // Guardar la URL de la imagen...
       company: {
         connect: {

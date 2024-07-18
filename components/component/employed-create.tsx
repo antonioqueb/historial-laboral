@@ -405,12 +405,8 @@ export default function DashboardEmployedAdmin() {
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof FormData];
       if (value !== null && value !== undefined && value !== '') {
-        if (key === 'jobTitle' || key === 'workShift' || key === 'contractType') {
-          // Convertir en JSON
-          form.append(key, JSON.stringify({ connect: { id: value } }));
-        } else {
-          form.append(key, value);
-        }
+        // Enviar directamente el valor sin convertirlo en JSON
+        form.append(key, value.toString());
       }
     });
   
@@ -707,14 +703,11 @@ export default function DashboardEmployedAdmin() {
     const jobTitle = await createJobTitleIfNotExists(jobTitleName);
     if (jobTitle) {
       setJobTitles([...jobTitles, jobTitle]);
-      setFormData({ ...formData, jobTitle: jobTitle.id }); // Guardar el ID del título de trabajo en lugar del nombre
+      setFormData({ ...formData, jobTitle: jobTitle.id }); // Guardar el ID
       setJobTitleInput('');
-      setShowJobTitleInput(false); // Ocultar el input después de agregar el nuevo título de trabajo
+      setShowJobTitleInput(false);
     }
   };
-  
-  
-  
   
 
   // Renderizado de selección de títulos de trabajo
@@ -783,7 +776,7 @@ export default function DashboardEmployedAdmin() {
     const workShift = await createWorkShiftIfNotExists(workShiftName);
     if (workShift) {
       setWorkShifts([...workShifts, workShift]);
-      setFormData({ ...formData, workShift: workShift.name });
+      setFormData({ ...formData, workShift: workShift.id });
       setWorkShiftInput('');
       setShowWorkShiftInput(false); // Ocultar el input después de agregar el nuevo turno de trabajo
     }
