@@ -92,7 +92,7 @@ const WorkShiftSelect: React.FC<WorkShiftSelectProps> = ({ companyRFC, value, on
           <SelectContent>
             {workShifts.map(ws => (
               <SelectItem key={ws.id} value={ws.id}>
-                {ws.id}
+                {ws.name}
               </SelectItem>
             ))}
             <SelectItem value="new">
