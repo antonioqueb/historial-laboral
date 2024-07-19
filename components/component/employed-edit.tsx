@@ -583,12 +583,12 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="workShift">Turno de Trabajo</Label>
-                <WorkShiftSelect selectedValue={formData.workShift} onChange={(value) => setFormData({ ...formData, workShift: value })} />
+                <WorkShiftSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.workShift} onChange={(value) => setFormData({ ...formData, workShift: value })} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="contractType">Tipo de Contrato</Label>
-                <ContractTypeSelect selectedValue={formData.contractType} onChange={(value) => setFormData({ ...formData, contractType: value })} />
-              </div>
+              <WorkShiftSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.workShift} onChange={(value) => setFormData({ ...formData, workShift: value })} />
+              <ContractTypeSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.contractType} onChange={(value) => setFormData({ ...formData, contractType: value })} />
+               </div>
             </div>
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
