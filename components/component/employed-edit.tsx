@@ -441,7 +441,7 @@ export default function DashboardEmployedEdit() {
                 <Label htmlFor="name">Nombre Completo</Label>
                 <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap_4 items-center mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
                 <Input type="date" id="birthDate" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
               </div>
