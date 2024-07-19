@@ -11,7 +11,6 @@ import { z } from "zod";
 import WorkShiftSelect from "./WorkShiftSelect";
 import ContractTypeSelect from "./ContractTypeSelect";
 
-// Aquí están las interfaces de Company y Employee
 export interface Company {
   id: string;
   name: string;
@@ -93,7 +92,6 @@ export default function DashboardEmployedEdit() {
   const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
   const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
 
-  // Aquí se cargan los datos iniciales
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -493,29 +491,28 @@ export default function DashboardEmployedEdit() {
                 </Select>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <h2>Contacto de emergencia</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="emergencyContact">Nombre</Label>
-              <Input 
-                id="emergencyContact" 
-                name="emergencyContact" 
-                value={formData.emergencyContact} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <Label htmlFor="emergencyPhone">Teléfono</Label>
-              <Input 
-                id="emergencyPhone" 
-                name="emergencyPhone" 
-                value={formData.emergencyPhone} 
-                onChange={handleChange} 
-                required 
-              />
-            </div>
-
+                <h2>Contacto de emergencia</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                <Label htmlFor="emergencyContact">Nombre</Label>
+                <Input 
+                  id="emergencyContact" 
+                  name="emergencyContact" 
+                  value={formData.emergencyContact} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+                <Label htmlFor="emergencyPhone">Teléfono</Label>
+                <Input 
+                  id="emergencyPhone" 
+                  name="emergencyPhone" 
+                  value={formData.emergencyPhone} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
             </div>
           </div>
           <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
@@ -586,9 +583,9 @@ export default function DashboardEmployedEdit() {
                 <WorkShiftSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.workShift} onChange={(value) => setFormData({ ...formData, workShift: value })} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-              <WorkShiftSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.workShift} onChange={(value) => setFormData({ ...formData, workShift: value })} />
-              <ContractTypeSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.contractType} onChange={(value) => setFormData({ ...formData, contractType: value })} />
-               </div>
+                <Label htmlFor="contractType">Tipo de Contrato</Label>
+                <ContractTypeSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.contractType} onChange={(value) => setFormData({ ...formData, contractType: value })} />
+              </div>
             </div>
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
