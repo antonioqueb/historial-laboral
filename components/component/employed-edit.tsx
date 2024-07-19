@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
@@ -11,6 +12,7 @@ import { z } from "zod";
 import WorkShiftSelect from "./WorkShiftSelect";
 import ContractTypeSelect from "./ContractTypeSelect";
 
+// Definición de las interfaces
 export interface Company {
   id: string;
   name: string;
@@ -45,6 +47,7 @@ export interface Employee {
   contractType: string;
 }
 
+// Componente principal
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
