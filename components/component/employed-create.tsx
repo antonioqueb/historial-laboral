@@ -9,6 +9,10 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import { getCompaniesList, createEmployee, Company, uploadEmployeeFiles } from "@/utils/fetchData";
 import { z } from "zod";
 import createEmployedSchema from "@/schemas/createEmployedSchema";
+import WorkShiftSelect from "./WorkShiftSelect";
+import ContractTypeSelect from "./ContractTypeSelect";
+
+
 
 // Definición de la estructura de los datos del formulario
 interface FormData {
@@ -77,9 +81,7 @@ export default function DashboardEmployedAdmin() {
   const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
   const [filteredRoles, setFilteredRoles] = useState<{ id: string; name: string }[]>(roles);
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
-  const [contractTypes, setContractTypes] = useState<{ id: string; name: string }[]>([]);
   const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
-  const [workShifts, setWorkShifts] = useState<{ id: string; name: string }[]>([]);
   const [companyRFC, setCompanyRFC] = useState('');
 
 
@@ -91,12 +93,8 @@ export default function DashboardEmployedAdmin() {
   const [showInput, setShowInput] = useState(false);
   const [departmentInput, setDepartmentInput] = useState<string>('');
   const [showDepartmentInput, setShowDepartmentInput] = useState(false);
-  const [contractTypeInput, setContractTypeInput] = useState<string>('');
-  const [showContractTypeInput, setShowContractTypeInput] = useState(false);
   const [jobTitleInput, setJobTitleInput] = useState<string>('');
   const [showJobTitleInput, setShowJobTitleInput] = useState(false);
-  const [workShiftInput, setWorkShiftInput] = useState<string>('');
-  const [showWorkShiftInput, setShowWorkShiftInput] = useState(false);
 
   // Funciones para cargar datos desde la API
   const loadCompanies = async () => {
@@ -167,7 +165,7 @@ export default function DashboardEmployedAdmin() {
       setError('Error al cargar los roles');
     }
   };
-  
+
   const loadDepartments = async () => {
     if (!companyRFC) {
       setDepartments([]);
@@ -180,20 +178,8 @@ export default function DashboardEmployedAdmin() {
       setError('Error al cargar los departamentos');
     }
   };
-  
-  const loadContractTypes = async () => {
-    if (!companyRFC) {
-      setContractTypes([]);
-      return;
-    }
-    try {
-      const data = await fetch(`/api/ContractType?rfc=${companyRFC}`).then(res => res.json());
-      setContractTypes(data);
-    } catch (error) {
-      setError('Error al cargar los tipos de contrato');
-    }
-  };
-  
+
+
   const loadJobTitles = async () => {
     if (!companyRFC) {
       setJobTitles([]);
@@ -206,20 +192,8 @@ export default function DashboardEmployedAdmin() {
       setError('Error al cargar los títulos de trabajo');
     }
   };
-  
-  const loadWorkShifts = async () => {
-    if (!companyRFC) {
-      setWorkShifts([]);
-      return;
-    }
-    try {
-      const data = await fetch(`/api/WorkShift?rfc=${companyRFC}`).then(res => res.json());
-      setWorkShifts(data);
-    } catch (error) {
-      setError('Error al cargar los turnos de trabajo');
-    }
-  };
-  
+
+
 
   // Funciones para crear datos si no existen
   const createRoleIfNotExists = async (roleName: string) => {
@@ -264,26 +238,6 @@ export default function DashboardEmployedAdmin() {
     return null;
   };
 
-  const createContractTypeIfNotExists = async (contractTypeName: string) => {
-    const existingContractType = contractTypes.find(ct => ct.name.toLowerCase() === contractTypeName.toLowerCase());
-    if (existingContractType) {
-      return existingContractType;
-    }
-
-    const response = await fetch(`/api/ContractType?rfc=${formData.RFC}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: contractTypeName }),
-    });
-    const result = await response.json();
-    if (result.id) {
-      setContractTypes([...contractTypes, result]);
-      return result;
-    }
-    return null;
-  };
 
   const createJobTitleIfNotExists = async (jobTitleName: string) => {
     const existingJobTitle = jobTitles.find(jt => jt.name.toLowerCase() === jobTitleName.toLowerCase());
@@ -306,26 +260,7 @@ export default function DashboardEmployedAdmin() {
     return null;
   };
 
-  const createWorkShiftIfNotExists = async (workShiftName: string) => {
-    const existingWorkShift = workShifts.find(ws => ws.name.toLowerCase() === workShiftName.toLowerCase());
-    if (existingWorkShift) {
-      return existingWorkShift;
-    }
 
-    const response = await fetch(`/api/WorkShift?rfc=${formData.RFC}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: workShiftName }),
-    });
-    const result = await response.json();
-    if (result.id) {
-      setWorkShifts([...workShifts, result]);
-      return result;
-    }
-    return null;
-  };
 
   // Efectos para cargar datos iniciales
   useEffect(() => {
@@ -341,12 +276,10 @@ export default function DashboardEmployedAdmin() {
     if (companyRFC) {
       loadRoles();
       loadDepartments();
-      loadContractTypes();
       loadJobTitles();
-      loadWorkShifts();
     }
   }, [companyRFC]);
-  
+
 
   // Manejadores de eventos
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -363,18 +296,16 @@ export default function DashboardEmployedAdmin() {
         loadRoles();
         loadDepartments();
         loadJobTitles();
-        loadContractTypes();
-        loadWorkShifts();
       }
     } else {
       setFormData(updatedFormData);
     }
   };
-  
-  
-  
-  
-  
+
+
+
+
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -388,12 +319,12 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
-  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
-  
+
     try {
       createEmployedSchema.parse(formData);
     } catch (error) {
@@ -402,9 +333,9 @@ export default function DashboardEmployedAdmin() {
         return;
       }
     }
-  
+
     console.log("Form data being sent:", formData); // Para depuración
-  
+
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof FormData];
@@ -413,7 +344,7 @@ export default function DashboardEmployedAdmin() {
         form.append(key, value.toString());
       }
     });
-  
+
     const result = await createEmployee(form);
     if (result.success) {
       if (formData.RFC && additionalFiles.length > 0) {
@@ -453,12 +384,12 @@ export default function DashboardEmployedAdmin() {
       setError(result.error ?? null);
     }
   };
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 
 
 
@@ -622,92 +553,22 @@ export default function DashboardEmployedAdmin() {
     );
   };
 
-  // Manejadores de tipos de contrato
-  const handleContractTypeSelect = async (contractTypeName: string) => {
-    if (!formData.RFC) {
-      setError('Debes seleccionar una empresa antes de agregar un nuevo tipo de contrato');
-      return;
-    }
-  
-    if (contractTypeName.trim() === "") {
-      setContractTypeInput('');
-      return;
-    }
-  
-    const contractType = await createContractTypeIfNotExists(contractTypeName);
-    if (contractType) {
-      setContractTypes([...contractTypes, contractType]);
-      handleSelectChange(contractType.id, 'contractType');
-      setContractTypeInput('');
-      setShowContractTypeInput(false); // Ocultar el input después de agregar el nuevo tipo de contrato
-    }
-  };
 
 
-  // Renderizado de selección de tipos de contrato
-  const renderContractTypeSelection = () => {
-    return (
-      <>
-        {!showContractTypeInput ? (
-          <Select
-            value={formData.contractType}
-            onValueChange={(value) => {
-              if (value === "new") {
-                setShowContractTypeInput(true);
-              } else {
-                handleSelectChange(value, 'contractType'); // Aquí ya se está enviando el id
-              }
-            }}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar tipo de contrato" />
-            </SelectTrigger>
-            <SelectContent>
-              {contractTypes.map((ct) => (
-                <SelectItem key={ct.id} value={ct.id}> {/* Asegurando que el value sea el id */}
-                  {ct.name}
-                </SelectItem>
-              ))}
-              <SelectItem value="new">
-                <span className="text-blue-600">Agregar nuevo tipo de contrato</span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        ) : (
-          <Input
-            id="contractTypeInput"
-            name="contractTypeInput"
-            value={contractTypeInput}
-            onChange={(e) => setContractTypeInput(e.target.value)}
-            onBlur={() => handleContractTypeSelect(contractTypeInput)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleContractTypeSelect(contractTypeInput);
-                e.preventDefault();
-              }
-            }}
-            required
-          />
-        )}
-      </>
-    );
-  };
-  
-  
-  
+
+
   // Manejadores de títulos de trabajo
   const handleJobTitleSelect = async (jobTitleName: string) => {
     if (!formData.RFC) {
       setError('Debes seleccionar una empresa antes de agregar un nuevo título de trabajo');
       return;
     }
-  
+
     if (jobTitleName.trim() === "") {
       setJobTitleInput('');
       return;
     }
-  
+
     const jobTitle = await createJobTitleIfNotExists(jobTitleName);
     if (jobTitle) {
       setJobTitles([...jobTitles, jobTitle]);
@@ -717,7 +578,7 @@ export default function DashboardEmployedAdmin() {
       setShowJobTitleInput(false);
     }
   };
-  
+
 
   // Renderizado de selección de títulos de trabajo
   const renderJobTitleSelection = () => {
@@ -768,84 +629,9 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
 
-  // Manejadores de turnos de trabajo
-  const handleWorkShiftSelect = async (workShiftName: string) => {
-    if (!formData.RFC) {
-      setError('Debes seleccionar una empresa antes de agregar un nuevo turno de trabajo');
-      return;
-    }
-  
-    if (workShiftName.trim() === "") {
-      setWorkShiftInput('');
-      return;
-    }
-  
-    const workShift = await createWorkShiftIfNotExists(workShiftName);
-    if (workShift) {
-      setWorkShifts([...workShifts, workShift]);
-      handleSelectChange(workShift.id, 'workShift');
-      setWorkShiftInput('');
-      setShowWorkShiftInput(false); // Ocultar el input después de agregar el nuevo turno de trabajo
-    }
-  };
 
-  // Renderizado de selección de turnos de trabajo
-  const renderWorkShiftSelection = () => {
-    return (
-      <>
-        {!showWorkShiftInput ? (
-          <Select
-            value={formData.workShift}
-            onValueChange={(value) => {
-              if (value === "new") {
-                setShowWorkShiftInput(true);
-              } else {
-                handleSelectChange(value, 'workShift'); // Aquí ya se está enviando el id
-              }
-            }}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar turno de trabajo" />
-            </SelectTrigger>
-            <SelectContent>
-              {workShifts.map((ws) => (
-                <SelectItem key={ws.id} value={ws.id}> {/* Asegurando que el value sea el id */}
-                  {ws.name}
-                </SelectItem>
-              ))}
-              <SelectItem value="new">
-                <span className="text-blue-600">Agregar nuevo turno de trabajo</span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        ) : (
-          <Input
-            id="workShiftInput"
-            name="workShiftInput"
-            value={workShiftInput}
-            onChange={(e) => setWorkShiftInput(e.target.value)}
-            onBlur={() => handleWorkShiftSelect(workShiftInput)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleWorkShiftSelect(workShiftInput);
-                e.preventDefault();
-              }
-            }}
-            required
-          />
-        )}
-      </>
-    );
-  };
-  
-  console.log("Selected JobTitle ID:", formData.jobTitle);
-  console.log("WorkShift ID:", formData.workShift);
-  console.log("ContractType ID:", formData.contractType);
-  
-  
+
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
@@ -938,22 +724,22 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="emergencyContact">Nombre</Label>
-              <Input 
-                id="emergencyContact" 
-                name="emergencyContact" 
-                value={formData.emergencyContact} 
-                onChange={handleChange} 
-                required 
+              <Input
+                id="emergencyContact"
+                name="emergencyContact"
+                value={formData.emergencyContact}
+                onChange={handleChange}
+                required
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="emergencyPhone">Teléfono</Label>
-              <Input 
-                id="emergencyPhone" 
-                name="emergencyPhone" 
-                value={formData.emergencyPhone} 
-                onChange={handleChange} 
-                required 
+              <Input
+                id="emergencyPhone"
+                name="emergencyPhone"
+                value={formData.emergencyPhone}
+                onChange={handleChange}
+                required
               />
             </div>
 
@@ -962,11 +748,11 @@ export default function DashboardEmployedAdmin() {
         <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
         <div className="grid gap-6 md:grid-cols-2 py-4">
           <div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-            <Label htmlFor="role">Rol</Label>
-            {renderRoleSelection()}
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
+              <Label htmlFor="role">Rol</Label>
+              {renderRoleSelection()}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="department">Departamento</Label>
               {renderDepartmentSelection()}
             </div>
@@ -991,12 +777,20 @@ export default function DashboardEmployedAdmin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
               <Label htmlFor="workShift">Turno de Trabajo</Label>
-              {renderWorkShiftSelection()}
+              <WorkShiftSelect
+                companyRFC={companyRFC}
+                value={formData.workShift}
+                onChange={(value) => handleSelectChange(value, 'workShift')}
+              />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-            <Label htmlFor="contractType">Tipo de Contrato</Label>
-            {renderContractTypeSelection()}
-          </div>
+              <Label htmlFor="contractType">Tipo de Contrato</Label>
+              <ContractTypeSelect
+                companyRFC={companyRFC}
+                value={formData.contractType}
+                onChange={(value) => handleSelectChange(value, 'contractType')}
+              />
+            </div>
           </div>
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
