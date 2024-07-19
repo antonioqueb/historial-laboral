@@ -380,36 +380,44 @@ export default function DashboardEmployedEdit() {
           <Label className="mb-2" htmlFor="company">
             Seleccionar Empresa
           </Label>
-          <Select value={selectedCompanyRFC ?? undefined} onValueChange={(value) => setSelectedCompanyRFC(value)} required>
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar empresa" />
-            </SelectTrigger>
-            <SelectContent>
-              {companies.map((company) => (
-                <SelectItem key={company.rfc} value={company.rfc}>
-                  {company.razonSocial}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {companies.length > 0 ? (
+            <Select value={selectedCompanyRFC ?? ''} onValueChange={(value) => setSelectedCompanyRFC(value)} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar empresa" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem key={company.rfc} value={company.rfc}>
+                    {company.razonSocial}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <p>No hay empresas disponibles</p>
+          )}
         </div>
       ) : !selectedEmployeeNss ? (
         <div>
           <Label className="mb-2" htmlFor="employee">
             Seleccionar Empleado
           </Label>
-          <Select value={selectedEmployeeNss ?? undefined} onValueChange={(value) => setSelectedEmployeeNss(value)} required>
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar empleado" />
-            </SelectTrigger>
-            <SelectContent>
-              {employees.map((employee) => (
-                <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
-                  {employee.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {employees.length > 0 ? (
+            <Select value={selectedEmployeeNss ?? ''} onValueChange={(value) => setSelectedEmployeeNss(value)} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar empleado" />
+              </SelectTrigger>
+              <SelectContent>
+                {employees.map((employee) => (
+                  <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
+                    {employee.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <p>No hay empleados disponibles</p>
+          )}
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
