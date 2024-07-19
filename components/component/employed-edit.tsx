@@ -8,7 +8,10 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@
 import Link from 'next/link';
 import { editEmployeeSchema } from "@/schemas/editEmployeeSchema";
 import { z } from "zod";
+import WorkShiftSelect from "./WorkShiftSelect";
+import ContractTypeSelect from "./ContractTypeSelect";
 
+// Aquí están las interfaces de Company y Employee
 export interface Company {
   id: string;
   name: string;
@@ -82,15 +85,19 @@ export default function DashboardEmployedEdit() {
   });
 
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
+  const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
+  const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
   const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
 
+  // Aquí se cargan los datos iniciales
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const res = await fetch('https://historiallaboral.com/api/getUserId');
+        const res = await fetch('/api/getUserId');
         if (res.ok) {
           const data = await res.json();
           return data.id;
@@ -104,7 +111,7 @@ export default function DashboardEmployedEdit() {
 
     const fetchCompanies = async (userId: string) => {
       try {
-        const res = await fetch('https://historiallaboral.com/api/listCompanies');
+        const res = await fetch('/api/listCompanies');
         if (res.ok) {
           const data = await res.json();
           const userCompanies = data.companies.filter((company: Company) => company.userId === userId);
@@ -132,7 +139,7 @@ export default function DashboardEmployedEdit() {
     if (selectedCompanyRFC) {
       const fetchEmployeesByCompanyRFC = async (rfc: string) => {
         try {
-          const res = await fetch(`https://historiallaboral.com/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
+          const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
           if (res.ok) {
             const data = await res.json();
             setEmployees(data.employees);
@@ -152,7 +159,7 @@ export default function DashboardEmployedEdit() {
     if (selectedEmployeeNss) {
       const fetchEmployee = async () => {
         try {
-          const res = await fetch(`https://historiallaboral.com/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
+          const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
           if (res.ok) {
             const { employee } = await res.json();
             setEmployeeData(employee);
@@ -232,7 +239,7 @@ export default function DashboardEmployedEdit() {
     });
 
     try {
-      const response = await fetch('https://historiallaboral.com/api/editEmployee', {
+      const response = await fetch('/api/editEmployee', {
         method: 'PATCH',
         body: form,
       });
@@ -299,7 +306,46 @@ export default function DashboardEmployedEdit() {
       console.error('Error loading education levels:', error);
     }
   };
-  
+
+  const loadRoles = async () => {
+    if (!selectedCompanyRFC) {
+      setRoles([]);
+      return;
+    }
+    try {
+      const data = await fetch(`/api/Roles?rfc=${selectedCompanyRFC}`).then(res => res.json());
+      setRoles(data);
+    } catch (error) {
+      setError('Error al cargar los roles');
+    }
+  };
+
+  const loadDepartments = async () => {
+    if (!selectedCompanyRFC) {
+      setDepartments([]);
+      return;
+    }
+    try {
+      const data = await fetch(`/api/Department?rfc=${selectedCompanyRFC}`).then(res => res.json());
+      setDepartments(data);
+    } catch (error) {
+      setError('Error al cargar los departamentos');
+    }
+  };
+
+  const loadJobTitles = async () => {
+    if (!selectedCompanyRFC) {
+      setJobTitles([]);
+      return;
+    }
+    try {
+      const data = await fetch(`/api/JobTitle?rfc=${selectedCompanyRFC}`).then(res => res.json());
+      setJobTitles(data);
+    } catch (error) {
+      setError('Error al cargar los títulos de trabajo');
+    }
+  };
+
   useEffect(() => {
     loadBloodTypes();
     loadGenders();
@@ -307,6 +353,14 @@ export default function DashboardEmployedEdit() {
     loadNationalities();
     loadEducationLevels();
   }, []);
+
+  useEffect(() => {
+    if (selectedCompanyRFC) {
+      loadRoles();
+      loadDepartments();
+      loadJobTitles();
+    }
+  }, [selectedCompanyRFC]);
 
   const handleNationalitySearch = (searchTerm: string) => {
     const filtered = nationalities.filter(nationality =>
@@ -474,10 +528,11 @@ export default function DashboardEmployedEdit() {
                     <SelectValue placeholder="Seleccionar rol" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="manager">Gerente</SelectItem>
-                    <SelectItem value="developer">Desarrollador</SelectItem>
-                    <SelectItem value="designer">Diseñador</SelectItem>
-                    <SelectItem value="hr">Recursos Humanos</SelectItem>
+                    {roles.map((role) => (
+                      <SelectItem key={role.id} value={role.name}>
+                        {role.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -488,10 +543,11 @@ export default function DashboardEmployedEdit() {
                     <SelectValue placeholder="Seleccionar departamento" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="engineering">Ingeniería</SelectItem>
-                    <SelectItem value="design">Diseño</SelectItem>
-                    <SelectItem value="hr">Recursos Humanos</SelectItem>
-                    <SelectItem value="marketing">Mercadotecnia</SelectItem>
+                    {departments.map((department) => (
+                      <SelectItem key={department.id} value={department.name}>
+                        {department.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -512,15 +568,26 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="jobTitle">Título del Trabajo</Label>
-                <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} required />
+                <Select value={formData.jobTitle} onValueChange={(value) => setFormData({ ...formData, jobTitle: value })} required>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar título del trabajo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {jobTitles.map((jobTitle) => (
+                      <SelectItem key={jobTitle.id} value={jobTitle.name}>
+                        {jobTitle.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="workShift">Turno de Trabajo</Label>
-                <Input id="workShift" name="workShift" value={formData.workShift} onChange={handleChange} required />
+                <WorkShiftSelect selectedValue={formData.workShift} onChange={(value) => setFormData({ ...formData, workShift: value })} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="contractType">Tipo de Contrato</Label>
-                <Input id="contractType" name="contractType" value={formData.contractType} onChange={handleChange} required />
+                <ContractTypeSelect selectedValue={formData.contractType} onChange={(value) => setFormData({ ...formData, contractType: value })} />
               </div>
             </div>
             <div>
