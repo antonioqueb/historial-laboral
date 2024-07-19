@@ -23,9 +23,15 @@ export async function PATCH(req: Request) {
 
   try {
     const formData = await req.formData();
+    console.log("Received formData:", Array.from(formData.entries()));
+    
     const image = formData.get("profileImage") as File | null;
     const nss = formData.get("socialSecurityNumber") as string | null;
     const id = formData.get("id") as string;
+
+    console.log("Received image:", image);
+    console.log("Received NSS:", nss);
+    console.log("Received ID:", id);
 
     let imageUrl: string | null = null;
     if (image && nss) {
@@ -40,6 +46,7 @@ export async function PATCH(req: Request) {
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error("Error uploading image:", errorText);
         return NextResponse.json({ error: `Failed to upload image: ${errorText}` }, { status: response.status });
       }
 
@@ -49,6 +56,8 @@ export async function PATCH(req: Request) {
     }
 
     const updateData: Record<string, any> = Object.fromEntries(formData.entries());
+    console.log("Initial updateData:", updateData);
+    
     delete updateData.id; // Remove id from update data as it should not be updated
 
     if (imageUrl) {
@@ -68,16 +77,22 @@ export async function PATCH(req: Request) {
       updateData.hireDate = new Date(updateData.hireDate).toISOString();
     }
 
+    console.log("Processed updateData before deleting unwanted fields:", updateData);
+
     // Eliminar campos que no deberían ser actualizados
     delete updateData.company;
     delete updateData.description; // Eliminar description del objeto de actualización
     delete updateData.bankAccountNumber; // Eliminar bankAccountNumber del objeto de actualización
     delete updateData.clabeNumber; // Eliminar clabeNumber del objeto de actualización
 
+    console.log("Final updateData to be sent to Prisma:", updateData);
+
     const updatedEmployee = await prisma.employee.update({
       where: { id: id as string },
       data: updateData,
     });
+
+    console.log("Updated employee:", updatedEmployee);
 
     return NextResponse.json({ employee: updatedEmployee }, { status: 200 });
   } catch (error) {
