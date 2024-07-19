@@ -11,7 +11,6 @@ import { z } from "zod";
 import WorkShiftSelect from "./WorkShiftSelect";
 import ContractTypeSelect from "./ContractTypeSelect";
 
-// Definición de las interfaces
 export interface Company {
   id: string;
   name: string;
@@ -46,7 +45,6 @@ export interface Employee {
   contractType: string;
 }
 
-// Componente principal
 export default function DashboardEmployedEdit() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -296,7 +294,7 @@ export default function DashboardEmployedEdit() {
       console.error('Error loading nationalities:', error);
     }
   };
-  
+
   const loadEducationLevels = async () => {
     try {
       const response = await fetch('/api/EducationLevels');
@@ -380,23 +378,24 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empresa
           </Label>
           {companies.length > 0 ? (
-           <Select 
-           value={selectedCompanyRFC || "default-value"} 
-           onValueChange={(value) => setSelectedCompanyRFC(value)} 
-           required
-         >
-           <SelectTrigger>
-             <SelectValue placeholder="Seleccionar empresa" />
-           </SelectTrigger>
-           <SelectContent>
-             {companies.map((company) => (
-               <SelectItem key={company.rfc} value={company.rfc || "default-value"}>
-                 {company.razonSocial}
-               </SelectItem>
-             ))}
-           </SelectContent>
-         </Select>
-         
+            <Select 
+              value={selectedCompanyRFC || ""}
+              onValueChange={(value) => setSelectedCompanyRFC(value)}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar empresa" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies
+                  .filter(company => company.rfc.trim() !== "") // Filtra empresas con rfc no vacíos
+                  .map((company) => (
+                    <SelectItem key={company.rfc} value={company.rfc}>
+                      {company.razonSocial}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
           ) : (
             <p>No hay empresas disponibles</p>
           )}
@@ -407,23 +406,24 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empleado
           </Label>
           {employees.length > 0 ? (
-           <Select 
-           value={selectedEmployeeNss || "default-value"} 
-           onValueChange={(value) => setSelectedEmployeeNss(value)} 
-           required
-         >
-           <SelectTrigger>
-             <SelectValue placeholder="Seleccionar empleado" />
-           </SelectTrigger>
-           <SelectContent>
-             {employees.map((employee) => (
-               <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber || "default-value"}>
-                 {employee.name}
-               </SelectItem>
-             ))}
-           </SelectContent>
-         </Select>
-         
+            <Select 
+              value={selectedEmployeeNss || ""}
+              onValueChange={(value) => setSelectedEmployeeNss(value)}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar empleado" />
+              </SelectTrigger>
+              <SelectContent>
+                {employees
+                  .filter(employee => employee.socialSecurityNumber.trim() !== "") // Filtra empleados con NSS no vacíos
+                  .map((employee) => (
+                    <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
+                      {employee.name}
+                    </SelectItem>
+                  ))}
+              </SelectContent>
+            </Select>
           ) : (
             <p>No hay empleados disponibles</p>
           )}
@@ -545,11 +545,13 @@ export default function DashboardEmployedEdit() {
                     <SelectValue placeholder="Seleccionar rol" />
                   </SelectTrigger>
                   <SelectContent>
-                    {roles.map((role) => (
-                      <SelectItem key={role.id} value={role.name}>
-                        {role.name}
-                      </SelectItem>
-                    ))}
+                    {roles
+                      .filter(role => role.id.trim() !== "") // Filtra roles con id no vacíos
+                      .map((role) => (
+                        <SelectItem key={role.id} value={role.name}>
+                          {role.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -560,11 +562,13 @@ export default function DashboardEmployedEdit() {
                     <SelectValue placeholder="Seleccionar departamento" />
                   </SelectTrigger>
                   <SelectContent>
-                    {departments.map((department) => (
-                      <SelectItem key={department.id} value={department.name}>
-                        {department.name}
-                      </SelectItem>
-                    ))}
+                    {departments
+                      .filter(department => department.id.trim() !== "") // Filtra departamentos con id no vacíos
+                      .map((department) => (
+                        <SelectItem key={department.id} value={department.name}>
+                          {department.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -575,11 +579,13 @@ export default function DashboardEmployedEdit() {
                     <SelectValue placeholder="Seleccionar empresa" />
                   </SelectTrigger>
                   <SelectContent>
-                    {companies.map((company) => (
-                      <SelectItem key={company.id} value={company.id}>
-                        {company.razonSocial}
-                      </SelectItem>
-                    ))}
+                    {companies
+                      .filter(company => company.id.trim() !== "") // Filtra empresas con id no vacíos
+                      .map((company) => (
+                        <SelectItem key={company.id} value={company.id}>
+                          {company.razonSocial}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -590,11 +596,13 @@ export default function DashboardEmployedEdit() {
                     <SelectValue placeholder="Seleccionar título del trabajo" />
                   </SelectTrigger>
                   <SelectContent>
-                    {jobTitles.map((jobTitle) => (
-                      <SelectItem key={jobTitle.id} value={jobTitle.name}>
-                        {jobTitle.name}
-                      </SelectItem>
-                    ))}
+                    {jobTitles
+                      .filter(jobTitle => jobTitle.id.trim() !== "") // Filtra títulos de trabajo con id no vacíos
+                      .map((jobTitle) => (
+                        <SelectItem key={jobTitle.id} value={jobTitle.name}>
+                          {jobTitle.name}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
