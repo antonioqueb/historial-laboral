@@ -101,6 +101,7 @@ export default function DashboardEmployedEdit() {
         const res = await fetch('/api/getUserId');
         if (res.ok) {
           const data = await res.json();
+          console.log("User ID:", data.id); // Log the user ID
           return data.id;
         } else {
           setError('Failed to fetch user ID');
@@ -117,6 +118,7 @@ export default function DashboardEmployedEdit() {
           const data = await res.json();
           const userCompanies = data.companies.filter((company: Company) => company.userId === userId);
           setCompanies(userCompanies);
+          console.log("Companies:", userCompanies); // Log the companies data
           return userCompanies;
         } else {
           setError('Failed to fetch companies');
@@ -144,6 +146,7 @@ export default function DashboardEmployedEdit() {
           if (res.ok) {
             const data = await res.json();
             setEmployees(data.employees);
+            console.log("Employees:", data.employees); // Log the employees data
           } else {
             setError('Failed to fetch employees');
           }
@@ -164,6 +167,7 @@ export default function DashboardEmployedEdit() {
           if (res.ok) {
             const { employee } = await res.json();
             setEmployeeData(employee);
+            console.log("Employee data:", employee); // Log the employee data
           } else {
             setError('Failed to fetch employee data');
           }
@@ -204,17 +208,20 @@ export default function DashboardEmployedEdit() {
         contractType: employeeData.contractType || '',
         profileImage: null,
       });
+      console.log("Form data initialized:", formData); // Log the initialized form data
     }
   }, [employeeData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log("Form data changed:", formData); // Log form data changes
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormData({ ...formData, profileImage: e.target.files[0] });
     }
+    console.log("Profile image changed:", formData.profileImage); // Log profile image change
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -239,6 +246,8 @@ export default function DashboardEmployedEdit() {
       }
     });
 
+    console.log("Form data submitted:", formData); // Log the final form data being submitted
+
     try {
       const response = await fetch('/api/editEmployee', {
         method: 'PATCH',
@@ -262,6 +271,7 @@ export default function DashboardEmployedEdit() {
       const response = await fetch('/api/bloodTypes');
       const data = await response.json();
       setBloodTypes(data.bloodTypes);
+      console.log("Blood types:", data.bloodTypes); // Log blood types
     } catch (error) {
       console.error('Error loading blood types:', error);
     }
@@ -272,6 +282,7 @@ export default function DashboardEmployedEdit() {
       const response = await fetch('/api/Genders');
       const data = await response.json();
       setGenders(data.genders);
+      console.log("Genders:", data.genders); // Log genders
     } catch (error) {
       console.error('Error loading genders:', error);
     }
@@ -282,6 +293,7 @@ export default function DashboardEmployedEdit() {
       const response = await fetch('/api/CivilStatus');
       const data = await response.json();
       setCivilStatuses(data.civilStatuses);
+      console.log("Civil statuses:", data.civilStatuses); // Log civil statuses
     } catch (error) {
       console.error('Error loading civil statuses:', error);
     }
@@ -293,6 +305,7 @@ export default function DashboardEmployedEdit() {
       const data = await response.json();
       setNationalities(data.nationalities);
       setFilteredNationalities(data.nationalities);
+      console.log("Nationalities:", data.nationalities); // Log nationalities
     } catch (error) {
       console.error('Error loading nationalities:', error);
     }
@@ -303,6 +316,7 @@ export default function DashboardEmployedEdit() {
       const response = await fetch('/api/EducationLevels');
       const data = await response.json();
       setEducationLevels(data.educationLevels);
+      console.log("Education levels:", data.educationLevels); // Log education levels
     } catch (error) {
       console.error('Error loading education levels:', error);
     }
@@ -316,6 +330,7 @@ export default function DashboardEmployedEdit() {
     try {
       const data = await fetch(`/api/Roles?rfc=${selectedCompanyRFC}`).then(res => res.json());
       setRoles(data);
+      console.log("Roles:", data); // Log roles
     } catch (error) {
       setError('Error al cargar los roles');
     }
@@ -329,6 +344,7 @@ export default function DashboardEmployedEdit() {
     try {
       const data = await fetch(`/api/Department?rfc=${selectedCompanyRFC}`).then(res => res.json());
       setDepartments(data);
+      console.log("Departments:", data); // Log departments
     } catch (error) {
       setError('Error al cargar los departamentos');
     }
@@ -342,6 +358,7 @@ export default function DashboardEmployedEdit() {
     try {
       const data = await fetch(`/api/JobTitle?rfc=${selectedCompanyRFC}`).then(res => res.json());
       setJobTitles(data);
+      console.log("Job titles:", data); // Log job titles
     } catch (error) {
       setError('Error al cargar los títulos de trabajo');
     }
