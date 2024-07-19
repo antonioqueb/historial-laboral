@@ -76,7 +76,7 @@ const WorkShiftSelect: React.FC<WorkShiftSelectProps> = ({ companyRFC, value, on
     <>
       {!showWorkShiftInput ? ( // Muestra el componente de selección si no se está agregando un nuevo turno
         <Select
-          value={value}
+          value={value || ""}
           onValueChange={(value) => {
             if (value === "new") { // Si se selecciona "nuevo", muestra el campo de entrada para agregar un nuevo turno
               setShowWorkShiftInput(true);
@@ -91,7 +91,7 @@ const WorkShiftSelect: React.FC<WorkShiftSelectProps> = ({ companyRFC, value, on
           </SelectTrigger>
           <SelectContent>
             {workShifts.map(ws => (
-              <SelectItem key={ws.id} value={ws.id}>
+              <SelectItem key={ws.id} value={ws.id || "default-value"}>
                 {ws.name}
               </SelectItem>
             ))}

@@ -76,7 +76,7 @@ const ContractTypeSelect: React.FC<ContractTypeSelectProps> = ({ companyRFC, val
     <>
       {!showContractTypeInput ? ( // Muestra el componente de selección si no se está agregando un nuevo tipo
         <Select
-          value={value}
+          value={value || ""}
           onValueChange={(value) => {
             if (value === "new") { // Si se selecciona "nuevo", muestra el campo de entrada para agregar un nuevo tipo
               setShowContractTypeInput(true);
@@ -91,7 +91,7 @@ const ContractTypeSelect: React.FC<ContractTypeSelectProps> = ({ companyRFC, val
           </SelectTrigger>
           <SelectContent>
             {contractTypes.map(ct => (
-              <SelectItem key={ct.id} value={ct.id}>
+              <SelectItem key={ct.id} value={ct.id || "default-value"}>
                 {ct.name}
               </SelectItem>
             ))}

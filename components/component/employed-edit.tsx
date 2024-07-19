@@ -380,18 +380,23 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empresa
           </Label>
           {companies.length > 0 ? (
-            <Select value={selectedCompanyRFC ?? ''} onValueChange={(value) => setSelectedCompanyRFC(value)} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar empresa" />
-              </SelectTrigger>
-              <SelectContent>
-                {companies.map((company) => (
-                  <SelectItem key={company.rfc} value={company.rfc}>
-                    {company.razonSocial}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+           <Select 
+           value={selectedCompanyRFC || "default-value"} 
+           onValueChange={(value) => setSelectedCompanyRFC(value)} 
+           required
+         >
+           <SelectTrigger>
+             <SelectValue placeholder="Seleccionar empresa" />
+           </SelectTrigger>
+           <SelectContent>
+             {companies.map((company) => (
+               <SelectItem key={company.rfc} value={company.rfc || "default-value"}>
+                 {company.razonSocial}
+               </SelectItem>
+             ))}
+           </SelectContent>
+         </Select>
+         
           ) : (
             <p>No hay empresas disponibles</p>
           )}
@@ -402,18 +407,23 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empleado
           </Label>
           {employees.length > 0 ? (
-            <Select value={selectedEmployeeNss ?? ''} onValueChange={(value) => setSelectedEmployeeNss(value)} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar empleado" />
-              </SelectTrigger>
-              <SelectContent>
-                {employees.map((employee) => (
-                  <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
-                    {employee.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+           <Select 
+           value={selectedEmployeeNss || "default-value"} 
+           onValueChange={(value) => setSelectedEmployeeNss(value)} 
+           required
+         >
+           <SelectTrigger>
+             <SelectValue placeholder="Seleccionar empleado" />
+           </SelectTrigger>
+           <SelectContent>
+             {employees.map((employee) => (
+               <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber || "default-value"}>
+                 {employee.name}
+               </SelectItem>
+             ))}
+           </SelectContent>
+         </Select>
+         
           ) : (
             <p>No hay empleados disponibles</p>
           )}
