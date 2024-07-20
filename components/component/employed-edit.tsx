@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import ContractTypeSelect from "./ContractTypeSelect"; // Asegúrate de ajustar la ruta si es necesario
+import ContractTypeSelect from "./ContractTypeSelect";
+import WorkShiftSelect from "./WorkShiftSelect"; // Asegúrate de ajustar la ruta si es necesario
 
 export interface Company {
   id: string;
@@ -145,6 +146,15 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  const handleWorkShiftChange = (value: string) => {
+    if (employeeData) {
+      setEmployeeData({
+        ...employeeData,
+        workShift: { ...employeeData.workShift, id: value }
+      });
+    }
+  };
+
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
@@ -234,7 +244,12 @@ export default function DashboardEmployedEdit() {
                 <p><strong>Departamento:</strong> {employeeData.department}</p>
                 <p><strong>Empresa:</strong> {companies.find(company => company.id === employeeData.companyId)?.razonSocial}</p>
                 <p><strong>Título del Trabajo:</strong> {employeeData.jobTitle?.name}</p>
-                <p><strong>Turno de Trabajo:</strong> {employeeData.workShift?.name}</p>
+                <p><strong>Turno de Trabajo:</strong></p>
+                <WorkShiftSelect
+                  companyRFC={selectedCompanyRFC ?? ''}
+                  value={employeeData.workShift?.id}
+                  onChange={handleWorkShiftChange}
+                />
                 <p><strong>Tipo de Contrato:</strong></p>
                 <ContractTypeSelect
                   companyRFC={selectedCompanyRFC ?? ''}
@@ -256,7 +271,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div>
                 <p><strong>Foto de Perfil:</strong></p>
-              </div>
+                 </div>
             </div>
           </div>
         )

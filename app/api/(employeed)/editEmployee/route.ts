@@ -13,6 +13,42 @@ interface ExtendedSession {
   };
 }
 
+export interface Employee {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  companyId: string;
+  socialSecurityNumber: string;
+  CURP: string;
+  RFC: string;
+  address: string;
+  phoneNumber: string;
+  email: string;
+  birthDate: string;
+  hireDate: string;
+  emergencyContact: string;
+  emergencyPhone: string;
+  maritalStatus: string;
+  nationality: string;
+  educationLevel: string;
+  gender: string;
+  bloodType: string;
+  jobTitle: {
+    id: string;
+    name: string;
+  };
+  workShift: {
+    id: string;
+    name: string;
+  };
+  contractType: {
+    id: string;
+    name: string;
+  };
+}
+
+
 const prisma = new PrismaClient();
 
 export async function PATCH(req: Request) {
@@ -28,11 +64,6 @@ export async function PATCH(req: Request) {
     const image = formData.get("profileImage") as File | null;
     const nss = formData.get("socialSecurityNumber") as string | null;
     const id = formData.get("id") as string;
-
-    console.log("Received image:", image);
-    console.log("Received NSS:", nss);
-    console.log("Received ID:", id);
-
     let imageUrl: string | null = null;
     if (image && nss) {
       const uploadForm = new FormData();
