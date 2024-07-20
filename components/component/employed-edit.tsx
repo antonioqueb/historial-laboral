@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import ContractTypeSelect from "./ContractTypeSelect"; // Asegúrate de ajustar la ruta si es necesario
 
 export interface Company {
   id: string;
@@ -32,14 +33,8 @@ export interface Employee {
   educationLevel: string;
   gender: string;
   bloodType: string;
-  jobTitle: {
-    id: string;
-    name: string;
-  };
-  workShift: {
-    id: string;
-    name: string;
-  };
+  jobTitle: string;
+  workShift: string;
   contractType: {
     id: string;
     name: string;
@@ -135,6 +130,15 @@ export default function DashboardEmployedEdit() {
     }
   }, [selectedEmployeeNss]);
 
+  const handleContractTypeChange = (value: string) => {
+    if (employeeData) {
+      setEmployeeData({
+        ...employeeData,
+        contractType: { ...employeeData.contractType, id: value }
+      });
+    }
+  };
+
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
@@ -225,7 +229,12 @@ export default function DashboardEmployedEdit() {
                 <p><strong>Empresa:</strong> {companies.find(company => company.id === employeeData.companyId)?.razonSocial}</p>
                 <p><strong>Título del Trabajo:</strong> {employeeData.jobTitle?.name}</p>
                 <p><strong>Turno de Trabajo:</strong> {employeeData.workShift?.name}</p>
-                <p><strong>Tipo de Contrato:</strong> {employeeData.contractType?.name}</p>
+                <p><strong>Tipo de Contrato:</strong></p>
+                <ContractTypeSelect
+                  companyRFC={selectedCompanyRFC ?? ''}
+                  value={employeeData.contractType?.id}
+                  onChange={handleContractTypeChange}
+                />
               </div>
               <div>
                 <p><strong>Fecha de Contratación:</strong> {employeeData.hireDate}</p>
