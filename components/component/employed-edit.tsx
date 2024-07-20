@@ -232,9 +232,6 @@ export default function DashboardEmployedEdit() {
               </div>
               <div>
                 <p><strong>Foto de Perfil:</strong></p>
-                {employeeData.profileImage && (
-                  <img src={employeeData.profileImage} alt="Foto de perfil" />
-                )}
               </div>
             </div>
           </div>
