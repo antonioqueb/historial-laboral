@@ -33,8 +33,14 @@ export interface Employee {
   educationLevel: string;
   gender: string;
   bloodType: string;
-  jobTitle: string;
-  workShift: string;
+  jobTitle: {
+    id: string;
+    name: string;
+  };
+  workShift: {
+    id: string;
+    name: string;
+  };
   contractType: {
     id: string;
     name: string;
