@@ -188,54 +188,59 @@ export default function DashboardEmployedEdit() {
           )}
         </div>
       ) : (
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
-          <div className="grid gap-6 md:grid-cols-2 py-4">
-            <div>
-              <p><strong>Número de Seguridad Social:</strong> {employeeData?.socialSecurityNumber}</p>
-              <p><strong>Nombre Completo:</strong> {employeeData?.name}</p>
-              <p><strong>Fecha de Nacimiento:</strong> {employeeData?.birthDate}</p>
-              <p><strong>Dirección:</strong> {employeeData?.address}</p>
-              <p><strong>Número de Teléfono:</strong> {employeeData?.phoneNumber}</p>
-              <p><strong>Correo Electrónico:</strong> {employeeData?.email}</p>
+        employeeData && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
+            <div className="grid gap-6 md:grid-cols-2 py-4">
+              <div>
+                <p><strong>Número de Seguridad Social:</strong> {employeeData.socialSecurityNumber}</p>
+                <p><strong>Nombre Completo:</strong> {employeeData.name}</p>
+                <p><strong>Fecha de Nacimiento:</strong> {employeeData.birthDate}</p>
+                <p><strong>Dirección:</strong> {employeeData.address}</p>
+                <p><strong>Número de Teléfono:</strong> {employeeData.phoneNumber}</p>
+                <p><strong>Correo Electrónico:</strong> {employeeData.email}</p>
+              </div>
+              <div>
+                <p><strong>Estado Civil:</strong> {employeeData.maritalStatus}</p>
+                <p><strong>Género:</strong> {employeeData.gender}</p>
+                <p><strong>Nacionalidad:</strong> {employeeData.nationality}</p>
+                <p><strong>Contacto de emergencia:</strong> {employeeData.emergencyContact}</p>
+                <p><strong>Teléfono de emergencia:</strong> {employeeData.emergencyPhone}</p>
+              </div>
             </div>
-            <div>
-              <p><strong>Estado Civil:</strong> {employeeData?.maritalStatus}</p>
-              <p><strong>Género:</strong> {employeeData?.gender}</p>
-              <p><strong>Nacionalidad:</strong> {employeeData?.nationality}</p>
-              <p><strong>Contacto de emergencia:</strong> {employeeData?.emergencyContact}</p>
-              <p><strong>Teléfono de emergencia:</strong> {employeeData?.emergencyPhone}</p>
+            <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
+            <div className="grid gap-6 md:grid-cols-2 py-4">
+              <div>
+                <p><strong>Rol:</strong> {employeeData.role}</p>
+                <p><strong>Departamento:</strong> {employeeData.department}</p>
+                <p><strong>Empresa:</strong> {companies.find(company => company.id === employeeData.companyId)?.razonSocial}</p>
+                <p><strong>Título del Trabajo:</strong> {employeeData.jobTitle}</p>
+                <p><strong>Turno de Trabajo:</strong> {employeeData.workShift}</p>
+                <p><strong>Tipo de Contrato:</strong> {employeeData.contractType}</p>
+              </div>
+              <div>
+                <p><strong>Fecha de Contratación:</strong> {employeeData.hireDate}</p>
+                <p><strong>CURP:</strong> {employeeData.CURP}</p>
+                <p><strong>RFC:</strong> {employeeData.RFC}</p>
+                <p><strong>Nivel Educativo:</strong> {employeeData.educationLevel}</p>
+              </div>
+            </div>
+            <h2 className="text-xl font-semibold mb-4">Datos Sociales</h2>
+            <div className="grid gap-6 md:grid-cols-2 py-4">
+              <div>
+                <p><strong>Tipo de Sangre:</strong> {employeeData.bloodType}</p>
+              </div>
+              <div>
+                <p><strong>Foto de Perfil:</strong></p>
+                {employeeData.profileImage && (
+                  <img src={employeeData.profileImage} alt="Foto de perfil" />
+                )}
+              </div>
             </div>
           </div>
-          <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
-          <div className="grid gap-6 md:grid-cols-2 py-4">
-            <div>
-              <p><strong>Rol:</strong> {employeeData?.role}</p>
-              <p><strong>Departamento:</strong> {employeeData?.department}</p>
-              <p><strong>Empresa:</strong> {companies.find(company => company.id === employeeData?.companyId)?.razonSocial}</p>
-              <p><strong>Título del Trabajo:</strong> {employeeData?.jobTitle}</p>
-              <p><strong>Turno de Trabajo:</strong> {employeeData?.workShift}</p>
-              <p><strong>Tipo de Contrato:</strong> {employeeData?.contractType}</p>
-            </div>
-            <div>
-              <p><strong>Fecha de Contratación:</strong> {employeeData?.hireDate}</p>
-              <p><strong>CURP:</strong> {employeeData?.CURP}</p>
-              <p><strong>RFC:</strong> {employeeData?.RFC}</p>
-              <p><strong>Nivel Educativo:</strong> {employeeData?.educationLevel}</p>
-            </div>
-          </div>
-          <h2 className="text-xl font-semibold mb-4">Datos Sociales</h2>
-          <div className="grid gap-6 md:grid-cols-2 py-4">
-            <div>
-              <p><strong>Tipo de Sangre:</strong> {employeeData?.bloodType}</p>
-            </div>
-            <div>
-              <p><strong>Foto de Perfil:</strong></p>
-            
-            </div>
-          </div>
-        </div>
+        )
       )}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   );
 }
