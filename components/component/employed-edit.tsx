@@ -32,9 +32,18 @@ export interface Employee {
   educationLevel: string;
   gender: string;
   bloodType: string;
-  jobTitle: string;
-  workShift: string;
-  contractType: string;
+  jobTitle: {
+    id: string;
+    name: string;
+  };
+  workShift: {
+    id: string;
+    name: string;
+  };
+  contractType: {
+    id: string;
+    name: string;
+  };
 }
 
 export default function DashboardEmployedEdit() {
@@ -214,9 +223,9 @@ export default function DashboardEmployedEdit() {
                 <p><strong>Rol:</strong> {employeeData.role}</p>
                 <p><strong>Departamento:</strong> {employeeData.department}</p>
                 <p><strong>Empresa:</strong> {companies.find(company => company.id === employeeData.companyId)?.razonSocial}</p>
-                <p><strong>Título del Trabajo:</strong> {employeeData.jobTitle.name}</p>
-                <p><strong>Turno de Trabajo:</strong> {employeeData.workShift.name}</p>
-                <p><strong>Tipo de Contrato:</strong> {employeeData.contractType.name}</p>
+                <p><strong>Título del Trabajo:</strong> {employeeData.jobTitle?.name}</p>
+                <p><strong>Turno de Trabajo:</strong> {employeeData.workShift?.name}</p>
+                <p><strong>Tipo de Contrato:</strong> {employeeData.contractType?.name}</p>
               </div>
               <div>
                 <p><strong>Fecha de Contratación:</strong> {employeeData.hireDate}</p>
@@ -232,7 +241,6 @@ export default function DashboardEmployedEdit() {
               </div>
               <div>
                 <p><strong>Foto de Perfil:</strong></p>
-              
               </div>
             </div>
           </div>
