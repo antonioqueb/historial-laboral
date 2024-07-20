@@ -31,13 +31,13 @@ export default function Header() {
           const profileImageData = await profileImageResponse.json();
           setProfileImageUrl(profileImageData.profileImageUrl);
         } else {
-          console.error('Failed to fetch profile image URL');
+          // console.error('Failed to fetch profile image URL');
         }
       } else {
-        console.error('Failed to fetch user ID');
+        // console.error('Failed to fetch user ID');
       }
     } catch (error) {
-      console.error('Error fetching user ID or profile image URL:', error);
+      // console.error('Error fetching user ID or profile image URL:', error);
     }
   };
 
