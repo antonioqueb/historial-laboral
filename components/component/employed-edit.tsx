@@ -170,6 +170,33 @@ export default function DashboardEmployedEdit() {
           if (res.ok) {
             const { employee } = await res.json();
             setEmployeeData(employee);
+            setFormData({
+              id: employee.id || '',
+              name: employee.name || '',
+              role: employee.role || '',
+              department: employee.department || '',
+              companyId: employee.companyId || '',
+              socialSecurityNumber: employee.socialSecurityNumber || '',
+              CURP: employee.CURP || '',
+              RFC: employee.RFC || '',
+              address: employee.address || '',
+              phoneNumber: employee.phoneNumber || '',
+              email: employee.email || '',
+              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+              emergencyContact: employee.emergencyContact || '',
+              emergencyPhone: employee.emergencyPhone || '',
+              maritalStatus: employee.maritalStatus || '',
+              nationality: employee.nationality || '',
+              educationLevel: employee.educationLevel || '',
+              gender: employee.gender || '',
+              bloodType: employee.bloodType || '',
+              jobTitle: employee.jobTitle.id || '',
+              workShift: employee.workShift.id || '',
+              contractType: employee.contractType.id || '',
+              profileImage: null,
+            });
+            fetchJobRelatedData(employee.companyId);
           } else {
             setError('Failed to fetch employee data');
           }
@@ -182,36 +209,11 @@ export default function DashboardEmployedEdit() {
     }
   }, [selectedEmployeeNss]);
 
-  useEffect(() => {
-    if (employeeData) {
-      setFormData({
-        id: employeeData.id || '',
-        name: employeeData.name || '',
-        role: employeeData.role || '',
-        department: employeeData.department || '',
-        companyId: employeeData.companyId || '',
-        socialSecurityNumber: employeeData.socialSecurityNumber || '',
-        CURP: employeeData.CURP || '',
-        RFC: employeeData.RFC || '',
-        address: employeeData.address || '',
-        phoneNumber: employeeData.phoneNumber || '',
-        email: employeeData.email || '',
-        birthDate: employeeData.birthDate ? new Date(employeeData.birthDate).toISOString().split('T')[0] : '',
-        hireDate: employeeData.hireDate ? new Date(employeeData.hireDate).toISOString().split('T')[0] : '',
-        emergencyContact: employeeData.emergencyContact || '',
-        emergencyPhone: employeeData.emergencyPhone || '',
-        maritalStatus: employeeData.maritalStatus || '',
-        nationality: employeeData.nationality || '',
-        educationLevel: employeeData.educationLevel || '',
-        gender: employeeData.gender || '',
-        bloodType: employeeData.bloodType || '',
-        jobTitle: employeeData.jobTitle.id || '',
-        workShift: employeeData.workShift.id || '',
-        contractType: employeeData.contractType.id || '',
-        profileImage: null,
-      });
+  const fetchJobRelatedData = async (companyId: string) => {
+    if (companyId) {
+      await Promise.all([loadRoles(companyId), loadDepartments(companyId), loadJobTitles(companyId)]);
     }
-  }, [employeeData]);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -314,39 +316,27 @@ export default function DashboardEmployedEdit() {
     }
   };
 
-  const loadRoles = async () => {
-    if (!selectedCompanyRFC) {
-      setRoles([]);
-      return;
-    }
+  const loadRoles = async (companyId: string) => {
     try {
-      const data = await fetch(`/api/roles?rfc=${selectedCompanyRFC}`).then(res => res.json());
+      const data = await fetch(`/api/roles?companyId=${companyId}`).then(res => res.json());
       setRoles(data);
     } catch (error) {
       setError('Error al cargar los roles');
     }
   };
 
-  const loadDepartments = async () => {
-    if (!selectedCompanyRFC) {
-      setDepartments([]);
-      return;
-    }
+  const loadDepartments = async (companyId: string) => {
     try {
-      const data = await fetch(`/api/departments?rfc=${selectedCompanyRFC}`).then(res => res.json());
+      const data = await fetch(`/api/departments?companyId=${companyId}`).then(res => res.json());
       setDepartments(data);
     } catch (error) {
       setError('Error al cargar los departamentos');
     }
   };
 
-  const loadJobTitles = async () => {
-    if (!selectedCompanyRFC) {
-      setJobTitles([]);
-      return;
-    }
+  const loadJobTitles = async (companyId: string) => {
     try {
-      const data = await fetch(`/api/jobTitles?rfc=${selectedCompanyRFC}`).then(res => res.json());
+      const data = await fetch(`/api/jobTitles?companyId=${companyId}`).then(res => res.json());
       setJobTitles(data);
     } catch (error) {
       setError('Error al cargar los títulos de trabajo');
@@ -360,14 +350,6 @@ export default function DashboardEmployedEdit() {
     loadNationalities();
     loadEducationLevels();
   }, []);
-
-  useEffect(() => {
-    if (selectedCompanyRFC) {
-      loadRoles();
-      loadDepartments();
-      loadJobTitles();
-    }
-  }, [selectedCompanyRFC]);
 
   const handleNationalitySearch = (searchTerm: string) => {
     const filtered = nationalities.filter(nationality =>

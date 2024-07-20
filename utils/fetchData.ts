@@ -129,7 +129,7 @@ export async function getEmployeesByCompany(selectedCompanyId: string): Promise<
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    console.log("All employees data:", data.employees);
+    // console.log("All employees data:", data.employees);
     return data.employees.filter((employee: Employee) => employee.companyId === selectedCompanyId);
   } catch (error) {
     console.error("Error al obtener los empleados:", error);
@@ -221,7 +221,7 @@ export async function getUserId(): Promise<{ id: string }> {
     }
 
     const data = await response.json();
-    console.log("Response from getUserId:", data);
+    // console.log("Response from getUserId:", data);
 
     if (!data.id) {
       throw new Error('User ID not found in response');
@@ -247,7 +247,7 @@ export async function getProfileImageUrl(): Promise<{ profileImageUrl: string }>
     }
 
     const data = await response.json();
-    console.log("Response from getProfileImage:", data);
+    // console.log("Response from getProfileImage:", data);
 
     if (!data.profileImageUrl) {
       throw new Error('Profile image URL not found in response');
@@ -255,7 +255,7 @@ export async function getProfileImageUrl(): Promise<{ profileImageUrl: string }>
 
     return data;
   } catch (error) {
-    console.error('Error fetching profile image URL:', error);
+    // console.error('Error fetching profile image URL:', error);
     throw new Error('Failed to fetch profile image URL');
   }
 }

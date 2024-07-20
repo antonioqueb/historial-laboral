@@ -83,11 +83,11 @@ export async function PATCH(req: Request) {
 
       const uploadResult = await response.json();
       imageUrl = uploadResult.imageUrl;
-      console.log("Image URL from upload:", imageUrl);
+      // console.log("Image URL from upload:", imageUrl);
     }
 
     const updateData: Record<string, any> = Object.fromEntries(formData.entries());
-    console.log("Initial updateData:", updateData);
+    // console.log("Initial updateData:", updateData);
     
     delete updateData.id; // Remove id from update data as it should not be updated
 
@@ -108,7 +108,7 @@ export async function PATCH(req: Request) {
       updateData.hireDate = new Date(updateData.hireDate).toISOString();
     }
 
-    console.log("Processed updateData before deleting unwanted fields:", updateData);
+    // console.log("Processed updateData before deleting unwanted fields:", updateData);
 
     // Eliminar campos que no deberían ser actualizados
     delete updateData.company;
@@ -116,7 +116,7 @@ export async function PATCH(req: Request) {
     delete updateData.bankAccountNumber; // Eliminar bankAccountNumber del objeto de actualización
     delete updateData.clabeNumber; // Eliminar clabeNumber del objeto de actualización
 
-    console.log("Final updateData to be sent to Prisma:", updateData);
+    // console.log("Final updateData to be sent to Prisma:", updateData);
 
     const updatedEmployee = await prisma.employee.update({
       where: { id: id as string },
