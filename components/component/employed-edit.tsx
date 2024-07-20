@@ -424,6 +424,9 @@ export default function DashboardEmployedEdit() {
           <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
           <div className="grid gap-6 md:grid-cols-2 py-4">
             <div>
+              <div className="mb-4">
+                <pre>{JSON.stringify(employeeData, null, 2)}</pre>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
                 <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
