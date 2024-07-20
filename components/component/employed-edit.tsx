@@ -210,8 +210,8 @@ export default function DashboardEmployedEdit() {
   }, [selectedEmployeeNss]);
 
   const fetchJobRelatedData = async (companyId: string) => {
-    if (companyId) {
-      await Promise.all([loadRoles(companyId), loadDepartments(companyId), loadJobTitles(companyId)]);
+    if (selectedCompanyRFC) {
+      await Promise.all([loadRoles(selectedCompanyRFC), loadDepartments(selectedCompanyRFC), loadJobTitles(selectedCompanyRFC)]);
     }
   };
 
@@ -316,27 +316,27 @@ export default function DashboardEmployedEdit() {
     }
   };
 
-  const loadRoles = async (companyId: string) => {
+  const loadRoles = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/roles?companyId=${companyId}`).then(res => res.json());
+      const data = await fetch(`/api/roles?rfc=${rfc}`).then(res => res.json());
       setRoles(data);
     } catch (error) {
       setError('Error al cargar los roles');
     }
   };
 
-  const loadDepartments = async (companyId: string) => {
+  const loadDepartments = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/departments?companyId=${companyId}`).then(res => res.json());
+      const data = await fetch(`/api/departments?rfc=${rfc}`).then(res => res.json());
       setDepartments(data);
     } catch (error) {
       setError('Error al cargar los departamentos');
     }
   };
 
-  const loadJobTitles = async (companyId: string) => {
+  const loadJobTitles = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/jobTitles?companyId=${companyId}`).then(res => res.json());
+      const data = await fetch(`/api/jobTitles?rfc=${rfc}`).then(res => res.json());
       setJobTitles(data);
     } catch (error) {
       setError('Error al cargar los títulos de trabajo');
@@ -424,9 +424,6 @@ export default function DashboardEmployedEdit() {
           <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
           <div className="grid gap-6 md:grid-cols-2 py-4">
             <div>
-              <div className="mb-4">
-                <pre>{JSON.stringify(employeeData, null, 2)}</pre>
-              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
                 <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
