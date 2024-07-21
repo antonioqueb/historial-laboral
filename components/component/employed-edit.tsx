@@ -170,6 +170,7 @@ export default function DashboardEmployedEdit() {
           if (res.ok) {
             const { employee } = await res.json();
             setEmployeeData(employee);
+            console.log("Employee data fetched:", employee); // Log to verify fetched data
             setFormData({
               id: employee.id || '',
               name: employee.name || '',
