@@ -318,7 +318,7 @@ export default function DashboardEmployedEdit() {
 
   const loadRoles = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/roles?rfc=${rfc}`).then(res => res.json());
+      const data = await fetch(`/api/Roles?rfc=${rfc}`).then(res => res.json());
       setRoles(data);
     } catch (error) {
       setError('Error al cargar los roles');
