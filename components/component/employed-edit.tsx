@@ -267,7 +267,7 @@ export default function DashboardEmployedEdit() {
 
   const loadBloodTypes = async () => {
     try {
-      const response = await fetch('/api/bloodTypes');
+      const response = await fetch('/api/bloodType');
       const data = await response.json();
       setBloodTypes(data.bloodTypes);
     } catch (error) {
@@ -277,7 +277,7 @@ export default function DashboardEmployedEdit() {
 
   const loadGenders = async () => {
     try {
-      const response = await fetch('/api/genders');
+      const response = await fetch('/api/Genders');
       const data = await response.json();
       setGenders(data.genders);
     } catch (error) {
@@ -287,7 +287,7 @@ export default function DashboardEmployedEdit() {
 
   const loadCivilStatuses = async () => {
     try {
-      const response = await fetch('/api/civilStatuses');
+      const response = await fetch('/api/CivilStatus');
       const data = await response.json();
       setCivilStatuses(data.civilStatuses);
     } catch (error) {
@@ -297,7 +297,7 @@ export default function DashboardEmployedEdit() {
 
   const loadNationalities = async () => {
     try {
-      const response = await fetch('/api/nationalities');
+      const response = await fetch('/api/Nationalities');
       const data = await response.json();
       setNationalities(data.nationalities);
       setFilteredNationalities(data.nationalities);
@@ -308,7 +308,7 @@ export default function DashboardEmployedEdit() {
 
   const loadEducationLevels = async () => {
     try {
-      const response = await fetch('/api/educationLevels');
+      const response = await fetch('/api/EducationLevels');
       const data = await response.json();
       setEducationLevels(data.educationLevels);
     } catch (error) {
@@ -318,7 +318,7 @@ export default function DashboardEmployedEdit() {
 
   const loadRoles = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/roles?rfc=${rfc}`).then(res => res.json());
+      const data = await fetch(`/api/Roles?rfc=${rfc}`).then(res => res.json());
       setRoles(data);
     } catch (error) {
       setError('Error al cargar los roles');
@@ -327,7 +327,7 @@ export default function DashboardEmployedEdit() {
 
   const loadDepartments = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/departments?rfc=${rfc}`).then(res => res.json());
+      const data = await fetch(`/api/Department?rfc=${rfc}`).then(res => res.json());
       setDepartments(data);
     } catch (error) {
       setError('Error al cargar los departamentos');
@@ -336,7 +336,7 @@ export default function DashboardEmployedEdit() {
 
   const loadJobTitles = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/jobTitles?rfc=${rfc}`).then(res => res.json());
+      const data = await fetch(`/api/JobTitle?rfc=${rfc}`).then(res => res.json());
       setJobTitles(data);
     } catch (error) {
       setError('Error al cargar los títulos de trabajo');
