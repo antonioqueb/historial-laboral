@@ -343,7 +343,7 @@ export default function DashboardEmployedEdit() {
 
   const loadJobTitles = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/jobTitles?rfc=${rfc}`).then(res => res.json());
+      const data = await fetch(`/api/JobTitle?rfc=${rfc}`).then(res => res.json());
       const filteredJobTitles = data.filter((jobTitle: { name: string }) => jobTitle.name.trim() !== '');
       setJobTitles(filteredJobTitles);
     } catch (error) {
