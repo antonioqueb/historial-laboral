@@ -287,7 +287,7 @@ export default function DashboardEmployedEdit() {
 
   const loadCivilStatuses = async () => {
     try {
-      const response = await fetch('/api/civilStatuses');
+      const response = await fetch('/api/CivilStatus');
       const data = await response.json();
       setCivilStatuses(data.civilStatuses);
     } catch (error) {
