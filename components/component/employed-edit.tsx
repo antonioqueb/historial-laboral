@@ -308,7 +308,7 @@ export default function DashboardEmployedEdit() {
 
   const loadEducationLevels = async () => {
     try {
-      const response = await fetch('/api/educationLevels');
+      const response = await fetch('/api/EducationLevels');
       const data = await response.json();
       setEducationLevels(data.educationLevels);
     } catch (error) {
