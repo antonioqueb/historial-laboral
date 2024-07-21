@@ -297,7 +297,7 @@ export default function DashboardEmployedEdit() {
 
   const loadNationalities = async () => {
     try {
-      const response = await fetch('/api/nationalities');
+      const response = await fetch('/api/Nationalities');
       const data = await response.json();
       setNationalities(data.nationalities);
       setFilteredNationalities(data.nationalities);
