@@ -269,7 +269,8 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/bloodTypes');
       const data = await response.json();
-      setBloodTypes(data.bloodTypes);
+      const filteredBloodTypes = data.bloodTypes.filter((type: string) => type.trim() !== '');
+      setBloodTypes(filteredBloodTypes);
     } catch (error) {
       console.error('Error loading blood types:', error);
     }
@@ -279,7 +280,8 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/Genders');
       const data = await response.json();
-      setGenders(data.genders);
+      const filteredGenders = data.genders.filter((gender: string) => gender.trim() !== '');
+      setGenders(filteredGenders);
     } catch (error) {
       console.error('Error loading genders:', error);
     }
@@ -289,7 +291,8 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/CivilStatus');
       const data = await response.json();
-      setCivilStatuses(data.civilStatuses);
+      const filteredCivilStatuses = data.civilStatuses.filter((status: string) => status.trim() !== '');
+      setCivilStatuses(filteredCivilStatuses);
     } catch (error) {
       console.error('Error loading civil statuses:', error);
     }
@@ -299,8 +302,9 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/Nationalities');
       const data = await response.json();
-      setNationalities(data.nationalities);
-      setFilteredNationalities(data.nationalities);
+      const filteredNationalities = data.nationalities.filter((nationality: { nombre: string }) => nationality.nombre.trim() !== '');
+      setNationalities(filteredNationalities);
+      setFilteredNationalities(filteredNationalities);
     } catch (error) {
       console.error('Error loading nationalities:', error);
     }
@@ -310,7 +314,8 @@ export default function DashboardEmployedEdit() {
     try {
       const response = await fetch('/api/EducationLevels');
       const data = await response.json();
-      setEducationLevels(data.educationLevels);
+      const filteredEducationLevels = data.educationLevels.filter((level: string) => level.trim() !== '');
+      setEducationLevels(filteredEducationLevels);
     } catch (error) {
       console.error('Error loading education levels:', error);
     }
@@ -328,8 +333,9 @@ export default function DashboardEmployedEdit() {
 
   const loadDepartments = async (rfc: string) => {
     try {
-      const data = await fetch(`/api/departments?rfc=${rfc}`).then(res => res.json());
-      setDepartments(data);
+      const data = await fetch(`/api/Department?rfc=${rfc}`).then(res => res.json());
+      const filteredDepartments = data.filter((department: { name: string }) => department.name.trim() !== '');
+      setDepartments(filteredDepartments);
     } catch (error) {
       setError('Error al cargar los departamentos');
     }
@@ -338,7 +344,8 @@ export default function DashboardEmployedEdit() {
   const loadJobTitles = async (rfc: string) => {
     try {
       const data = await fetch(`/api/jobTitles?rfc=${rfc}`).then(res => res.json());
-      setJobTitles(data);
+      const filteredJobTitles = data.filter((jobTitle: { name: string }) => jobTitle.name.trim() !== '');
+      setJobTitles(filteredJobTitles);
     } catch (error) {
       setError('Error al cargar los títulos de trabajo');
     }
