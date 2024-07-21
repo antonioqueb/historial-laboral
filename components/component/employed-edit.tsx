@@ -192,9 +192,9 @@ export default function DashboardEmployedEdit() {
                         educationLevel: employee.educationLevel || '',
                         gender: employee.gender || '',
                         bloodType: employee.bloodType || '',
-                        jobTitle: employee.jobTitle ? employee.jobTitle.id : '',
-                        workShift: employee.workShift ? employee.workShift.id : '',
-                        contractType: employee.contractType ? employee.contractType.id : '',
+                        jobTitle: employee.jobTitle ? employee.jobTitle.name : '',
+                        workShift: employee.workShift ? employee.workShift.name : '',
+                        contractType: employee.contractType ? employee.contractType.name : '',
                         profileImage: null,
                     });
                     fetchJobRelatedData(employee.companyId);
@@ -209,6 +209,7 @@ export default function DashboardEmployedEdit() {
         fetchEmployee();
     }
 }, [selectedEmployeeNss]);
+
 
 
 
