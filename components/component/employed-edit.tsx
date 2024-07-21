@@ -164,55 +164,50 @@ export default function DashboardEmployedEdit() {
 
   useEffect(() => {
     if (selectedEmployeeNss) {
-        const fetchEmployee = async () => {
-            try {
-                const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
-                if (res.ok) {
-                    const { employee } = await res.json();
-                    setEmployeeData(employee);
-                    console.log("Employee data fetched:", employee); // Log to verify fetched data
-                    setFormData({
-                        id: employee.id || '',
-                        name: employee.name || '',
-                        role: employee.role || '',
-                        department: employee.department || '',
-                        companyId: employee.companyId || '',
-                        socialSecurityNumber: employee.socialSecurityNumber || '',
-                        CURP: employee.CURP || '',
-                        RFC: employee.RFC || '',
-                        address: employee.address || '',
-                        phoneNumber: employee.phoneNumber || '',
-                        email: employee.email || '',
-                        birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
-                        hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
-                        emergencyContact: employee.emergencyContact || '',
-                        emergencyPhone: employee.emergencyPhone || '',
-                        maritalStatus: employee.maritalStatus || '',
-                        nationality: employee.nationality || '',
-                        educationLevel: employee.educationLevel || '',
-                        gender: employee.gender || '',
-                        bloodType: employee.bloodType || '',
-                        jobTitle: employee.jobTitle ? employee.jobTitle.name : '',
-                        workShift: employee.workShift ? employee.workShift.name : '',
-                        contractType: employee.contractType ? employee.contractType.name : '',
-                        profileImage: null,
-                    });
-                    fetchJobRelatedData(employee.companyId);
-                } else {
-                    setError('Failed to fetch employee data');
-                }
-            } catch (err) {
-                setError('Failed to fetch employee data');
-            }
-        };
+      const fetchEmployee = async () => {
+        try {
+          const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
+          if (res.ok) {
+            const { employee } = await res.json();
+            setEmployeeData(employee);
+            setFormData({
+              id: employee.id || '',
+              name: employee.name || '',
+              role: employee.role || '',
+              department: employee.department || '',
+              companyId: employee.companyId || '',
+              socialSecurityNumber: employee.socialSecurityNumber || '',
+              CURP: employee.CURP || '',
+              RFC: employee.RFC || '',
+              address: employee.address || '',
+              phoneNumber: employee.phoneNumber || '',
+              email: employee.email || '',
+              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+              emergencyContact: employee.emergencyContact || '',
+              emergencyPhone: employee.emergencyPhone || '',
+              maritalStatus: employee.maritalStatus || '',
+              nationality: employee.nationality || '',
+              educationLevel: employee.educationLevel || '',
+              gender: employee.gender || '',
+              bloodType: employee.bloodType || '',
+              jobTitle: employee.jobTitle ? employee.jobTitle.name : '',
+              workShift: employee.workShift ? employee.workShift.name : '',
+              contractType: employee.contractType ? employee.contractType.name : '',
+              profileImage: null,
+            });
+            fetchJobRelatedData(employee.companyId);
+          } else {
+            setError('Failed to fetch employee data');
+          }
+        } catch (err) {
+          setError('Failed to fetch employee data');
+        }
+      };
 
-        fetchEmployee();
+      fetchEmployee();
     }
-}, [selectedEmployeeNss]);
-
-
-
-
+  }, [selectedEmployeeNss]);
 
   const fetchJobRelatedData = async (companyId: string) => {
     if (selectedCompanyRFC) {
@@ -382,7 +377,7 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empresa
           </Label>
           {companies.length > 0 ? (
-            <Select 
+            <Select
               value={selectedCompanyRFC || ""}
               onValueChange={(value) => setSelectedCompanyRFC(value)}
               required
@@ -410,7 +405,7 @@ export default function DashboardEmployedEdit() {
             Seleccionar Empleado
           </Label>
           {employees.length > 0 ? (
-            <Select 
+            <Select
               value={selectedEmployeeNss || ""}
               onValueChange={(value) => setSelectedEmployeeNss(value)}
               required
@@ -439,32 +434,39 @@ export default function DashboardEmployedEdit() {
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
+                <p>{formData.socialSecurityNumber}</p>
                 <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="name">Nombre Completo</Label>
+                <p>{formData.name}</p>
                 <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
+                <p>{formData.birthDate}</p>
                 <Input type="date" id="birthDate" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="address">Dirección</Label>
+                <p>{formData.address}</p>
                 <Input id="address" name="address" value={formData.address} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="phoneNumber">Número de Teléfono</Label>
+                <p>{formData.phoneNumber}</p>
                 <Input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="email">Correo Electrónico</Label>
+                <p>{formData.email}</p>
                 <Input id="email" name="email" value={formData.email} onChange={handleChange} required />
               </div>
             </div>
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="maritalStatus">Estado Civil</Label>
+                <p>{formData.maritalStatus}</p>
                 <Select value={formData.maritalStatus} onValueChange={(value) => setFormData({ ...formData, maritalStatus: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar estado civil" />
@@ -480,6 +482,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="gender">Género</Label>
+                <p>{formData.gender}</p>
                 <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar género" />
@@ -495,6 +498,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="nationality">Nacionalidad</Label>
+                <p>{formData.nationality}</p>
                 <Select value={formData.nationality} onValueChange={(value) => setFormData({ ...formData, nationality: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar nacionalidad" />
@@ -519,6 +523,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="emergencyContact">Nombre</Label>
+                <p>{formData.emergencyContact}</p>
                 <Input 
                   id="emergencyContact" 
                   name="emergencyContact" 
@@ -529,6 +534,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="emergencyPhone">Teléfono</Label>
+                <p>{formData.emergencyPhone}</p>
                 <Input 
                   id="emergencyPhone" 
                   name="emergencyPhone" 
@@ -544,6 +550,7 @@ export default function DashboardEmployedEdit() {
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="role">Rol</Label>
+                <p>{formData.role}</p>
                 <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar rol" />
@@ -561,6 +568,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="department">Departamento</Label>
+                <p>{formData.department}</p>
                 <Select value={formData.department} onValueChange={(value) => setFormData({ ...formData, department: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar departamento" />
@@ -578,6 +586,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="companyId">Empresa</Label>
+                <p>{formData.companyId}</p>
                 <Select value={formData.companyId} onValueChange={(value) => setFormData({ ...formData, companyId: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar empresa" />
@@ -595,6 +604,7 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="jobTitle">Título del Trabajo</Label>
+                <p>{formData.jobTitle}</p>
                 <Select value={formData.jobTitle} onValueChange={(value) => setFormData({ ...formData, jobTitle: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar título del trabajo" />
@@ -612,28 +622,34 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="workShift">Turno de Trabajo</Label>
+                <p>{formData.workShift}</p>
                 <WorkShiftSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.workShift} onChange={(value) => setFormData({ ...formData, workShift: value })} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="contractType">Tipo de Contrato</Label>
+                <p>{formData.contractType}</p>
                 <ContractTypeSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.contractType} onChange={(value) => setFormData({ ...formData, contractType: value })} />
               </div>
             </div>
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="hireDate">Fecha de Contratación</Label>
+                <p>{formData.hireDate}</p>
                 <Input type="date" id="hireDate" name="hireDate" value={formData.hireDate} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="CURP">CURP</Label>
+                <p>{formData.CURP}</p>
                 <Input id="CURP" name="CURP" value={formData.CURP} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="RFC">RFC</Label>
+                <p>{formData.RFC}</p>
                 <Input id="RFC" name="RFC" value={formData.RFC} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="educationLevel">Nivel Educativo</Label>
+                <p>{formData.educationLevel}</p>
                 <Select value={formData.educationLevel} onValueChange={(value) => setFormData({ ...formData, educationLevel: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar nivel educativo" />
@@ -654,6 +670,7 @@ export default function DashboardEmployedEdit() {
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="bloodType">Tipo de Sangre</Label>
+                <p>{formData.bloodType}</p>
                 <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar tipo de sangre" />
@@ -687,4 +704,5 @@ export default function DashboardEmployedEdit() {
       )}
     </div>
   );
+  
 }
