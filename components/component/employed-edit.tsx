@@ -164,51 +164,52 @@ export default function DashboardEmployedEdit() {
 
   useEffect(() => {
     if (selectedEmployeeNss) {
-      const fetchEmployee = async () => {
-        try {
-          const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
-          if (res.ok) {
-            const { employee } = await res.json();
-            setEmployeeData(employee);
-            console.log("Employee data fetched:", employee); // Log to verify fetched data
-            setFormData({
-              id: employee.id || '',
-              name: employee.name || '',
-              role: employee.role || '',
-              department: employee.department || '',
-              companyId: employee.companyId || '',
-              socialSecurityNumber: employee.socialSecurityNumber || '',
-              CURP: employee.CURP || '',
-              RFC: employee.RFC || '',
-              address: employee.address || '',
-              phoneNumber: employee.phoneNumber || '',
-              email: employee.email || '',
-              birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
-              hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
-              emergencyContact: employee.emergencyContact || '',
-              emergencyPhone: employee.emergencyPhone || '',
-              maritalStatus: employee.maritalStatus || '',
-              nationality: employee.nationality || '',
-              educationLevel: employee.educationLevel || '',
-              gender: employee.gender || '',
-              bloodType: employee.bloodType || '',
-              jobTitle: employee.jobTitle.id || '',
-              workShift: employee.workShift.id || '',
-              contractType: employee.contractType.id || '',
-              profileImage: null,
-            });
-            fetchJobRelatedData(employee.companyId);
-          } else {
-            setError('Failed to fetch employee data');
-          }
-        } catch (err) {
-          setError('Failed to fetch employee data');
-        }
-      };
+        const fetchEmployee = async () => {
+            try {
+                const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
+                if (res.ok) {
+                    const { employee } = await res.json();
+                    setEmployeeData(employee);
+                    console.log("Employee data fetched:", employee); // Log to verify fetched data
+                    setFormData({
+                        id: employee.id || '',
+                        name: employee.name || '',
+                        role: employee.role || '',
+                        department: employee.department || '',
+                        companyId: employee.companyId || '',
+                        socialSecurityNumber: employee.socialSecurityNumber || '',
+                        CURP: employee.CURP || '',
+                        RFC: employee.RFC || '',
+                        address: employee.address || '',
+                        phoneNumber: employee.phoneNumber || '',
+                        email: employee.email || '',
+                        birthDate: employee.birthDate ? new Date(employee.birthDate).toISOString().split('T')[0] : '',
+                        hireDate: employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '',
+                        emergencyContact: employee.emergencyContact || '',
+                        emergencyPhone: employee.emergencyPhone || '',
+                        maritalStatus: employee.maritalStatus || '',
+                        nationality: employee.nationality || '',
+                        educationLevel: employee.educationLevel || '',
+                        gender: employee.gender || '',
+                        bloodType: employee.bloodType || '',
+                        jobTitle: employee.jobTitle ? employee.jobTitle.id : '',
+                        workShift: employee.workShift ? employee.workShift.id : '',
+                        contractType: employee.contractType ? employee.contractType.id : '',
+                        profileImage: null,
+                    });
+                    fetchJobRelatedData(employee.companyId);
+                } else {
+                    setError('Failed to fetch employee data');
+                }
+            } catch (err) {
+                setError('Failed to fetch employee data');
+            }
+        };
 
-      fetchEmployee();
+        fetchEmployee();
     }
-  }, [selectedEmployeeNss]);
+}, [selectedEmployeeNss]);
+
 
   const fetchJobRelatedData = async (companyId: string) => {
     if (selectedCompanyRFC) {
