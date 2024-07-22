@@ -429,6 +429,13 @@ export default function DashboardEmployedEdit() {
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
+          {employeeData && (
+            <div>
+              <h2>Datos del Empleado Seleccionado:</h2>
+              <pre>{JSON.stringify(employeeData, null, 2)}</pre>
+            </div>
+          )}
+
           <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
           <div className="grid gap-6 md:grid-cols-2 py-4">
             <div>
