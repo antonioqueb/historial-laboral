@@ -185,6 +185,7 @@ export default function DashboardEmployedEdit() {
   }, [selectedEmployeeNss]);
 
   console.log('pre-sync employeeData:', employeeData);
+  console.log('pre-sync formData:', formData);
 
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
@@ -220,6 +221,7 @@ export default function DashboardEmployedEdit() {
   }, [employeeData]);
 
   console.log('pos-sync employeeData:', employeeData);
+  console.log('pos-sync formData:', formData);
 
 
 
