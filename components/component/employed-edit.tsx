@@ -184,6 +184,8 @@ export default function DashboardEmployedEdit() {
     }
   }, [selectedEmployeeNss]);
 
+  console.log('pre-sync employeeData:', employeeData);
+
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
     if (employeeData) {
@@ -216,6 +218,9 @@ export default function DashboardEmployedEdit() {
       fetchJobRelatedData(employeeData.companyId);
     }
   }, [employeeData]);
+
+  console.log('pos-sync employeeData:', employeeData);
+
 
 
   // Función para cargar roles, departamentos y títulos de trabajo para la empresa seleccionada
