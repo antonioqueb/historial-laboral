@@ -188,37 +188,60 @@ export default function DashboardEmployedEdit() {
 
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
-    console.log("employeeData cambió:", employeeData);
+    console.log("employeeData cambió:", employeeData); // Verificar que employeeData cambió
     if (employeeData) {
-      setFormData({
-        id: employeeData.id || '',
-        name: employeeData.name || '',
-        role: employeeData.role || '',
-        department: employeeData.department || '',
-        companyId: employeeData.companyId || '',
-        socialSecurityNumber: employeeData.socialSecurityNumber || '',
-        CURP: employeeData.CURP || '',
-        RFC: employeeData.RFC || '',
-        address: employeeData.address || '',
-        phoneNumber: employeeData.phoneNumber || '',
-        email: employeeData.email || '',
-        birthDate: employeeData.birthDate ? new Date(employeeData.birthDate).toISOString().split('T')[0] : '',
-        hireDate: employeeData.hireDate ? new Date(employeeData.hireDate).toISOString().split('T')[0] : '',
-        emergencyContact: employeeData.emergencyContact || '',
-        emergencyPhone: employeeData.emergencyPhone || '',
-        maritalStatus: employeeData.maritalStatus || '',
-        nationality: employeeData.nationality || '',
-        educationLevel: employeeData.educationLevel || '',
-        gender: employeeData.gender || '',
-        bloodType: employeeData.bloodType || '',
-        jobTitle: employeeData.jobTitle ? employeeData.jobTitle.name : '',
-        workShift: employeeData.workShift ? employeeData.workShift.name : '',
-        contractType: employeeData.contractType ? employeeData.contractType.name : '',
-        profileImage: null,
-      });
-      fetchJobRelatedData(employeeData.companyId);
+      try {
+        // Validaciones básicas de la estructura de employeeData
+        if (!employeeData.id || !employeeData.name || !employeeData.companyId) {
+          throw new Error("Datos del empleado incompletos");
+        }
+  
+        const updatedFormData = {
+          id: employeeData.id || '',
+          name: employeeData.name || '',
+          role: employeeData.role || '',
+          department: employeeData.department || '',
+          companyId: employeeData.companyId || '',
+          socialSecurityNumber: employeeData.socialSecurityNumber || '',
+          CURP: employeeData.CURP || '',
+          RFC: employeeData.RFC || '',
+          address: employeeData.address || '',
+          phoneNumber: employeeData.phoneNumber || '',
+          email: employeeData.email || '',
+          birthDate: employeeData.birthDate ? new Date(employeeData.birthDate).toISOString().split('T')[0] : '',
+          hireDate: employeeData.hireDate ? new Date(employeeData.hireDate).toISOString().split('T')[0] : '',
+          emergencyContact: employeeData.emergencyContact || '',
+          emergencyPhone: employeeData.emergencyPhone || '',
+          maritalStatus: employeeData.maritalStatus || '',
+          nationality: employeeData.nationality || '',
+          educationLevel: employeeData.educationLevel || '',
+          gender: employeeData.gender || '',
+          bloodType: employeeData.bloodType || '',
+          jobTitle: employeeData.jobTitle ? employeeData.jobTitle.name : '',
+          workShift: employeeData.workShift ? employeeData.workShift.name : '',
+          contractType: employeeData.contractType ? employeeData.contractType.name : '',
+          profileImage: null, // Asumiendo que quieres manejar la imagen de perfil aquí
+        };
+  
+        console.log("Actualizando formData con:", updatedFormData); // Verificar que formData se está actualizando correctamente
+        setFormData(updatedFormData); // Actualiza formData con los datos de employeeData
+  
+        // fetchJobRelatedData(employeeData.companyId); // Llama a fetchJobRelatedData si es necesario
+  
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error("Error actualizando formData:", error.message);
+          setError("Hubo un problema al cargar los datos del empleado. Por favor, inténtalo de nuevo.");
+        } else {
+          console.error("Error desconocido actualizando formData");
+          setError("Error desconocido. Por favor, inténtalo de nuevo.");
+        }
+      }
     }
-  }, [employeeData]);
+  }, [employeeData]); // El efecto se ejecuta cuando employeeData cambia
+  
+  
+  
 
   console.log('pos-sync formData:', formData);
 
@@ -405,6 +428,7 @@ export default function DashboardEmployedEdit() {
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
+        {error && <div className="error-message">{error}</div>}
         <pre>{JSON.stringify(formData, null, 2)}</pre>
       </div>
       {!selectedCompanyRFC ? (
