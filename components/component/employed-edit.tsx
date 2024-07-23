@@ -91,7 +91,6 @@ export default function DashboardEmployedEdit() {
     contractType: '',
     profileImage: null as File | null,
   });
-
   const [companies, setCompanies] = useState<Company[]>([]);
   const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
@@ -100,7 +99,8 @@ export default function DashboardEmployedEdit() {
   const [success, setSuccess] = useState<string | null>(null);
   const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
   const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
-
+  
+  // getUserId
   useEffect(() => {
     const fetchUserId = async () => {
       try {
@@ -142,6 +142,7 @@ export default function DashboardEmployedEdit() {
     initializeData();
   }, []);
 
+  // listEmployeesByCompanyRFC
   useEffect(() => {
     if (selectedCompanyRFC) {
       const fetchEmployeesByCompanyRFC = async (rfc: string) => {
@@ -162,6 +163,7 @@ export default function DashboardEmployedEdit() {
     }
   }, [selectedCompanyRFC]);
 
+  // getEmployeeByNss
   useEffect(() => {
     if (selectedEmployeeNss) {
       const fetchEmployee = async () => {
@@ -182,7 +184,7 @@ export default function DashboardEmployedEdit() {
     }
   }, [selectedEmployeeNss]);
 
-  // Nuevo useEffect para sincronizar employeeData con formData
+  // useEffect para sincronizar employeeData con formData
   useEffect(() => {
     if (employeeData) {
       setFormData({
@@ -215,28 +217,38 @@ export default function DashboardEmployedEdit() {
     }
   }, [employeeData]);
 
+
+  // Función para cargar roles, departamentos y títulos de trabajo para la empresa seleccionada
   const fetchJobRelatedData = async (companyId: string) => {
     if (selectedCompanyRFC) {
-      await Promise.all([loadRoles(selectedCompanyRFC), loadDepartments(selectedCompanyRFC), loadJobTitles(selectedCompanyRFC)]);
+      await Promise.all([
+        loadRoles(selectedCompanyRFC),
+        loadDepartments(selectedCompanyRFC),
+        loadJobTitles(selectedCompanyRFC)
+      ]);
     }
   };
 
+  // Manejador de cambios para actualizar los datos del formulario con los valores de los inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Manejador de cambios para actualizar la imagen de perfil en los datos del formulario
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormData({ ...formData, profileImage: e.target.files[0] });
     }
   };
 
+  // Manejador de envío del formulario para actualizar los datos del empleado
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
     try {
+      // Validación de datos del formulario con el esquema definido
       editEmployeeSchema.parse(formData);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -246,6 +258,7 @@ export default function DashboardEmployedEdit() {
     }
 
     const form = new FormData();
+    // Agrega datos del formulario al objeto FormData
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof typeof formData];
       if (value !== null && value !== undefined && value !== '') {
@@ -254,6 +267,7 @@ export default function DashboardEmployedEdit() {
     });
 
     try {
+      // Envío de los datos al servidor
       const response = await fetch('/api/editEmployee', {
         method: 'PATCH',
         body: form,
@@ -271,6 +285,7 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  // Carga los tipos de sangre desde el servidor y filtra valores vacíos
   const loadBloodTypes = async () => {
     try {
       const response = await fetch('/api/bloodTypes');
@@ -282,6 +297,7 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  // Carga los géneros desde el servidor y filtra valores vacíos
   const loadGenders = async () => {
     try {
       const response = await fetch('/api/Genders');
@@ -293,6 +309,7 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  // Carga los estados civiles desde el servidor y filtra valores vacíos
   const loadCivilStatuses = async () => {
     try {
       const response = await fetch('/api/CivilStatus');
@@ -304,6 +321,7 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  // Carga las nacionalidades desde el servidor, filtra valores vacíos y actualiza los estados correspondientes
   const loadNationalities = async () => {
     try {
       const response = await fetch('/api/Nationalities');
@@ -316,6 +334,7 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  // Carga los niveles educativos desde el servidor y filtra valores vacíos
   const loadEducationLevels = async () => {
     try {
       const response = await fetch('/api/EducationLevels');
@@ -327,6 +346,7 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  // Carga los roles desde el servidor y filtra valores vacíos
   const loadRoles = async (rfc: string) => {
     try {
       const data = await fetch(`/api/Roles?rfc=${rfc}`).then(res => res.json());
@@ -337,6 +357,7 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  // Carga los departamentos desde el servidor y filtra valores vacíos
   const loadDepartments = async (rfc: string) => {
     try {
       const data = await fetch(`/api/Department?rfc=${rfc}`).then(res => res.json());
@@ -347,6 +368,7 @@ export default function DashboardEmployedEdit() {
     }
   };
 
+  // Carga los titulos de trabajo desde el servidor y filtra valores vacíos
   const loadJobTitles = async (rfc: string) => {
     try {
       const data = await fetch(`/api/JobTitle?rfc=${rfc}`).then(res => res.json());
@@ -365,6 +387,7 @@ export default function DashboardEmployedEdit() {
     loadEducationLevels();
   }, []);
 
+  // Filtra la lista de nacionalidades según el término de búsqueda y actualiza el estado de nacionalidades filtradas
   const handleNationalitySearch = (searchTerm: string) => {
     const filtered = nationalities.filter(nationality =>
       nationality.nombre.toLowerCase().includes(searchTerm.toLowerCase())

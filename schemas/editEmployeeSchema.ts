@@ -21,8 +21,17 @@ export const editEmployeeSchema = z.object({
   educationLevel: z.string().nonempty("Nivel Educativo es requerido"),
   gender: z.string().nonempty("Género es requerido"),
   bloodType: z.string().nonempty("Tipo de Sangre es requerido"),
-  jobTitle: z.string().nonempty("Título del Trabajo es requerido"),
-  workShift: z.string().nonempty("Turno de Trabajo es requerido"),
-  contractType: z.string().nonempty("Tipo de Contrato es requerido"),
+  jobTitle: z.object({
+    id: z.string().nonempty("ID del Título del Trabajo es requerido"),
+    name: z.string().nonempty("Nombre del Título del Trabajo es requerido")
+  }),
+  workShift: z.object({
+    id: z.string().nonempty("ID del Turno de Trabajo es requerido"),
+    name: z.string().nonempty("Nombre del Turno de Trabajo es requerido")
+  }),
+  contractType: z.object({
+    id: z.string().nonempty("ID del Tipo de Contrato es requerido"),
+    name: z.string().nonempty("Nombre del Tipo de Contrato es requerido")
+  }),
   profileImage: z.any().optional(), // Optional file
 });
