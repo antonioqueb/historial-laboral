@@ -428,8 +428,8 @@ export default function DashboardEmployedEdit() {
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
-        {error && <div className="error-message">{error}</div>}
-        <pre>{JSON.stringify(formData, null, 2)}</pre>
+        {/* {error && <div className="error-message">{error}</div>}
+        <pre>{JSON.stringify(formData, null, 2)}</pre> */}
       </div>
       {!selectedCompanyRFC ? (
         <div>
