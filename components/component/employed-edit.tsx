@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -166,30 +166,29 @@ export default function DashboardEmployedEdit() {
   // getEmployeeByNss
   useEffect(() => {
     if (selectedEmployeeNss) {
-        const fetchEmployee = async () => {
-            try {
-                const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
-                if (res.ok) {
-                    const { employee } = await res.json();
-                    console.log("Datos del empleado obtenidos:", employee);
-                    setEmployeeData(employee);
-                } else {
-                    setError('Failed to fetch employee data');
-                }
-            } catch (err) {
-                setError('Failed to fetch employee data');
-            }
-        };
+      const fetchEmployee = async () => {
+        try {
+          const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
+          if (res.ok) {
+            const { employee } = await res.json();
+            console.log("Datos del empleado obtenidos:", employee);
+            setEmployeeData(employee);
+          } else {
+            setError('Failed to fetch employee data');
+          }
+        } catch (err) {
+          setError('Failed to fetch employee data');
+        }
+      };
 
-        fetchEmployee();
+      fetchEmployee();
     }
-}, [selectedEmployeeNss]);
+  }, [selectedEmployeeNss]);
 
-  // useEffect para sincronizar employeeData con formData
-  useEffect(() => {
-    console.log("employeeData cambió:", employeeData);
+  // Memorizar los datos del empleado para evitar recalculaciones innecesarias
+  const memoizedEmployeeData = useMemo(() => {
     if (employeeData) {
-      const updatedFormData = {
+      return {
         id: employeeData.id || '',
         name: employeeData.name || '',
         role: employeeData.role || '',
@@ -215,16 +214,19 @@ export default function DashboardEmployedEdit() {
         contractType: employeeData.contractType ? employeeData.contractType.name : '',
         profileImage: null,
       };
-      console.log("Actualizando formData con:", updatedFormData);
-      setFormData(updatedFormData);
+    }
+    return null;
+  }, [employeeData]);
+
+  // useEffect para sincronizar employeeData con formData
+  useEffect(() => {
+    console.log("employeeData cambió:", employeeData);
+    if (memoizedEmployeeData) {
+      console.log("Actualizando formData con:", memoizedEmployeeData);
+      setFormData(memoizedEmployeeData);
     }
     console.log('pos-sync formData:', formData);
-  }, [employeeData]);
-  
-  
-  
-
-
+  }, [memoizedEmployeeData]);
 
   // Función para cargar roles, departamentos y títulos de trabajo para la empresa seleccionada
   const fetchJobRelatedData = async (companyId: string) => {
@@ -240,8 +242,7 @@ export default function DashboardEmployedEdit() {
   // Manejador de cambios para actualizar los datos del formulario con los valores de los inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-};
-
+  };
 
   // Manejador de cambios para actualizar la imagen de perfil en los datos del formulario
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
