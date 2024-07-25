@@ -218,20 +218,19 @@ export default function DashboardEmployedEdit() {
     return null;
   }, [employeeData]);
   
+  
 
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
-    console.log("employeeData cambió:", employeeData);
     if (memoizedEmployeeData) {
-      console.log("Actualizando formData con:", memoizedEmployeeData);
       setFormData(prevFormData => {
         // Verifica si formData está vacío
-        const isFormDataEmpty = Object.values(prevFormData).every(value => value === '' || value === null);
+        const isFormDataEmpty = Object.values(prevFormData).every(value => value === '' || value === null || value === undefined);
         return isFormDataEmpty ? memoizedEmployeeData : prevFormData;
       });
     }
-    console.log('pos-sync formData:', formData);
   }, [memoizedEmployeeData]);
+  
   
 
   // Función para cargar roles, departamentos y títulos de trabajo para la empresa seleccionada
