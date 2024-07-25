@@ -188,48 +188,36 @@ export default function DashboardEmployedEdit() {
 
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
-    console.log("employeeData cambió:", employeeData);
     if (employeeData) {
-        try {
-            const updatedFormData = {
-                id: employeeData.id || '',
-                name: employeeData.name || '',
-                role: employeeData.role || '',
-                department: employeeData.department || '',
-                companyId: employeeData.companyId || '',
-                socialSecurityNumber: employeeData.socialSecurityNumber || '',
-                CURP: employeeData.CURP || '',
-                RFC: employeeData.RFC || '',
-                address: employeeData.address || '',
-                phoneNumber: employeeData.phoneNumber || '',
-                email: employeeData.email || '',
-                birthDate: employeeData.birthDate ? new Date(employeeData.birthDate).toISOString().split('T')[0] : '',
-                hireDate: employeeData.hireDate ? new Date(employeeData.hireDate).toISOString().split('T')[0] : '',
-                emergencyContact: employeeData.emergencyContact || '',
-                emergencyPhone: employeeData.emergencyPhone || '',
-                maritalStatus: employeeData.maritalStatus || '',
-                nationality: employeeData.nationality || '',
-                educationLevel: employeeData.educationLevel || '',
-                gender: employeeData.gender || '',
-                bloodType: employeeData.bloodType || '',
-                jobTitle: employeeData.jobTitle ? employeeData.jobTitle.name : '',
-                workShift: employeeData.workShift ? employeeData.workShift.name : '',
-                contractType: employeeData.contractType ? employeeData.contractType.name : '',
-                profileImage: null,
-            };
-            console.log("Actualizando formData con:", updatedFormData);
-            setFormData(updatedFormData);
-        } catch (error) {
-            if (error instanceof Error) {
-                setError("Hubo un problema al cargar los datos del empleado. Por favor, inténtalo de nuevo.");
-            } else {
-                setError("Error desconocido. Por favor, inténtalo de nuevo.");
-            }
-        }
+      const updatedFormData = {
+        id: employeeData.id || '',
+        name: employeeData.name || '',
+        role: employeeData.role || '',
+        department: employeeData.department || '',
+        companyId: employeeData.companyId || '',
+        socialSecurityNumber: employeeData.socialSecurityNumber || '',
+        CURP: employeeData.CURP || '',
+        RFC: employeeData.RFC || '',
+        address: employeeData.address || '',
+        phoneNumber: employeeData.phoneNumber || '',
+        email: employeeData.email || '',
+        birthDate: employeeData.birthDate ? new Date(employeeData.birthDate).toISOString().split('T')[0] : '',
+        hireDate: employeeData.hireDate ? new Date(employeeData.hireDate).toISOString().split('T')[0] : '',
+        emergencyContact: employeeData.emergencyContact || '',
+        emergencyPhone: employeeData.emergencyPhone || '',
+        maritalStatus: employeeData.maritalStatus || '',
+        nationality: employeeData.nationality || '',
+        educationLevel: employeeData.educationLevel || '',
+        gender: employeeData.gender || '',
+        bloodType: employeeData.bloodType || '',
+        jobTitle: employeeData.jobTitle ? employeeData.jobTitle.name : '',
+        workShift: employeeData.workShift ? employeeData.workShift.name : '',
+        contractType: employeeData.contractType ? employeeData.contractType.name : '',
+        profileImage: null,
+      };
+      setFormData(updatedFormData);
     }
-    console.log('pos-sync formData:', formData);
-}, [employeeData]);
-
+  }, [employeeData]);
   
   
   
