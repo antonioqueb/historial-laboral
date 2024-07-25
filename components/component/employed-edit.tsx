@@ -209,9 +209,9 @@ export default function DashboardEmployedEdit() {
         educationLevel: employeeData.educationLevel || '',
         gender: employeeData.gender || '',
         bloodType: employeeData.bloodType || '',
-        jobTitle: employeeData.jobTitle ? employeeData.jobTitle.name : '',
-        workShift: employeeData.workShift ? employeeData.workShift.name : '',
-        contractType: employeeData.contractType ? employeeData.contractType.name : '',
+        jobTitle: employeeData.jobTitle.name ? employeeData.jobTitle : '',
+        workShift: employeeData.workShift.name ? employeeData.workShift : '',
+        contractType: employeeData.contractType.name ? employeeData.contractType : '',
         profileImage: null,
       };
     }
@@ -223,10 +223,15 @@ export default function DashboardEmployedEdit() {
     console.log("employeeData cambió:", employeeData);
     if (memoizedEmployeeData) {
       console.log("Actualizando formData con:", memoizedEmployeeData);
-      setFormData(memoizedEmployeeData);
+      setFormData(prevFormData => {
+        // Verifica si formData está vacío
+        const isFormDataEmpty = Object.values(prevFormData).every(value => value === '' || value === null);
+        return isFormDataEmpty ? memoizedEmployeeData : prevFormData;
+      });
     }
     console.log('pos-sync formData:', formData);
   }, [memoizedEmployeeData]);
+  
 
   // Función para cargar roles, departamentos y títulos de trabajo para la empresa seleccionada
   const fetchJobRelatedData = async (companyId: string) => {
