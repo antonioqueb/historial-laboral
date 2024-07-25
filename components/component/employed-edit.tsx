@@ -166,28 +166,28 @@ export default function DashboardEmployedEdit() {
   // getEmployeeByNss
   useEffect(() => {
     if (selectedEmployeeNss) {
-      const fetchEmployee = async () => {
-        try {
-          const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
-          if (res.ok) {
-            const { employee } = await res.json();
-            console.log("Datos del empleado obtenidos:", employee);
-            setEmployeeData(employee);
-          } else {
-            setError('Failed to fetch employee data');
-          }
-        } catch (err) {
-          setError('Failed to fetch employee data');
-        }
-      };
+        const fetchEmployee = async () => {
+            try {
+                const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
+                if (res.ok) {
+                    const { employee } = await res.json();
+                    console.log("Datos del empleado obtenidos:", employee);
+                    setEmployeeData(employee);
+                } else {
+                    setError('Failed to fetch employee data');
+                }
+            } catch (err) {
+                setError('Failed to fetch employee data');
+            }
+        };
 
-      fetchEmployee();
+        fetchEmployee();
     }
-  }, [selectedEmployeeNss]);
-
+}, [selectedEmployeeNss]);
 
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
+    console.log("employeeData cambió:", employeeData);
     if (employeeData) {
       const updatedFormData = {
         id: employeeData.id || '',
@@ -215,8 +215,10 @@ export default function DashboardEmployedEdit() {
         contractType: employeeData.contractType ? employeeData.contractType.name : '',
         profileImage: null,
       };
+      console.log("Actualizando formData con:", updatedFormData);
       setFormData(updatedFormData);
     }
+    console.log('pos-sync formData:', formData);
   }, [employeeData]);
   
   
@@ -238,7 +240,8 @@ export default function DashboardEmployedEdit() {
   // Manejador de cambios para actualizar los datos del formulario con los valores de los inputs
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+};
+
 
   // Manejador de cambios para actualizar la imagen de perfil en los datos del formulario
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
