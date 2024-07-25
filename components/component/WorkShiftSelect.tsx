@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui.select';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 
 interface WorkShiftSelectProps {
@@ -72,7 +72,7 @@ const WorkShiftSelect: React.FC<WorkShiftSelectProps> = ({ companyRFC, value, on
       {!showWorkShiftInput ? (
         <Select
           value={value || ""}
-          onValueChange={(value) => {
+          onValueChange={(value: string) => {
             console.log('Select value changed:', value);
             if (value === "new") {
               setShowWorkShiftInput(true);
