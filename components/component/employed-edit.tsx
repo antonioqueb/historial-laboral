@@ -209,14 +209,15 @@ export default function DashboardEmployedEdit() {
         educationLevel: employeeData.educationLevel || '',
         gender: employeeData.gender || '',
         bloodType: employeeData.bloodType || '',
-        jobTitle: employeeData.jobTitle.name ? employeeData.jobTitle : '',
-        workShift: employeeData.workShift.name ? employeeData.workShift : '',
-        contractType: employeeData.contractType.name ? employeeData.contractType : '',
+        jobTitle: employeeData.jobTitle ? employeeData.jobTitle.name : '',
+        workShift: employeeData.workShift ? employeeData.workShift.name : '',
+        contractType: employeeData.contractType ? employeeData.contractType.name : '',
         profileImage: null,
       };
     }
     return null;
   }, [employeeData]);
+  
 
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
