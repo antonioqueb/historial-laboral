@@ -221,25 +221,27 @@ export default function DashboardEmployedReview() {
                 </div>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
                   <Label htmlFor="rating">Calificación</Label>
-                  <Slider.Root
-                    className="relative flex items-center select-none touch-none w-full h-5"
-                    value={[reviewData.rating]}
-                    onValueChange={handleRatingChange}
-                    max={5}
-                    step={1}
-                    aria-label="Rating"
-                  >
-                    <Slider.Track className="bg-gray-200 relative flex-grow rounded-full h-1">
-                      <Slider.Range className="absolute bg-blue-500 rounded-full h-full" />
-                    </Slider.Track>
-                    <Slider.Thumb className="block w-5 h-5 bg-blue-500 rounded-full focus:outline-none" />
-                  </Slider.Root>
-                  <div className="flex justify-between">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span key={star} className={`text-xl ${reviewData.rating >= star ? 'text-yellow-500' : 'text-gray-400'}`}>
-                        ★
-                      </span>
-                    ))}
+                  <div className="flex items-center space-x-2">
+                    <Slider.Root
+                      className="relative flex items-center select-none touch-none w-full h-8"
+                      value={[reviewData.rating]}
+                      onValueChange={handleRatingChange}
+                      max={5}
+                      step={1}
+                      aria-label="Rating"
+                    >
+                      <Slider.Track className="bg-gray-200 relative flex-grow rounded-full h-2">
+                        <Slider.Range className="absolute bg-blue-500 rounded-full h-full" />
+                      </Slider.Track>
+                      <Slider.Thumb className="block w-6 h-6 bg-blue-500 rounded-full focus:outline-none" />
+                    </Slider.Root>
+                    <div className="flex space-x-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span key={star} className={`text-3xl ${reviewData.rating >= star ? 'text-yellow-500' : 'text-gray-400'}`}>
+                          ★
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
