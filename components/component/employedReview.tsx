@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { createReview, getCompaniesList, getEmployeesByCompany, getUserId, Employee, Company } from '@/utils/fetchData';
 import { reviewSchema } from "@/schemas/reviewSchema"; // Importar el esquema de validación
 import { z } from "zod";
+import * as Slider from '@radix-ui/react-slider';
 
 interface ReviewData {
   employeeId: string;
@@ -117,6 +118,14 @@ export default function DashboardEmployedReview() {
     }));
   };
 
+  // Handle slider change
+  const handleRatingChange = (value: number[]) => {
+    setReviewData((prevData) => ({
+      ...prevData,
+      rating: value[0],
+    }));
+  };
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -212,7 +221,26 @@ export default function DashboardEmployedReview() {
                 </div>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
                   <Label htmlFor="rating">Calificación</Label>
-                  <Input type="number" id="rating" name="rating" value={reviewData.rating.toString()} onChange={handleReviewChange} required min="0" max="5" />
+                  <Slider.Root
+                    className="relative flex items-center select-none touch-none w-full h-5"
+                    value={[reviewData.rating]}
+                    onValueChange={handleRatingChange}
+                    max={5}
+                    step={1}
+                    aria-label="Rating"
+                  >
+                    <Slider.Track className="bg-gray-200 relative flex-grow rounded-full h-1">
+                      <Slider.Range className="absolute bg-blue-500 rounded-full h-full" />
+                    </Slider.Track>
+                    <Slider.Thumb className="block w-5 h-5 bg-blue-500 rounded-full focus:outline-none" />
+                  </Slider.Root>
+                  <div className="flex justify-between">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span key={star} className={`text-xl ${reviewData.rating >= star ? 'text-yellow-500' : 'text-gray-400'}`}>
+                        ★
+                      </span>
+                    ))}
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
                   <Label htmlFor="positive">Positiva</Label>
@@ -241,7 +269,7 @@ export default function DashboardEmployedReview() {
         </div>
         {error && <div className="text-red-500 mb-4">{error}</div>}
         {success && <div className="text-green-500 mb-4">{success}</div>}
-        <div className="flex justify-end mt-4">  
+        <div className="flex justify-end mt-4">
           <Button type="submit" disabled={!isAuthorized}>Dejar Reseña</Button>
           <Link href="/tablero/empleados" className="ml-2">
             <Button type="button">Cancelar</Button>
