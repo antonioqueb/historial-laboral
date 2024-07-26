@@ -223,21 +223,26 @@ export default function DashboardEmployedReview() {
                   <Label htmlFor="rating">Calificación</Label>
                   <div className="flex items-center space-x-2">
                     <Slider.Root
-                      className="relative flex items-center select-none touch-none w-full h-8"
+                      className="relative flex items-center select-none touch-none w-full h-12"
                       value={[reviewData.rating]}
                       onValueChange={handleRatingChange}
                       max={5}
                       step={1}
                       aria-label="Rating"
+                      style={{ display: 'none' }} // Ocultando el track y el thumb
                     >
-                      <Slider.Track className="bg-gray-200 relative flex-grow rounded-full h-2">
-                        <Slider.Range className="absolute bg-blue-500 rounded-full h-full" />
+                      <Slider.Track className="hidden">
+                        <Slider.Range className="hidden" />
                       </Slider.Track>
-                      <Slider.Thumb className="block w-6 h-6 bg-blue-500 rounded-full focus:outline-none" />
+                      <Slider.Thumb className="hidden" />
                     </Slider.Root>
                     <div className="flex space-x-1">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <span key={star} className={`text-3xl ${reviewData.rating >= star ? 'text-yellow-500' : 'text-gray-400'}`}>
+                        <span
+                          key={star}
+                          className={`text-4xl cursor-pointer ${reviewData.rating >= star ? 'text-yellow-500' : 'text-gray-400'}`}
+                          onClick={() => handleRatingChange([star])}
+                        >
                           ★
                         </span>
                       ))}
