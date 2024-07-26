@@ -95,7 +95,7 @@ model Review {
   employee      Employee  @relation(fields: [employeeId], references: [id])
   companyId     String
   company       Company   @relation(fields: [companyId], references: [id])
-  title         String
+  title         String?   // Campo opcional
   description   String
   rating        Int       @default(0) // Puedes ajustar el valor por defecto según sea necesario
   positive      Boolean   @default(true)
@@ -103,6 +103,7 @@ model Review {
   createdAt     DateTime  @default(now()) // Registro de creación
   updatedAt     DateTime  @updatedAt // Registro de actualización
 }
+
 
 /// The `Role` model represents different roles within a company.
 /// Each role has a unique identifier, a name, and is associated with multiple companies.

@@ -16,7 +16,7 @@ import * as Slider from '@radix-ui/react-slider';
 interface ReviewData {
   employeeId: string;
   companyId: string;
-  title: string;
+  // title: string; // Elimina el campo title del estado
   description: string;
   rating: number;
   positive: boolean;
@@ -44,7 +44,7 @@ export default function DashboardEmployedReview() {
   const [reviewData, setReviewData] = useState<ReviewData>({
     employeeId: '',
     companyId: '',
-    title: '',
+    // title: '', // Elimina el campo title del estado inicial
     description: '',
     rating: 0,
     positive: true,
@@ -54,7 +54,6 @@ export default function DashboardEmployedReview() {
   const [success, setSuccess] = useState<string | null>(null);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
 
-  // Fetch companies when the component mounts
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
@@ -70,7 +69,6 @@ export default function DashboardEmployedReview() {
     fetchCompanies();
   }, []);
 
-  // Fetch employees when a company is selected
   useEffect(() => {
     if (selectedCompany) {
       const fetchEmployees = async () => {
@@ -88,7 +86,6 @@ export default function DashboardEmployedReview() {
     }
   }, [selectedCompany]);
 
-  // Check authorization when an employee is selected
   useEffect(() => {
     if (selectedEmployee) {
       const checkEmployeeAuthorization = async () => {
@@ -104,12 +101,10 @@ export default function DashboardEmployedReview() {
 
       checkEmployeeAuthorization();
     } else {
-      // Reset authorization state when no employee is selected
       setIsAuthorized(null);
     }
   }, [selectedEmployee, employees]);
 
-  // Handle form input changes
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setReviewData((prevData) => ({
@@ -118,7 +113,6 @@ export default function DashboardEmployedReview() {
     }));
   };
 
-  // Handle slider change
   const handleRatingChange = (value: number[]) => {
     setReviewData((prevData) => ({
       ...prevData,
@@ -126,7 +120,6 @@ export default function DashboardEmployedReview() {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -138,7 +131,6 @@ export default function DashboardEmployedReview() {
       return;
     }
 
-    // Validar los datos de la reseña con Zod
     try {
       reviewSchema.parse(reviewData);
     } catch (error) {
@@ -211,10 +203,6 @@ export default function DashboardEmployedReview() {
             )}
             {selectedEmployee && isAuthorized && (
               <>
-                <div className="grid grid-cols-1 gap-4 items-center mb-4">
-                  <Label htmlFor="title">Título</Label>
-                  <Input id="title" name="title" value={reviewData.title} onChange={handleReviewChange} required />
-                </div>
                 <div className="grid grid-cols-1 gap-4 items-center mb-4">
                   <Label htmlFor="description">Descripción</Label>
                   <Textarea id="description" name="description" value={reviewData.description} onChange={handleReviewChange} required />

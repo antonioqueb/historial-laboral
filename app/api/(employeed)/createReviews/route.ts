@@ -7,7 +7,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
-    // Crear un objeto "NextAuth" compatible con la request y el response
     const session = await getServerSession({ req, ...authOptions });
     if (!session || !session.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -16,19 +15,18 @@ export async function POST(req: Request) {
     const {
         employeeId,
         companyId,
-        title,
+        title, // Sigue recibiendo el título pero será opcional
         description,
         rating,
         positive,
         documentation,
-        userId // Asegúrate de recibir el userId desde la solicitud
+        userId
     } = await req.json();
 
     if (!userId) {
         return NextResponse.json({ error: "Failed to fetch user ID" }, { status: 500 });
     }
 
-    // Validar que la compañía del usuario que hace la petición sea la misma que está dejando la review
     const userCompany = await prisma.company.findFirst({
         where: {
             id: companyId,
@@ -40,12 +38,11 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Crear la revisión en la base de datos
     const review = await prisma.review.create({
         data: {
             employeeId,
             companyId,
-            title,
+            title, // El título se puede omitir si es null
             description,
             rating,
             positive,
