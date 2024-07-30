@@ -421,20 +421,21 @@ export default function DashboardEmployedAdmin() {
       setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
       return;
     }
-
+  
     if (roleName.trim() === "") {
       setRoleInput('');
       return;
     }
-
+  
     const role = await createRoleIfNotExists(roleName);
     if (role) {
       setRoles([...roles, role]);
-      setFormData({ ...formData, role: role.id });
+      setFormData({ ...formData, role: role.id }); // Guardar el ID
       setRoleInput('');
       setShowInput(false); // Ocultar el input después de agregar el nuevo rol
     }
   };
+  
 
   // Renderizado de selección de roles
   const renderRoleSelection = () => {
@@ -447,7 +448,7 @@ export default function DashboardEmployedAdmin() {
               if (value === "new") {
                 setShowInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo rol"
               } else {
-                setFormData({ ...formData, role: value });
+                setFormData({ ...formData, role: value }); // Almacenar el ID del rol
               }
             }}
             required
@@ -457,7 +458,7 @@ export default function DashboardEmployedAdmin() {
             </SelectTrigger>
             <SelectContent>
               {roles.map((role) => (
-                <SelectItem key={role.id} value={role.name || role.id}>
+                <SelectItem key={role.id} value={role.id}>
                   {role.name}
                 </SelectItem>
               ))}
@@ -485,6 +486,7 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
+  
 
   // Manejadores de departamentos
   const handleDepartmentSelect = async (departmentName: string) => {
@@ -595,7 +597,7 @@ export default function DashboardEmployedAdmin() {
               if (value === "new") {
                 setShowJobTitleInput(true); // Mostrar el input cuando se selecciona "Agregar nuevo título de trabajo"
               } else {
-                setFormData({ ...formData, jobTitle: value });
+                setFormData({ ...formData, jobTitle: value }); // Almacenar el ID del título de trabajo
               }
             }}
             required
@@ -633,7 +635,7 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-
+  
 
 
 
