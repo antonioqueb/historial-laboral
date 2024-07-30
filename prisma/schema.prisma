@@ -52,8 +52,10 @@ model Company {
 model Employee {
   id                   String   @id @default(cuid())
   name                 String
-  role                 String
-  department           String
+  role                 Role     @relation(fields: [roleId], references: [id])
+  roleId               String
+  department           Department @relation(fields: [departmentId], references: [id])
+  departmentId         String
   description          String?
   companyId            String
   company              Company  @relation(fields: [companyId], references: [id])
@@ -68,7 +70,7 @@ model Employee {
   emergencyContact     String?
   emergencyPhone       String?
   bankAccountNumber    String?
-  clabeNumber          String?   
+  clabeNumber          String?
   maritalStatus        String
   nationality          String
   educationLevel       String
@@ -104,18 +106,14 @@ model Review {
   updatedAt     DateTime  @updatedAt // Registro de actualización
 }
 
-
-/// The `Role` model represents different roles within a company.
-/// Each role has a unique identifier, a name, and is associated with multiple companies.
-/// The model also includes timestamps for when the role was created and last updated.
 model Role {
   id        String   @id @default(cuid())
   name      String
   companies Company[] // Role: Define los roles en la empresa
+  employees Employee[] // Relación con Employee
   createdAt DateTime  @default(now()) // Registro de creación
   updatedAt DateTime  @updatedAt // Registro de actualización
 }
-
 
 model WorkShift {
   id         String   @id @default(cuid())
@@ -130,6 +128,7 @@ model Department {
   id         String   @id @default(cuid())
   name       String
   companies  Company[] // Department: Define los departamentos en la empresa
+  employees  Employee[] // Relación con Employee
   employeeDepartments EmployeeDepartment[] // Relación con el modelo intermedio EmployeeDepartment
   createdAt  DateTime  @default(now()) // Registro de creación
   updatedAt  DateTime  @updatedAt // Registro de actualización
