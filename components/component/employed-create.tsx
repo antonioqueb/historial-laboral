@@ -1,4 +1,3 @@
-// components\component\employed-create.tsx
 'use client';
 
 import { useState, useEffect } from "react";
@@ -11,8 +10,6 @@ import { z } from "zod";
 import createEmployedSchema from "@/schemas/createEmployedSchema";
 import WorkShiftSelect from "./WorkShiftSelect";
 import ContractTypeSelect from "./ContractTypeSelect";
-
-
 
 // Definición de la estructura de los datos del formulario
 interface FormData {
@@ -35,12 +32,11 @@ interface FormData {
   educationLevel: string;
   gender: string;
   bloodType: string;
-  jobTitle: string; // Cambiado para asegurar que almacene el id
-  workShift: string; // Cambiado para asegurar que almacene el id
-  contractType: string; // Cambiado para asegurar que almacene el id
+  jobTitle: string;
+  workShift: string;
+  contractType: string;
   profileImage: File | null;
 }
-
 
 export default function DashboardEmployedAdmin() {
   // Estados del formulario
@@ -83,7 +79,6 @@ export default function DashboardEmployedAdmin() {
   const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
   const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
   const [companyRFC, setCompanyRFC] = useState('');
-
 
   // Estados auxiliares para entradas dinámicas
   const [error, setError] = useState<string | null>(null);
@@ -179,7 +174,6 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
-
   const loadJobTitles = async () => {
     if (!companyRFC) {
       setJobTitles([]);
@@ -192,8 +186,6 @@ export default function DashboardEmployedAdmin() {
       setError('Error al cargar los títulos de trabajo');
     }
   };
-
-
 
   // Funciones para crear datos si no existen
   const createRoleIfNotExists = async (roleName: string) => {
@@ -238,7 +230,6 @@ export default function DashboardEmployedAdmin() {
     return null;
   };
 
-
   const createJobTitleIfNotExists = async (jobTitleName: string) => {
     const existingJobTitle = jobTitles.find(jt => jt.name.toLowerCase() === jobTitleName.toLowerCase());
     if (existingJobTitle) {
@@ -260,8 +251,6 @@ export default function DashboardEmployedAdmin() {
     return null;
   };
 
-
-
   // Efectos para cargar datos iniciales
   useEffect(() => {
     loadCompanies();
@@ -279,7 +268,6 @@ export default function DashboardEmployedAdmin() {
       loadJobTitles();
     }
   }, [companyRFC]);
-
 
   // Manejadores de eventos
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -302,11 +290,6 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
-
-
-
-
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFormData({ ...formData, profileImage: e.target.files[0] });
@@ -319,12 +302,11 @@ export default function DashboardEmployedAdmin() {
     }
   };
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
-  
+
     try {
       createEmployedSchema.parse(formData);
     } catch (error) {
@@ -333,21 +315,20 @@ export default function DashboardEmployedAdmin() {
         return;
       }
     }
-  
+
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof FormData];
       if (value !== null && value !== undefined && value !== '') {
-        // Enviar directamente el valor sin convertirlo en JSON
         form.append(key, value.toString());
       }
     });
-  
+
     // Aquí se agrega el console.log para ver cómo se están enviando los datos
     form.forEach((value, key) => {
       console.log(`${key}: ${value}`);
     });
-  
+
     const result = await createEmployee(form);
     if (result.success) {
       if (formData.RFC && additionalFiles.length > 0) {
@@ -387,15 +368,6 @@ export default function DashboardEmployedAdmin() {
       setError(result.error ?? null);
     }
   };
-  
-
-
-
-
-
-
-
-
 
   // Función de búsqueda de nacionalidades
   const handleNationalitySearch = (searchTerm: string) => {
@@ -421,12 +393,12 @@ export default function DashboardEmployedAdmin() {
       setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
       return;
     }
-  
+
     if (roleName.trim() === "") {
       setRoleInput('');
       return;
     }
-  
+
     const role = await createRoleIfNotExists(roleName);
     if (role) {
       setRoles([...roles, role]);
@@ -435,7 +407,6 @@ export default function DashboardEmployedAdmin() {
       setShowInput(false); // Ocultar el input después de agregar el nuevo rol
     }
   };
-  
 
   // Renderizado de selección de roles
   const renderRoleSelection = () => {
@@ -486,7 +457,6 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
 
   // Manejadores de departamentos
   const handleDepartmentSelect = async (departmentName: string) => {
@@ -559,10 +529,6 @@ export default function DashboardEmployedAdmin() {
     );
   };
 
-
-
-
-
   // Manejadores de títulos de trabajo
   const handleJobTitleSelect = async (jobTitleName: string) => {
     if (!formData.RFC) {
@@ -579,12 +545,10 @@ export default function DashboardEmployedAdmin() {
     if (jobTitle) {
       setJobTitles([...jobTitles, jobTitle]);
       setFormData({ ...formData, jobTitle: jobTitle.id }); // Guardar el ID
-      console.log("Selected JobTitle ID:", jobTitle.id); // Para depuración
       setJobTitleInput('');
       setShowJobTitleInput(false);
     }
   };
-
 
   // Renderizado de selección de títulos de trabajo
   const renderJobTitleSelection = () => {
@@ -635,9 +599,6 @@ export default function DashboardEmployedAdmin() {
       </>
     );
   };
-  
-
-
 
   return (
     <div className="w-full mx-auto px-4 md:px-6 py-12 mb-14">
@@ -748,7 +709,6 @@ export default function DashboardEmployedAdmin() {
                 required
               />
             </div>
-
           </div>
         </div>
         <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
@@ -867,4 +827,3 @@ export default function DashboardEmployedAdmin() {
     </div>
   );
 }
-
