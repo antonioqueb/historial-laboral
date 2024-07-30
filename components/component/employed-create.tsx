@@ -324,7 +324,7 @@ export default function DashboardEmployedAdmin() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
-
+  
     try {
       createEmployedSchema.parse(formData);
     } catch (error) {
@@ -333,9 +333,7 @@ export default function DashboardEmployedAdmin() {
         return;
       }
     }
-
-    console.log("Form data being sent:", formData); // Para depuración
-
+  
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       const value = formData[key as keyof FormData];
@@ -344,7 +342,12 @@ export default function DashboardEmployedAdmin() {
         form.append(key, value.toString());
       }
     });
-
+  
+    // Aquí se agrega el console.log para ver cómo se están enviando los datos
+    form.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+  
     const result = await createEmployee(form);
     if (result.success) {
       if (formData.RFC && additionalFiles.length > 0) {
@@ -384,6 +387,7 @@ export default function DashboardEmployedAdmin() {
       setError(result.error ?? null);
     }
   };
+  
 
 
 
