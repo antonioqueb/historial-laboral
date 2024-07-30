@@ -32,5 +32,16 @@ services:
       postgres:
         condition: service_healthy
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    ports:
+      - "3028:80" # Puerto externo 3028 al puerto 80 del contenedor
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    depends_on:
+      - postgres
+
 volumes:
   postgres-data:
