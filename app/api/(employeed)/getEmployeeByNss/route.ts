@@ -17,29 +17,24 @@ const prisma = new PrismaClient();
 export async function GET(req: Request) {
   console.log("Starting GET request for employee details");
 
-  // Obtener la sesión actual
   const session = await getServerSession(authOptions) as ExtendedSession | null;
   console.log("Session:", session);
 
-  // Verificar si la sesión es válida
   if (!session || !session.user || !session.user.id) {
     console.log("Unauthorized access attempt");
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Obtener el NSS (Número de Seguridad Social) de los parámetros de consulta
   const url = new URL(req.url);
   const socialSecurityNumber = url.searchParams.get("nss");
   console.log("Social Security Number:", socialSecurityNumber);
 
-  // Validar que el NSS esté presente
   if (!socialSecurityNumber) {
     console.log("Social Security Number is missing in request");
     return NextResponse.json({ error: "Social Security Number is required" }, { status: 400 });
   }
 
   try {
-    // Buscar el empleado en la base de datos
     const employee = await prisma.employee.findUnique({
       where: {
         socialSecurityNumber: socialSecurityNumber,
@@ -47,8 +42,18 @@ export async function GET(req: Request) {
       select: {
         id: true,
         name: true,
-        role: true,
-        department: true,
+        role: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        department: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
         companyId: true,
         socialSecurityNumber: true,
         CURP: true,
@@ -89,7 +94,6 @@ export async function GET(req: Request) {
       },
     });
 
-    // Si no se encuentra el empleado, retornar un error 404
     if (!employee) {
       console.log("Employee not found");
       return NextResponse.json({ error: "Employee not found" }, { status: 404 });
@@ -97,17 +101,43 @@ export async function GET(req: Request) {
 
     console.log("Employee data:", employee);
 
-    // Deshabilitar la caché añadiendo encabezados de control de caché
     const headers = new Headers();
     headers.append('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     headers.append('Pragma', 'no-cache');
     headers.append('Expires', '0');
     headers.append('Surrogate-Control', 'no-store');
 
-    // Retornar los datos del empleado
-    return new NextResponse(JSON.stringify({ employee }), { headers });
+    return new NextResponse(JSON.stringify({ 
+      employee: {
+        id: employee.id,
+        name: employee.name,
+        role: employee.role ? employee.role.name : null,
+        department: employee.department ? employee.department.name : null,
+        companyId: employee.companyId,
+        socialSecurityNumber: employee.socialSecurityNumber,
+        CURP: employee.CURP,
+        RFC: employee.RFC,
+        address: employee.address,
+        phoneNumber: employee.phoneNumber,
+        email: employee.email,
+        birthDate: employee.birthDate,
+        hireDate: employee.hireDate,
+        emergencyContact: employee.emergencyContact,
+        emergencyPhone: employee.emergencyPhone,
+        maritalStatus: employee.maritalStatus,
+        nationality: employee.nationality,
+        educationLevel: employee.educationLevel,
+        gender: employee.gender,
+        bloodType: employee.bloodType,
+        jobTitle: employee.jobTitle ? employee.jobTitle.name : null,
+        workShift: employee.workShift ? employee.workShift.name : null,
+        contractType: employee.contractType ? employee.contractType.name : null,
+        profileImageUrl: employee.profileImageUrl,
+        createdAt: employee.createdAt,
+        updatedAt: employee.updatedAt
+      } 
+    }), { headers });
   } catch (error) {
-    // Manejo de errores con más detalles
     console.error("Error fetching employee:", error);
     return NextResponse.json({ error: (error as any).message || "Internal Server Error" }, { status: 500 });
   }
