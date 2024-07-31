@@ -389,7 +389,7 @@ export default function DashboardEmployedAdmin() {
   };
 
   const handleRoleSelect = async (roleName: string) => {
-    if (!formData.RFC) {
+    if (!companyRFC) {
       setError('Debes seleccionar una empresa antes de agregar un nuevo rol');
       return;
     }
@@ -460,7 +460,7 @@ export default function DashboardEmployedAdmin() {
 
   // Manejadores de departamentos
   const handleDepartmentSelect = async (departmentName: string) => {
-    if (!formData.RFC) {
+    if (!companyRFC) {
       setError('Debes seleccionar una empresa antes de agregar un nuevo departamento');
       return;
     }
@@ -531,7 +531,7 @@ export default function DashboardEmployedAdmin() {
 
   // Manejadores de títulos de trabajo
   const handleJobTitleSelect = async (jobTitleName: string) => {
-    if (!formData.RFC) {
+    if (!companyRFC) {
       setError('Debes seleccionar una empresa antes de agregar un nuevo título de trabajo');
       return;
     }
