@@ -191,8 +191,8 @@ export default function DashboardEmployedEdit() {
       return {
         id: employeeData.id || '',
         name: employeeData.name || '',
-        role: employeeData.role || '',
-        department: employeeData.department || '',
+        role: employeeData.role.name || '',
+        department: employeeData.department.name || '',
         companyId: employeeData.companyId || '',
         socialSecurityNumber: employeeData.socialSecurityNumber || '',
         CURP: employeeData.CURP || '',
@@ -209,9 +209,9 @@ export default function DashboardEmployedEdit() {
         educationLevel: employeeData.educationLevel || '',
         gender: employeeData.gender || '',
         bloodType: employeeData.bloodType || '',
-        jobTitle: employeeData.jobTitle ? employeeData.jobTitle.name : '',
-        workShift: employeeData.workShift ? employeeData.workShift.name : '',
-        contractType: employeeData.contractType ? employeeData.contractType.name : '',
+        jobTitle: employeeData.jobTitle.name || '',
+        workShift: employeeData.workShift.name || '',
+        contractType: employeeData.contractType.name || '',
         profileImage: null,
       };
     }
