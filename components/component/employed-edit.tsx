@@ -217,21 +217,14 @@ export default function DashboardEmployedEdit() {
     }
     return null;
   }, [employeeData]);
-  
-  
 
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
     if (memoizedEmployeeData) {
-      setFormData(prevFormData => {
-        // Verifica si formData está vacío
-        const isFormDataEmpty = Object.values(prevFormData).every(value => value === '' || value === null || value === undefined);
-        return isFormDataEmpty ? memoizedEmployeeData : prevFormData;
-      });
+      console.log('Sincronizando datos del empleado:', memoizedEmployeeData);
+      setFormData(memoizedEmployeeData);
     }
   }, [memoizedEmployeeData]);
-  
-  
 
   // Función para cargar roles, departamentos y títulos de trabajo para la empresa seleccionada
   const fetchJobRelatedData = async (companyId: string) => {
