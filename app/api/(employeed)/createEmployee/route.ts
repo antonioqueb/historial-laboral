@@ -103,8 +103,8 @@ export async function POST(req: Request) {
 
     const employeeData: any = {
       name: name as string,
-      role: role as string,
-      department: department as string,
+      role: { connect: { id: role as string } },
+      department: { connect: { id: department as string } },
       socialSecurityNumber: nss as string,
       CURP: CURP as string,
       RFC: RFC as string,
@@ -126,11 +126,7 @@ export async function POST(req: Request) {
       workShift: { connect: { id: workShift as string } },
       contractType: { connect: { id: contractType as string } },
       profileImageUrl: imageUrl as string,
-      company: {
-        connect: {
-          id: companyId as string,
-        }
-      }
+      company: { connect: { id: companyId as string } }
     };
 
     if (description) {
