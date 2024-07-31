@@ -22,8 +22,14 @@ export interface Company {
 export interface Employee {
   id: string;
   name: string;
-  role: string;
-  department: string;
+  role: {
+    id: string;
+    name: string;
+  };
+  department:  {
+    id: string;
+    name: string;
+  };
   companyId: string;
   socialSecurityNumber: string;
   CURP: string;
@@ -191,8 +197,8 @@ export default function DashboardEmployedEdit() {
       return {
         id: employeeData.id || '',
         name: employeeData.name || '',
-        role: employeeData.role.name || '',
-        department: employeeData.department.name || '',
+        role: employeeData.role?.name || '',
+        department: employeeData.department?.name || '',
         companyId: employeeData.companyId || '',
         socialSecurityNumber: employeeData.socialSecurityNumber || '',
         CURP: employeeData.CURP || '',
@@ -209,14 +215,15 @@ export default function DashboardEmployedEdit() {
         educationLevel: employeeData.educationLevel || '',
         gender: employeeData.gender || '',
         bloodType: employeeData.bloodType || '',
-        jobTitle: employeeData.jobTitle.name || '',
-        workShift: employeeData.workShift.name || '',
-        contractType: employeeData.contractType.name || '',
+        jobTitle: employeeData.jobTitle?.name || '',
+        workShift: employeeData.workShift?.name || '',
+        contractType: employeeData.contractType?.name || '',
         profileImage: null,
       };
     }
     return null;
   }, [employeeData]);
+  
 
   // useEffect para sincronizar employeeData con formData
   useEffect(() => {
