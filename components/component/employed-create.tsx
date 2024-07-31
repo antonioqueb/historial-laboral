@@ -194,7 +194,7 @@ export default function DashboardEmployedAdmin() {
       return existingRole;
     }
 
-    const response = await fetch(`/api/Roles?rfc=${formData.RFC}`, {
+    const response = await fetch(`/api/Roles?rfc=${companyRFC}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ export default function DashboardEmployedAdmin() {
       return existingDepartment;
     }
 
-    const response = await fetch(`/api/Department?rfc=${formData.RFC}`, {
+    const response = await fetch(`/api/Department?rfc=${companyRFC}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -236,7 +236,7 @@ export default function DashboardEmployedAdmin() {
       return existingJobTitle;
     }
 
-    const response = await fetch(`/api/JobTitle?rfc=${formData.RFC}`, {
+    const response = await fetch(`/api/JobTitle?rfc=${companyRFC}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
