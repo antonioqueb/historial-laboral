@@ -22,9 +22,14 @@ const WorkShiftSelect: React.FC<WorkShiftSelectProps> = ({ companyRFC, value, on
         return;
       }
       try {
-        const data = await fetch(`/api/WorkShift?rfc=${companyRFC}`).then(res => res.json());
-        console.log('Loaded work shifts:', data);
-        setWorkShifts(data);
+        const response = await fetch(`/api/WorkShift?rfc=${companyRFC}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Loaded work shifts:', data);
+          setWorkShifts(data);
+        } else {
+          console.error('Failed to load work shifts');
+        }
       } catch (error) {
         console.error('Error loading work shifts', error);
       }
@@ -43,6 +48,7 @@ const WorkShiftSelect: React.FC<WorkShiftSelectProps> = ({ companyRFC, value, on
     if (existingWorkShift) {
       console.log('Existing work shift selected:', existingWorkShift);
       onChange(existingWorkShift.id);
+      setShowWorkShiftInput(false); // Ensure to hide the input field after selection
       return;
     }
 
@@ -53,14 +59,18 @@ const WorkShiftSelect: React.FC<WorkShiftSelectProps> = ({ companyRFC, value, on
         body: JSON.stringify({ name: workShiftName }),
       });
 
-      const result = await response.json();
-      console.log('New work shift created:', result);
+      if (response.ok) {
+        const result = await response.json();
+        console.log('New work shift created:', result);
 
-      if (result.id) {
-        setWorkShifts([...workShifts, result]);
-        onChange(result.id);
-        setWorkShiftInput('');
-        setShowWorkShiftInput(false);
+        if (result.id) {
+          setWorkShifts([...workShifts, result]);
+          onChange(result.id);
+          setWorkShiftInput('');
+          setShowWorkShiftInput(false);
+        }
+      } else {
+        console.error('Failed to create new work shift');
       }
     } catch (error) {
       console.error('Error creating new work shift', error);

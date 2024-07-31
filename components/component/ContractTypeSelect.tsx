@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
@@ -21,9 +22,14 @@ const ContractTypeSelect: React.FC<ContractTypeSelectProps> = ({ companyRFC, val
         return;
       }
       try {
-        const data = await fetch(`/api/ContractType?rfc=${companyRFC}`).then(res => res.json());
-        console.log('Loaded contract types:', data);
-        setContractTypes(data);
+        const response = await fetch(`/api/ContractType?rfc=${companyRFC}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Loaded contract types:', data);
+          setContractTypes(data);
+        } else {
+          console.error('Failed to load contract types');
+        }
       } catch (error) {
         console.error('Error loading contract types', error);
       }
@@ -42,6 +48,7 @@ const ContractTypeSelect: React.FC<ContractTypeSelectProps> = ({ companyRFC, val
     if (existingContractType) {
       console.log('Existing contract type selected:', existingContractType);
       onChange(existingContractType.id);
+      setShowContractTypeInput(false); // Ensure to hide the input field after selection
       return;
     }
 
@@ -52,14 +59,18 @@ const ContractTypeSelect: React.FC<ContractTypeSelectProps> = ({ companyRFC, val
         body: JSON.stringify({ name: contractTypeName }),
       });
 
-      const result = await response.json();
-      console.log('New contract type created:', result);
+      if (response.ok) {
+        const result = await response.json();
+        console.log('New contract type created:', result);
 
-      if (result.id) {
-        setContractTypes([...contractTypes, result]);
-        onChange(result.id);
-        setContractTypeInput('');
-        setShowContractTypeInput(false);
+        if (result.id) {
+          setContractTypes([...contractTypes, result]);
+          onChange(result.id);
+          setContractTypeInput('');
+          setShowContractTypeInput(false);
+        }
+      } else {
+        console.error('Failed to create new contract type');
       }
     } catch (error) {
       console.error('Error creating new contract type', error);
