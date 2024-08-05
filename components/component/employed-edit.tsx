@@ -1,16 +1,14 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import Link from 'next/link';
-import { editEmployeeSchema } from "@/schemas/editEmployeeSchema";
-import { z } from "zod";
-import WorkShiftSelect from "./WorkShiftSelect";
-import ContractTypeSelect from "./ContractTypeSelect";
+import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
+import { z } from 'zod';
 
 export interface Company {
   id: string;
@@ -27,7 +25,7 @@ export interface Employee {
     id: string;
     name: string;
   };
-  department:  {
+  department: {
     id: string;
     name: string;
   };
@@ -61,7 +59,239 @@ export interface Employee {
   };
 }
 
-export default function DashboardEmployedEdit() {
+interface SelectProps {
+  companyRFC: string;
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const WorkShiftSelect: React.FC<SelectProps> = ({ companyRFC, value, onChange }) => {
+  const [workShifts, setWorkShifts] = useState<{ id: string; name: string }[]>([]);
+  const [workShiftInput, setWorkShiftInput] = useState<string>('');
+  const [showWorkShiftInput, setShowWorkShiftInput] = useState(false);
+
+  useEffect(() => {
+    const loadWorkShifts = async () => {
+      if (!companyRFC) {
+        setWorkShifts([]);
+        return;
+      }
+      try {
+        const response = await fetch(`/api/WorkShift?rfc=${companyRFC}`);
+        if (response.ok) {
+          const data = await response.json();
+          setWorkShifts(data);
+        } else {
+          console.error('Failed to load work shifts');
+        }
+      } catch (error) {
+        console.error('Error loading work shifts', error);
+      }
+    };
+
+    loadWorkShifts();
+  }, [companyRFC]);
+
+  const handleWorkShiftSelect = async (workShiftName: string) => {
+    if (workShiftName.trim() === '') {
+      setWorkShiftInput('');
+      return;
+    }
+
+    const existingWorkShift = workShifts.find(ws => ws.name.toLowerCase() === workShiftName.toLowerCase());
+    if (existingWorkShift) {
+      onChange(existingWorkShift.id);
+      setShowWorkShiftInput(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/WorkShift?rfc=${companyRFC}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: workShiftName }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.id) {
+          setWorkShifts([...workShifts, result]);
+          onChange(result.id);
+          setWorkShiftInput('');
+          setShowWorkShiftInput(false);
+        }
+      } else {
+        console.error('Failed to create new work shift');
+      }
+    } catch (error) {
+      console.error('Error creating new work shift', error);
+    }
+  };
+
+  return (
+    <>
+      {!showWorkShiftInput ? (
+        <Select
+          value={value || ''}
+          onValueChange={(value: string) => {
+            if (value === 'new') {
+              setShowWorkShiftInput(true);
+            } else {
+              onChange(value);
+            }
+          }}
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Seleccionar turno de trabajo" />
+          </SelectTrigger>
+          <SelectContent>
+            {workShifts
+              .filter(ws => ws.id.trim() !== '')
+              .map(ws => (
+                <SelectItem key={ws.id} value={ws.id}>
+                  {ws.name}
+                </SelectItem>
+              ))}
+            <SelectItem value="new">
+              <span className="text-blue-600">Agregar nuevo turno de trabajo</span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      ) : (
+        <Input
+          id="workShiftInput"
+          name="workShiftInput"
+          value={workShiftInput}
+          onChange={e => setWorkShiftInput(e.target.value)}
+          onBlur={() => handleWorkShiftSelect(workShiftInput)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              handleWorkShiftSelect(workShiftInput);
+              e.preventDefault();
+            }
+          }}
+          required
+        />
+      )}
+    </>
+  );
+};
+
+const ContractTypeSelect: React.FC<SelectProps> = ({ companyRFC, value, onChange }) => {
+  const [contractTypes, setContractTypes] = useState<{ id: string; name: string }[]>([]);
+  const [contractTypeInput, setContractTypeInput] = useState<string>('');
+  const [showContractTypeInput, setShowContractTypeInput] = useState(false);
+
+  useEffect(() => {
+    const loadContractTypes = async () => {
+      if (!companyRFC) {
+        setContractTypes([]);
+        return;
+      }
+      try {
+        const response = await fetch(`/api/ContractType?rfc=${companyRFC}`);
+        if (response.ok) {
+          const data = await response.json();
+          setContractTypes(data);
+        } else {
+          console.error('Failed to load contract types');
+        }
+      } catch (error) {
+        console.error('Error loading contract types', error);
+      }
+    };
+
+    loadContractTypes();
+  }, [companyRFC]);
+
+  const handleContractTypeSelect = async (contractTypeName: string) => {
+    if (contractTypeName.trim() === '') {
+      setContractTypeInput('');
+      return;
+    }
+
+    const existingContractType = contractTypes.find(ct => ct.name.toLowerCase() === contractTypeName.toLowerCase());
+    if (existingContractType) {
+      onChange(existingContractType.id);
+      setShowContractTypeInput(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/ContractType?rfc=${companyRFC}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: contractTypeName }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.id) {
+          setContractTypes([...contractTypes, result]);
+          onChange(result.id);
+          setContractTypeInput('');
+          setShowContractTypeInput(false);
+        }
+      } else {
+        console.error('Failed to create new contract type');
+      }
+    } catch (error) {
+      console.error('Error creating new contract type', error);
+    }
+  };
+
+  return (
+    <>
+      {!showContractTypeInput ? (
+        <Select
+          value={value || ''}
+          onValueChange={(value: string) => {
+            if (value === 'new') {
+              setShowContractTypeInput(true);
+            } else {
+              onChange(value);
+            }
+          }}
+          required
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Seleccionar tipo de contrato" />
+          </SelectTrigger>
+          <SelectContent>
+            {contractTypes
+              .filter(ct => ct.id.trim() !== '')
+              .map(ct => (
+                <SelectItem key={ct.id} value={ct.id}>
+                  {ct.name}
+                </SelectItem>
+              ))}
+            <SelectItem value="new">
+              <span className="text-blue-600">Agregar nuevo tipo de contrato</span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      ) : (
+        <Input
+          id="contractTypeInput"
+          name="contractTypeInput"
+          value={contractTypeInput}
+          onChange={e => setContractTypeInput(e.target.value)}
+          onBlur={() => handleContractTypeSelect(contractTypeInput)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              handleContractTypeSelect(contractTypeInput);
+              e.preventDefault();
+            }
+          }}
+          required
+        />
+      )}
+    </>
+  );
+};
+
+const DashboardEmployedEdit = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
@@ -175,7 +405,6 @@ export default function DashboardEmployedEdit() {
           const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
           if (res.ok) {
             const { employee } = await res.json();
-            console.log("Datos del empleado obtenidos:", employee);
             setEmployeeData(employee);
           } else {
             setError('Failed to fetch employee data');
@@ -217,18 +446,13 @@ export default function DashboardEmployedEdit() {
         contractType: employeeData.contractType?.id || '',
         profileImage: null,
       };
-      console.log('Sincronizando datos del empleado:', updatedFormData);
       setFormData(updatedFormData);
     }
   }, [employeeData]);
 
   const fetchJobRelatedData = async (companyId: string) => {
     if (selectedCompanyRFC) {
-      await Promise.all([
-        loadRoles(selectedCompanyRFC),
-        loadDepartments(selectedCompanyRFC),
-        loadJobTitles(selectedCompanyRFC)
-      ]);
+      await Promise.all([loadRoles(selectedCompanyRFC), loadDepartments(selectedCompanyRFC), loadJobTitles(selectedCompanyRFC)]);
     }
   };
 
@@ -251,13 +475,13 @@ export default function DashboardEmployedEdit() {
       editEmployeeSchema.parse(formData);
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setError(error.errors.map(err => err.message).join(", "));
+        setError(error.errors.map(err => err.message).join(', '));
         return;
       }
     }
 
     const form = new FormData();
-    Object.keys(formData).forEach((key) => {
+    Object.keys(formData).forEach(key => {
       const value = formData[key as keyof typeof formData];
       if (value !== null && value !== undefined && value !== '') {
         form.append(key, value);
@@ -387,8 +611,6 @@ export default function DashboardEmployedEdit() {
     <div className="w-full mx-auto px-4 md:px-6 py-12">
       <div className="flex flex-col md:flex-row items-start justify-start mb-6">
         <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
-        {/* {error && <div className="error-message">{error}</div>}
-        <pre>{JSON.stringify(formData, null, 2)}</pre> */}
       </div>
       {!selectedCompanyRFC ? (
         <div>
@@ -397,8 +619,8 @@ export default function DashboardEmployedEdit() {
           </Label>
           {companies.length > 0 ? (
             <Select
-              value={selectedCompanyRFC || ""}
-              onValueChange={(value) => setSelectedCompanyRFC(value)}
+              value={selectedCompanyRFC || ''}
+              onValueChange={value => setSelectedCompanyRFC(value)}
               required
             >
               <SelectTrigger>
@@ -406,8 +628,8 @@ export default function DashboardEmployedEdit() {
               </SelectTrigger>
               <SelectContent>
                 {companies
-                  .filter(company => company.rfc.trim() !== "") // Filtra empresas con rfc no vacíos
-                  .map((company) => (
+                  .filter(company => company.rfc.trim() !== '')
+                  .map(company => (
                     <SelectItem key={company.rfc} value={company.rfc}>
                       {company.razonSocial}
                     </SelectItem>
@@ -425,8 +647,8 @@ export default function DashboardEmployedEdit() {
           </Label>
           {employees.length > 0 ? (
             <Select
-              value={selectedEmployeeNss || ""}
-              onValueChange={(value) => setSelectedEmployeeNss(value)}
+              value={selectedEmployeeNss || ''}
+              onValueChange={value => setSelectedEmployeeNss(value)}
               required
             >
               <SelectTrigger>
@@ -434,8 +656,8 @@ export default function DashboardEmployedEdit() {
               </SelectTrigger>
               <SelectContent>
                 {employees
-                  .filter(employee => employee.socialSecurityNumber.trim() !== "") // Filtra empleados con NSS no vacíos
-                  .map((employee) => (
+                  .filter(employee => employee.socialSecurityNumber.trim() !== '')
+                  .map(employee => (
                     <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
                       {employee.name}
                     </SelectItem>
@@ -486,12 +708,12 @@ export default function DashboardEmployedEdit() {
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="maritalStatus">Estado Civil</Label>
-                <Select value={formData.maritalStatus} onValueChange={(value) => setFormData({ ...formData, maritalStatus: value })} required>
+                <Select value={formData.maritalStatus} onValueChange={value => setFormData({ ...formData, maritalStatus: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar estado civil" />
                   </SelectTrigger>
                   <SelectContent>
-                    {civilStatuses.map((status) => (
+                    {civilStatuses.map(status => (
                       <SelectItem key={status} value={status}>
                         {status}
                       </SelectItem>
@@ -501,12 +723,12 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="gender">Género</Label>
-                <Select value={formData.gender} onValueChange={(value) => setFormData({ ...formData, gender: value })} required>
+                <Select value={formData.gender} onValueChange={value => setFormData({ ...formData, gender: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar género" />
                   </SelectTrigger>
                   <SelectContent>
-                    {genders.map((gender) => (
+                    {genders.map(gender => (
                       <SelectItem key={gender} value={gender}>
                         {gender}
                       </SelectItem>
@@ -516,18 +738,13 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="nationality">Nacionalidad</Label>
-                <Select value={formData.nationality} onValueChange={(value) => setFormData({ ...formData, nationality: value })} required>
+                <Select value={formData.nationality} onValueChange={value => setFormData({ ...formData, nationality: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar nacionalidad" />
                   </SelectTrigger>
                   <SelectContent>
-                    <Input
-                      type="text"
-                      placeholder="Buscar..."
-                      onChange={(e) => handleNationalitySearch(e.target.value)}
-                      className="mb-2"
-                    />
-                    {filteredNationalities.map((nationality) => (
+                    <Input type="text" placeholder="Buscar..." onChange={e => handleNationalitySearch(e.target.value)} className="mb-2" />
+                    {filteredNationalities.map(nationality => (
                       <SelectItem key={nationality.sigla} value={nationality.nombre}>
                         {nationality.nombre}
                       </SelectItem>
@@ -540,23 +757,11 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="emergencyContact">Nombre</Label>
-                <Input 
-                  id="emergencyContact" 
-                  name="emergencyContact" 
-                  value={formData.emergencyContact} 
-                  onChange={handleChange} 
-                  required 
-                />
+                <Input id="emergencyContact" name="emergencyContact" value={formData.emergencyContact} onChange={handleChange} required />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="emergencyPhone">Teléfono</Label>
-                <Input 
-                  id="emergencyPhone" 
-                  name="emergencyPhone" 
-                  value={formData.emergencyPhone} 
-                  onChange={handleChange} 
-                  required 
-                />
+                <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
               </div>
             </div>
           </div>
@@ -565,14 +770,14 @@ export default function DashboardEmployedEdit() {
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="role">Rol</Label>
-                <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })} required>
+                <Select value={formData.role} onValueChange={value => setFormData({ ...formData, role: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar rol" />
                   </SelectTrigger>
                   <SelectContent>
                     {roles
-                      .filter(role => role.id.trim() !== "") // Filtra roles con id no vacíos
-                      .map((role) => (
+                      .filter(role => role.id.trim() !== '')
+                      .map(role => (
                         <SelectItem key={role.id} value={role.id}>
                           {role.name}
                         </SelectItem>
@@ -582,14 +787,14 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="department">Departamento</Label>
-                <Select value={formData.department} onValueChange={(value) => setFormData({ ...formData, department: value })} required>
+                <Select value={formData.department} onValueChange={value => setFormData({ ...formData, department: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar departamento" />
                   </SelectTrigger>
                   <SelectContent>
                     {departments
-                      .filter(department => department.id.trim() !== "") // Filtra departamentos con id no vacíos
-                      .map((department) => (
+                      .filter(department => department.id.trim() !== '')
+                      .map(department => (
                         <SelectItem key={department.id} value={department.id}>
                           {department.name}
                         </SelectItem>
@@ -599,14 +804,14 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="companyId">Empresa</Label>
-                <Select value={formData.companyId} onValueChange={(value) => setFormData({ ...formData, companyId: value })} required>
+                <Select value={formData.companyId} onValueChange={value => setFormData({ ...formData, companyId: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar empresa" />
                   </SelectTrigger>
                   <SelectContent>
                     {companies
-                      .filter(company => company.id.trim() !== "") // Filtra empresas con id no vacíos
-                      .map((company) => (
+                      .filter(company => company.id.trim() !== '')
+                      .map(company => (
                         <SelectItem key={company.id} value={company.id}>
                           {company.razonSocial}
                         </SelectItem>
@@ -616,14 +821,14 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="jobTitle">Título del Trabajo</Label>
-                <Select value={formData.jobTitle} onValueChange={(value) => setFormData({ ...formData, jobTitle: value })} required>
+                <Select value={formData.jobTitle} onValueChange={value => setFormData({ ...formData, jobTitle: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar título del trabajo" />
                   </SelectTrigger>
                   <SelectContent>
                     {jobTitles
-                      .filter(jobTitle => jobTitle.id.trim() !== "") // Filtra títulos de trabajo con id no vacíos
-                      .map((jobTitle) => (
+                      .filter(jobTitle => jobTitle.id.trim() !== '')
+                      .map(jobTitle => (
                         <SelectItem key={jobTitle.id} value={jobTitle.id}>
                           {jobTitle.name}
                         </SelectItem>
@@ -633,11 +838,11 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="workShift">Turno de Trabajo</Label>
-                <WorkShiftSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.workShift} onChange={(value) => setFormData({ ...formData, workShift: value })} />
+                <WorkShiftSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.workShift} onChange={value => setFormData({ ...formData, workShift: value })} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="contractType">Tipo de Contrato</Label>
-                <ContractTypeSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.contractType} onChange={(value) => setFormData({ ...formData, contractType: value })} />
+                <ContractTypeSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.contractType} onChange={value => setFormData({ ...formData, contractType: value })} />
               </div>
             </div>
             <div>
@@ -655,12 +860,12 @@ export default function DashboardEmployedEdit() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="educationLevel">Nivel Educativo</Label>
-                <Select value={formData.educationLevel} onValueChange={(value) => setFormData({ ...formData, educationLevel: value })} required>
+                <Select value={formData.educationLevel} onValueChange={value => setFormData({ ...formData, educationLevel: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar nivel educativo" />
                   </SelectTrigger>
                   <SelectContent>
-                    {educationLevels.map((level) => (
+                    {educationLevels.map(level => (
                       <SelectItem key={level} value={level}>
                         {level}
                       </SelectItem>
@@ -675,12 +880,12 @@ export default function DashboardEmployedEdit() {
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
                 <Label htmlFor="bloodType">Tipo de Sangre</Label>
-                <Select value={formData.bloodType} onValueChange={(value) => setFormData({ ...formData, bloodType: value })} required>
+                <Select value={formData.bloodType} onValueChange={value => setFormData({ ...formData, bloodType: value })} required>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar tipo de sangre" />
                   </SelectTrigger>
                   <SelectContent>
-                    {bloodTypes.map((type) => (
+                    {bloodTypes.map(type => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
@@ -708,4 +913,6 @@ export default function DashboardEmployedEdit() {
       )}
     </div>
   );
-}
+};
+
+export default DashboardEmployedEdit;
