@@ -33,7 +33,8 @@ const CompanyPage = () => {
             console.error('No employees found in response data');
           }
         } else {
-          console.error('Failed to fetch employees, response not OK');
+          const errorData = await res.json();
+          console.error('Failed to fetch employees, response not OK', errorData);
         }
       } catch (error) {
         console.error('Failed to fetch employees', error);
