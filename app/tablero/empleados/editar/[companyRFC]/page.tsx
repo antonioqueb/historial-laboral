@@ -20,9 +20,11 @@ const CompanyPage = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
+        console.log(`Fetching employees for company RFC: ${companyRFC}`);
         const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${companyRFC}`);
         if (res.ok) {
           const data = await res.json();
+          console.log('Fetched employees:', data.employees);
           setEmployees(data.employees);
         } else {
           console.error('Failed to fetch employees');
