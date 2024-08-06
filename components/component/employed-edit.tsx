@@ -120,7 +120,7 @@ export default function EditEmployee() {
           const employeesData = await getEmployeesByCompany(employeeData.companyId);
           console.log("Fetched Employees Data:", employeesData);
 
-          setEmployees(employeesData.employees); // Aquí debe ser employeesData.employees
+          setEmployees(employeesData); // Asignar directamente la respuesta de la API
         } catch (error) {
           console.error("Error fetching employees:", error);
         }
@@ -360,7 +360,7 @@ export default function EditEmployee() {
               />
             </div>
           </div>
-          <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
+          <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:grid-cols-3">
             <Button type="submit">Editar Empleado</Button>
             <Link href="/tablero/empleados" className="ml-2">
               <Button type="button">Cancelar</Button>
