@@ -43,17 +43,18 @@ export async function getCompaniesRFC(): Promise<{ rfcs: string[] }> {
 // Función para obtener los empleados filtrados por la compañía seleccionada
 export async function getEmployeesByCompany(selectedCompanyId: string): Promise<Employee[]> {
   try {
-    const response = await fetch(`/api/listAllEmployees`);
+    const response = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${selectedCompanyId}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    return data.employees.filter((employee: Employee) => employee.companyId === selectedCompanyId);
+    return data.employees;
   } catch (error) {
     console.error("Error al obtener los empleados:", error);
     return [];
   }
 }
+
 
 // Función para obtener la lista de compañías
 export async function getCompaniesList(): Promise<{ companies: Company[] }> {
