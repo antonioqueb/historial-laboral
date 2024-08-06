@@ -9,910 +9,248 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
+import { getEmployeeByRfc, editEmployee, getCompaniesRFC, getUserId } from '@/utils/fetchData';
 
-export interface Company {
-  id: string;
-  name: string;
-  userId: string;
-  razonSocial: string;
-  rfc: string;
-}
-
-export interface Employee {
-  id: string;
-  name: string;
-  role: {
-    id: string;
-    name: string;
-  };
-  department: {
-    id: string;
-    name: string;
-  };
-  companyId: string;
-  socialSecurityNumber: string;
-  CURP: string;
-  RFC: string;
-  address: string;
-  phoneNumber: string;
-  email: string;
-  birthDate: string;
-  hireDate: string;
-  emergencyContact: string;
-  emergencyPhone: string;
-  maritalStatus: string;
-  nationality: string;
-  educationLevel: string;
-  gender: string;
-  bloodType: string;
-  jobTitle: {
-    id: string;
-    name: string;
-  };
-  workShift: {
-    id: string;
-    name: string;
-  };
-  contractType: {
-    id: string;
-    name: string;
-  };
-}
-
-interface SelectProps {
-  companyRFC: string;
-  value: string;
-  onChange: (value: string) => void;
-}
-
-const WorkShiftSelect: React.FC<SelectProps> = ({ companyRFC, value, onChange }) => {
-  const [workShifts, setWorkShifts] = useState<{ id: string; name: string }[]>([]);
-  const [workShiftInput, setWorkShiftInput] = useState<string>('');
-  const [showWorkShiftInput, setShowWorkShiftInput] = useState(false);
-
-  useEffect(() => {
-    const loadWorkShifts = async () => {
-      if (!companyRFC) {
-        setWorkShifts([]);
-        return;
-      }
-      try {
-        const response = await fetch(`/api/WorkShift?rfc=${companyRFC}`);
-        if (response.ok) {
-          const data = await response.json();
-          setWorkShifts(data);
-        } else {
-          console.error('Failed to load work shifts');
-        }
-      } catch (error) {
-        console.error('Error loading work shifts', error);
-      }
-    };
-
-    loadWorkShifts();
-  }, [companyRFC]);
-
-  const handleWorkShiftSelect = async (workShiftName: string) => {
-    if (workShiftName.trim() === '') {
-      setWorkShiftInput('');
-      return;
-    }
-
-    const existingWorkShift = workShifts.find(ws => ws.name.toLowerCase() === workShiftName.toLowerCase());
-    if (existingWorkShift) {
-      onChange(existingWorkShift.id);
-      setShowWorkShiftInput(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/WorkShift?rfc=${companyRFC}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: workShiftName }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        if (result.id) {
-          setWorkShifts([...workShifts, result]);
-          onChange(result.id);
-          setWorkShiftInput('');
-          setShowWorkShiftInput(false);
-        }
-      } else {
-        console.error('Failed to create new work shift');
-      }
-    } catch (error) {
-      console.error('Error creating new work shift', error);
-    }
-  };
-
-  return (
-    <>
-      {!showWorkShiftInput ? (
-        <Select
-          value={value || ''}
-          onValueChange={(value: string) => {
-            if (value === 'new') {
-              setShowWorkShiftInput(true);
-            } else {
-              onChange(value);
-            }
-          }}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Seleccionar turno de trabajo" />
-          </SelectTrigger>
-          <SelectContent>
-            {workShifts
-              .filter(ws => ws.id.trim() !== '')
-              .map(ws => (
-                <SelectItem key={ws.id} value={ws.id}>
-                  {ws.name}
-                </SelectItem>
-              ))}
-            <SelectItem value="new">
-              <span className="text-blue-600">Agregar nuevo turno de trabajo</span>
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      ) : (
-        <Input
-          id="workShiftInput"
-          name="workShiftInput"
-          value={workShiftInput}
-          onChange={e => setWorkShiftInput(e.target.value)}
-          onBlur={() => handleWorkShiftSelect(workShiftInput)}
-          onKeyDown={e => {
-            if (e.key === 'Enter') {
-              handleWorkShiftSelect(workShiftInput);
-              e.preventDefault();
-            }
-          }}
-          required
-        />
-      )}
-    </>
-  );
-};
-
-const ContractTypeSelect: React.FC<SelectProps> = ({ companyRFC, value, onChange }) => {
-  const [contractTypes, setContractTypes] = useState<{ id: string; name: string }[]>([]);
-  const [contractTypeInput, setContractTypeInput] = useState<string>('');
-  const [showContractTypeInput, setShowContractTypeInput] = useState(false);
-
-  useEffect(() => {
-    const loadContractTypes = async () => {
-      if (!companyRFC) {
-        setContractTypes([]);
-        return;
-      }
-      try {
-        const response = await fetch(`/api/ContractType?rfc=${companyRFC}`);
-        if (response.ok) {
-          const data = await response.json();
-          setContractTypes(data);
-        } else {
-          console.error('Failed to load contract types');
-        }
-      } catch (error) {
-        console.error('Error loading contract types', error);
-      }
-    };
-
-    loadContractTypes();
-  }, [companyRFC]);
-
-  const handleContractTypeSelect = async (contractTypeName: string) => {
-    if (contractTypeName.trim() === '') {
-      setContractTypeInput('');
-      return;
-    }
-
-    const existingContractType = contractTypes.find(ct => ct.name.toLowerCase() === contractTypeName.toLowerCase());
-    if (existingContractType) {
-      onChange(existingContractType.id);
-      setShowContractTypeInput(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/ContractType?rfc=${companyRFC}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: contractTypeName }),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        if (result.id) {
-          setContractTypes([...contractTypes, result]);
-          onChange(result.id);
-          setContractTypeInput('');
-          setShowContractTypeInput(false);
-        }
-      } else {
-        console.error('Failed to create new contract type');
-      }
-    } catch (error) {
-      console.error('Error creating new contract type', error);
-    }
-  };
-
-  return (
-    <>
-      {!showContractTypeInput ? (
-        <Select
-          value={value || ''}
-          onValueChange={(value: string) => {
-            if (value === 'new') {
-              setShowContractTypeInput(true);
-            } else {
-              onChange(value);
-            }
-          }}
-          required
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Seleccionar tipo de contrato" />
-          </SelectTrigger>
-          <SelectContent>
-            {contractTypes
-              .filter(ct => ct.id.trim() !== '')
-              .map(ct => (
-                <SelectItem key={ct.id} value={ct.id}>
-                  {ct.name}
-                </SelectItem>
-              ))}
-            <SelectItem value="new">
-              <span className="text-blue-600">Agregar nuevo tipo de contrato</span>
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      ) : (
-        <Input
-          id="contractTypeInput"
-          name="contractTypeInput"
-          value={contractTypeInput}
-          onChange={e => setContractTypeInput(e.target.value)}
-          onBlur={() => handleContractTypeSelect(contractTypeInput)}
-          onKeyDown={e => {
-            if (e.key === 'Enter') {
-              handleContractTypeSelect(contractTypeInput);
-              e.preventDefault();
-            }
-          }}
-          required
-        />
-      )}
-    </>
-  );
-};
-
-const DashboardEmployedEdit = () => {
+export default function EditEmployee() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
-  const [bloodTypes, setBloodTypes] = useState<string[]>([]);
-  const [selectedCompanyRFC, setSelectedCompanyRFC] = useState<string | undefined>(undefined);
-  const [selectedEmployeeNss, setSelectedEmployeeNss] = useState<string | undefined>(undefined);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [genders, setGenders] = useState<string[]>([]);
-  const [educationLevels, setEducationLevels] = useState<string[]>([]);
-  const [employeeData, setEmployeeData] = useState<Employee | null>(null);
-  const [formData, setFormData] = useState({
-    id: '',
-    name: '',
-    role: '',
-    department: '',
-    companyId: '',
-    socialSecurityNumber: '',
-    CURP: '',
-    RFC: '',
-    address: '',
-    phoneNumber: '',
-    email: '',
-    birthDate: '',
-    hireDate: '',
-    emergencyContact: '',
-    emergencyPhone: '',
-    maritalStatus: '',
-    nationality: '',
-    educationLevel: '',
-    gender: '',
-    bloodType: '',
-    jobTitle: '',
-    workShift: '',
-    contractType: '',
-    profileImage: null as File | null,
+  const initialEmployeeId = searchParams.get("id");
+
+  const [employeeData, setEmployeeData] = useState({
+    id: "",
+    name: "",
+    role: { id: "", name: "" },
+    department: { id: "", name: "" },
+    companyId: "",
+    socialSecurityNumber: "",
+    CURP: "",
+    RFC: "",
+    address: "",
+    phoneNumber: "",
+    email: "",
+    birthDate: "",
+    hireDate: "",
+    emergencyContact: "",
+    emergencyPhone: "",
+    maritalStatus: "",
+    nationality: "",
+    educationLevel: "",
+    gender: "",
+    bloodType: "",
+    jobTitle: { id: "", name: "" },
+    workShift: { id: "", name: "" },
+    contractType: { id: "", name: "" },
+    profileImageUrl: null as string | null,
+    createdAt: "",
+    updatedAt: ""
   });
-  const [companies, setCompanies] = useState<Company[]>([]);
-  const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
-  const [departments, setDepartments] = useState<{ id: string; name: string }[]>([]);
-  const [jobTitles, setJobTitles] = useState<{ id: string; name: string }[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [nationalities, setNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
-  const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string; nombre: string; nombreIngles: string }[]>([]);
+
+  const [message, setMessage] = useState<string | null>(null);
+  const [companies, setCompanies] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        const res = await fetch('/api/getUserId');
-        if (res.ok) {
-          const data = await res.json();
-          return data.id;
-        } else {
-          setError('Failed to fetch user ID');
-        }
-      } catch (err) {
-        setError('Failed to fetch user ID');
+    const fetchUserData = async () => {
+      const userId = await getUserId();
+      const companyRFCs = await getCompaniesRFC();
+      setCompanies(companyRFCs.rfcs);
+
+      if (initialEmployeeId) {
+        fetchEmployeeData(initialEmployeeId);
       }
     };
 
-    const fetchCompanies = async (userId: string) => {
-      try {
-        const res = await fetch('/api/listCompanies');
-        if (res.ok) {
-          const data = await res.json();
-          const userCompanies = data.companies.filter((company: Company) => company.userId === userId);
-          setCompanies(userCompanies);
-          return userCompanies;
-        } else {
-          setError('Failed to fetch companies');
-        }
-      } catch (err) {
-        setError('Failed to fetch companies');
+    fetchUserData();
+  }, [initialEmployeeId]);
+
+  const fetchEmployeeData = async (id: string) => {
+    try {
+      const data = await getEmployeeByRfc(id);
+      if (data) {
+        setEmployeeData({
+          ...data,
+          birthDate: data.birthDate ? new Date(data.birthDate).toISOString().split('T')[0] : "",
+          hireDate: data.hireDate ? new Date(data.hireDate).toISOString().split('T')[0] : "",
+          profileImageUrl: data.profileImageUrl ?? null, // Asegurarse de que sea null si es undefined
+        });
+      } else {
+        setMessage("Failed to fetch employee data.");
       }
-    };
-
-    const initializeData = async () => {
-      const userId = await fetchUserId();
-      if (userId) {
-        await fetchCompanies(userId);
-      }
-    };
-
-    initializeData();
-  }, []);
-
-  useEffect(() => {
-    if (selectedCompanyRFC) {
-      const fetchEmployeesByCompanyRFC = async (rfc: string) => {
-        try {
-          const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${rfc}`);
-          if (res.ok) {
-            const data = await res.json();
-            setEmployees(data.employees);
-          } else {
-            setError('Failed to fetch employees');
-          }
-        } catch (err) {
-          setError('Failed to fetch employees');
-        }
-      };
-
-      fetchEmployeesByCompanyRFC(selectedCompanyRFC);
-    }
-  }, [selectedCompanyRFC]);
-
-  useEffect(() => {
-    if (selectedEmployeeNss) {
-      const fetchEmployee = async () => {
-        try {
-          const res = await fetch(`/api/getEmployeeByNss?nss=${selectedEmployeeNss}`);
-          if (res.ok) {
-            const { employee } = await res.json();
-            setEmployeeData(employee);
-          } else {
-            setError('Failed to fetch employee data');
-          }
-        } catch (err) {
-          setError('Failed to fetch employee data');
-        }
-      };
-
-      fetchEmployee();
-    }
-  }, [selectedEmployeeNss]);
-
-  useEffect(() => {
-    if (employeeData) {
-      const updatedFormData = {
-        id: employeeData.id || '',
-        name: employeeData.name || '',
-        role: employeeData.role?.id || '',
-        department: employeeData.department?.id || '',
-        companyId: employeeData.companyId || '',
-        socialSecurityNumber: employeeData.socialSecurityNumber || '',
-        CURP: employeeData.CURP || '',
-        RFC: employeeData.RFC || '',
-        address: employeeData.address || '',
-        phoneNumber: employeeData.phoneNumber || '',
-        email: employeeData.email || '',
-        birthDate: employeeData.birthDate ? new Date(employeeData.birthDate).toISOString().split('T')[0] : '',
-        hireDate: employeeData.hireDate ? new Date(employeeData.hireDate).toISOString().split('T')[0] : '',
-        emergencyContact: employeeData.emergencyContact || '',
-        emergencyPhone: employeeData.emergencyPhone || '',
-        maritalStatus: employeeData.maritalStatus || '',
-        nationality: employeeData.nationality || '',
-        educationLevel: employeeData.educationLevel || '',
-        gender: employeeData.gender || '',
-        bloodType: employeeData.bloodType || '',
-        jobTitle: employeeData.jobTitle?.id || '',
-        workShift: employeeData.workShift?.id || '',
-        contractType: employeeData.contractType?.id || '',
-        profileImage: null,
-      };
-      setFormData(updatedFormData);
-    }
-  }, [employeeData]);
-
-  const fetchJobRelatedData = async (companyId: string) => {
-    if (selectedCompanyRFC) {
-      await Promise.all([loadRoles(selectedCompanyRFC), loadDepartments(selectedCompanyRFC), loadJobTitles(selectedCompanyRFC)]);
+    } catch (error) {
+      setMessage("Failed to fetch employee data.");
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEmployeeData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFormData({ ...formData, profileImage: e.target.files[0] });
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
 
     try {
-      editEmployeeSchema.parse(formData);
+      editEmployeeSchema.parse(employeeData); // Validar datos con Zod
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setError(error.errors.map(err => err.message).join(', '));
+        setMessage(error.errors.map(err => err.message).join(", "));
         return;
       }
     }
 
     const form = new FormData();
-    Object.keys(formData).forEach(key => {
-      const value = formData[key as keyof typeof formData];
+    Object.keys(employeeData).forEach(key => {
+      const value = employeeData[key as keyof typeof employeeData];
       if (value !== null && value !== undefined && value !== '') {
-        form.append(key, value);
+        form.append(key, value as any);
       }
     });
 
     try {
-      const response = await fetch('/api/editEmployee', {
-        method: 'PATCH',
-        body: form,
-      });
+      const result = await editEmployee(form);
 
-      if (response.ok) {
-        setSuccess('Empleado actualizado exitosamente');
-        router.push('/tablero/empleados/editar');
+      if (result.success) {
+        setMessage(`Employee updated successfully`);
+        router.push('/tablero/empleados');
       } else {
-        const data = await response.json();
-        setError(data.error || 'Error al actualizar el empleado');
+        setMessage(result.error ?? "Failed to update employee");
       }
-    } catch (err) {
-      setError('Error de conexión');
-    }
-  };
-
-  const loadBloodTypes = async () => {
-    try {
-      const response = await fetch('/api/bloodTypes');
-      const data = await response.json();
-      const filteredBloodTypes = data.bloodTypes.filter((type: string) => type.trim() !== '');
-      setBloodTypes(filteredBloodTypes);
     } catch (error) {
-      console.error('Error loading blood types:', error);
+      setMessage("Error updating employee.");
     }
-  };
-
-  const loadGenders = async () => {
-    try {
-      const response = await fetch('/api/Genders');
-      const data = await response.json();
-      const filteredGenders = data.genders.filter((gender: string) => gender.trim() !== '');
-      setGenders(filteredGenders);
-    } catch (error) {
-      console.error('Error loading genders:', error);
-    }
-  };
-
-  const loadCivilStatuses = async () => {
-    try {
-      const response = await fetch('/api/CivilStatus');
-      const data = await response.json();
-      const filteredCivilStatuses = data.civilStatuses.filter((status: string) => status.trim() !== '');
-      setCivilStatuses(filteredCivilStatuses);
-    } catch (error) {
-      console.error('Error loading civil statuses:', error);
-    }
-  };
-
-  const loadNationalities = async () => {
-    try {
-      const response = await fetch('/api/Nationalities');
-      const data = await response.json();
-      const filteredNationalities = data.nationalities.filter((nationality: { nombre: string }) => nationality.nombre.trim() !== '');
-      setNationalities(filteredNationalities);
-      setFilteredNationalities(filteredNationalities);
-    } catch (error) {
-      console.error('Error loading nationalities:', error);
-    }
-  };
-
-  const loadEducationLevels = async () => {
-    try {
-      const response = await fetch('/api/EducationLevels');
-      const data = await response.json();
-      const filteredEducationLevels = data.educationLevels.filter((level: string) => level.trim() !== '');
-      setEducationLevels(filteredEducationLevels);
-    } catch (error) {
-      console.error('Error loading education levels:', error);
-    }
-  };
-
-  const loadRoles = async (rfc: string) => {
-    try {
-      const data = await fetch(`/api/Roles?rfc=${rfc}`).then(res => res.json());
-      const filteredRoles = data.filter((role: { name: string }) => role.name.trim() !== '');
-      setRoles(filteredRoles);
-    } catch (error) {
-      setError('Error al cargar los roles');
-    }
-  };
-
-  const loadDepartments = async (rfc: string) => {
-    try {
-      const data = await fetch(`/api/Department?rfc=${rfc}`).then(res => res.json());
-      const filteredDepartments = data.filter((department: { name: string }) => department.name.trim() !== '');
-      setDepartments(filteredDepartments);
-    } catch (error) {
-      setError('Error al cargar los departamentos');
-    }
-  };
-
-  const loadJobTitles = async (rfc: string) => {
-    try {
-      const data = await fetch(`/api/JobTitle?rfc=${rfc}`).then(res => res.json());
-      const filteredJobTitles = data.filter((jobTitle: { name: string }) => jobTitle.name.trim() !== '');
-      setJobTitles(filteredJobTitles);
-    } catch (error) {
-      setError('Error al cargar los títulos de trabajo');
-    }
-  };
-
-  useEffect(() => {
-    loadBloodTypes();
-    loadGenders();
-    loadCivilStatuses();
-    loadNationalities();
-    loadEducationLevels();
-  }, []);
-
-  const handleNationalitySearch = (searchTerm: string) => {
-    const filtered = nationalities.filter(nationality =>
-      nationality.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredNationalities(filtered);
   };
 
   return (
-    <div className="w-full mx-auto px-4 md:px-6 py-12">
-      <div className="flex flex-col md:flex-row items-start justify-start mb-6">
-        <h1 className="text-2xl font-bold mb-4 md:mb-0">Editar Empleado</h1>
-      </div>
-      {!selectedCompanyRFC ? (
-        <div>
-          <Label className="mb-2" htmlFor="company">
-            Seleccionar Empresa
-          </Label>
-          {companies.length > 0 ? (
-            <Select
-              value={selectedCompanyRFC || ''}
-              onValueChange={value => setSelectedCompanyRFC(value)}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar empresa" />
-              </SelectTrigger>
-              <SelectContent>
-                {companies
-                  .filter(company => company.rfc.trim() !== '')
-                  .map(company => (
-                    <SelectItem key={company.rfc} value={company.rfc}>
-                      {company.razonSocial}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            <p>No hay empresas disponibles</p>
-          )}
+    <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
+      <>
+        <h1 className="text-3xl font-bold mb-8">Editar Empleado</h1>
+        <div className="mb-4">
+          <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+          <Select
+            value={employeeData.companyId}
+            onValueChange={value => setEmployeeData(prevState => ({ ...prevState, companyId: value }))}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar empresa" />
+            </SelectTrigger>
+            <SelectContent>
+              {companies.map(companyRfc => (
+                <SelectItem key={companyRfc} value={companyRfc}>
+                  {companyRfc}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-      ) : !selectedEmployeeNss ? (
-        <div>
-          <Label className="mb-2" htmlFor="employee">
-            Seleccionar Empleado
-          </Label>
-          {employees.length > 0 ? (
-            <Select
-              value={selectedEmployeeNss || ''}
-              onValueChange={value => setSelectedEmployeeNss(value)}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar empleado" />
-              </SelectTrigger>
-              <SelectContent>
-                {employees
-                  .filter(employee => employee.socialSecurityNumber.trim() !== '')
-                  .map(employee => (
-                    <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
-                      {employee.name}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
-          ) : (
-            <p>No hay empleados disponibles</p>
-          )}
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          {employeeData && (
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Información General</h2>
             <div>
-              <h2>Datos del Empleado Seleccionado:</h2>
-              <pre>{JSON.stringify(employeeData, null, 2)}</pre>
-            </div>
-          )}
-
-          <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
-          <div className="grid gap-6 md:grid-cols-2 py-4">
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="socialSecurityNumber">Número de Seguridad Social</Label>
-                <Input id="socialSecurityNumber" name="socialSecurityNumber" value={formData.socialSecurityNumber} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="name">Nombre Completo</Label>
-                <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
-                <Input type="date" id="birthDate" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="address">Dirección</Label>
-                <Input id="address" name="address" value={formData.address} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="phoneNumber">Número de Teléfono</Label>
-                <Input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="email">Correo Electrónico</Label>
-                <Input id="email" name="email" value={formData.email} onChange={handleChange} required />
-              </div>
+              <Label htmlFor="name">Nombre</Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                value={employeeData.name}
+                onChange={handleInputChange}
+                required
+              />
             </div>
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="maritalStatus">Estado Civil</Label>
-                <Select value={formData.maritalStatus} onValueChange={value => setFormData({ ...formData, maritalStatus: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar estado civil" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {civilStatuses.map(status => (
-                      <SelectItem key={status} value={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="gender">Género</Label>
-                <Select value={formData.gender} onValueChange={value => setFormData({ ...formData, gender: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar género" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {genders.map(gender => (
-                      <SelectItem key={gender} value={gender}>
-                        {gender}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="nationality">Nacionalidad</Label>
-                <Select value={formData.nationality} onValueChange={value => setFormData({ ...formData, nationality: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar nacionalidad" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <Input type="text" placeholder="Buscar..." onChange={e => handleNationalitySearch(e.target.value)} className="mb-2" />
-                    {filteredNationalities.map(nationality => (
-                      <SelectItem key={nationality.sigla} value={nationality.nombre}>
-                        {nationality.nombre}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <h2>Contacto de emergencia</h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="emergencyContact">Nombre</Label>
-                <Input id="emergencyContact" name="emergencyContact" value={formData.emergencyContact} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="emergencyPhone">Teléfono</Label>
-                <Input id="emergencyPhone" name="emergencyPhone" value={formData.emergencyPhone} onChange={handleChange} required />
-              </div>
+              <Label htmlFor="role">Rol</Label>
+              <Input
+                id="role"
+                name="role"
+                type="text"
+                value={employeeData.role.name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="department">Departamento</Label>
+              <Input
+                id="department"
+                name="department"
+                type="text"
+                value={employeeData.department.name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="email">Correo Electrónico</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={employeeData.email}
+                onChange={handleInputChange}
+                required
+              />
             </div>
           </div>
-          <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
-          <div className="grid gap-6 md:grid-cols-2 py-4">
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Información Adicional</h2>
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="role">Rol</Label>
-                <Select value={formData.role} onValueChange={value => setFormData({ ...formData, role: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar rol" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {roles
-                      .filter(role => role.id.trim() !== '')
-                      .map(role => (
-                        <SelectItem key={role.id} value={role.id}>
-                          {role.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="department">Departamento</Label>
-                <Select value={formData.department} onValueChange={value => setFormData({ ...formData, department: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar departamento" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {departments
-                      .filter(department => department.id.trim() !== '')
-                      .map(department => (
-                        <SelectItem key={department.id} value={department.id}>
-                          {department.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="companyId">Empresa</Label>
-                <Select value={formData.companyId} onValueChange={value => setFormData({ ...formData, companyId: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar empresa" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {companies
-                      .filter(company => company.id.trim() !== '')
-                      .map(company => (
-                        <SelectItem key={company.id} value={company.id}>
-                          {company.razonSocial}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="jobTitle">Título del Trabajo</Label>
-                <Select value={formData.jobTitle} onValueChange={value => setFormData({ ...formData, jobTitle: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar título del trabajo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {jobTitles
-                      .filter(jobTitle => jobTitle.id.trim() !== '')
-                      .map(jobTitle => (
-                        <SelectItem key={jobTitle.id} value={jobTitle.id}>
-                          {jobTitle.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="workShift">Turno de Trabajo</Label>
-                <WorkShiftSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.workShift} onChange={value => setFormData({ ...formData, workShift: value })} />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="contractType">Tipo de Contrato</Label>
-                <ContractTypeSelect companyRFC={selectedCompanyRFC ?? ''} value={formData.contractType} onChange={value => setFormData({ ...formData, contractType: value })} />
-              </div>
+              <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
+              <Input
+                id="birthDate"
+                name="birthDate"
+                type="date"
+                value={employeeData.birthDate}
+                onChange={handleInputChange}
+                required
+              />
             </div>
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="hireDate">Fecha de Contratación</Label>
-                <Input type="date" id="hireDate" name="hireDate" value={formData.hireDate} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="CURP">CURP</Label>
-                <Input id="CURP" name="CURP" value={formData.CURP} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="RFC">RFC</Label>
-                <Input id="RFC" name="RFC" value={formData.RFC} onChange={handleChange} required />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="educationLevel">Nivel Educativo</Label>
-                <Select value={formData.educationLevel} onValueChange={value => setFormData({ ...formData, educationLevel: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar nivel educativo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {educationLevels.map(level => (
-                      <SelectItem key={level} value={level}>
-                        {level}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <Label htmlFor="hireDate">Fecha de Contratación</Label>
+              <Input
+                id="hireDate"
+                name="hireDate"
+                type="date"
+                value={employeeData.hireDate}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="address">Dirección</Label>
+              <Input
+                id="address"
+                name="address"
+                type="text"
+                value={employeeData.address}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="phoneNumber">Número de Teléfono</Label>
+              <Input
+                id="phoneNumber"
+                name="phoneNumber"
+                type="text"
+                value={employeeData.phoneNumber}
+                onChange={handleInputChange}
+                required
+              />
             </div>
           </div>
-          <h2 className="text-xl font-semibold mb-4">Datos Sociales</h2>
-          <div className="grid gap-6 md:grid-cols-2 py-4">
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="bloodType">Tipo de Sangre</Label>
-                <Select value={formData.bloodType} onValueChange={value => setFormData({ ...formData, bloodType: value })} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar tipo de sangre" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bloodTypes.map(type => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mb-4">
-                <Label htmlFor="profileImage">Foto de Perfil</Label>
-                <Input type="file" id="profileImage" name="profileImage" onChange={handleFileChange} />
-              </div>
-            </div>
-          </div>
-          {error && <div className="text-red-500 mb-4">{error}</div>}
-          {success && <div className="text-green-500 mb-4">{success}</div>}
-          <div className="flex justify-end mt-4">
-            <Button type="submit">Actualizar</Button>
+          <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:grid-cols-3">
+            <Button type="submit">Editar Empleado</Button>
             <Link href="/tablero/empleados" className="ml-2">
               <Button type="button">Cancelar</Button>
             </Link>
           </div>
         </form>
-      )}
+        {message && (
+          <p className="text-center text-green-600 text-md italic mt-4">{message}</p>
+        )}
+      </>
     </div>
   );
-};
-
-export default DashboardEmployedEdit;
+}

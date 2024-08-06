@@ -29,8 +29,14 @@ export interface Company {
 export interface Employee {
   id: string;
   name: string;
-  role: string;
-  department: string;
+  role: {
+    id: string;
+    name: string;
+  };
+  department: {
+    id: string;
+    name: string;
+  };
   description: string;
   companyId: string;
   socialSecurityNumber: string;
@@ -39,8 +45,8 @@ export interface Employee {
   address: string;
   phoneNumber: string;
   email: string;
-  birthDate: Date;
-  hireDate: Date;
+  birthDate: string; // Cambiado a string para el formato de fecha ISO
+  hireDate: string; // Cambiado a string para el formato de fecha ISO
   emergencyContact: string;
   emergencyPhone: string;
   bankAccountNumber: string;
@@ -50,13 +56,22 @@ export interface Employee {
   educationLevel: string;
   gender: string;
   bloodType: string;
-  jobTitle: string;
-  workShift: string;
-  contractType: string;
+  jobTitle: {
+    id: string;
+    name: string;
+  };
+  workShift: {
+    id: string;
+    name: string;
+  };
+  contractType: {
+    id: string;
+    name: string;
+  };
   profileImageUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  company: { // Agregar la propiedad company con su estructura
+  createdAt: string; // Cambiado a string para el formato de fecha ISO
+  updatedAt: string; // Cambiado a string para el formato de fecha ISO
+  company: {
     name: string;
     rfc: string;
   };
@@ -73,8 +88,8 @@ export interface Review {
   positive: boolean;
   documentation?: string;
   userId?: string; // Propiedad opcional
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string; // Cambiado a string para el formato de fecha ISO
+  updatedAt: string; // Cambiado a string para el formato de fecha ISO
 }
 
 
