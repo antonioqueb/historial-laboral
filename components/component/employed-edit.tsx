@@ -9,7 +9,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByRfc, editEmployee, getCompaniesRFC, getUserId } from '@/utils/fetchData';
+import { getEmployeeByRfc, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
@@ -90,6 +90,8 @@ export default function EditEmployee() {
 
   const [message, setMessage] = useState<string | null>(null);
   const [companies, setCompanies] = useState<string[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [selectedEmployee, setSelectedEmployee] = useState<string>("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -97,17 +99,34 @@ export default function EditEmployee() {
         const userId = await getUserId();
         const companyRFCs = await getCompaniesRFC();
         setCompanies(companyRFCs.rfcs);
-
-        if (initialEmployeeId) {
-          fetchEmployeeData(initialEmployeeId);
-        }
       } catch (error) {
         console.error("Error fetching user data or companies:", error);
       }
     };
 
     fetchUserData();
-  }, [initialEmployeeId]);
+  }, []);
+
+  useEffect(() => {
+    if (employeeData.companyId) {
+      const fetchEmployees = async () => {
+        try {
+          const employeesData = await getEmployeesByCompany(employeeData.companyId);
+          setEmployees(employeesData);
+        } catch (error) {
+          console.error("Error fetching employees:", error);
+        }
+      };
+
+      fetchEmployees();
+    }
+  }, [employeeData.companyId]);
+
+  useEffect(() => {
+    if (selectedEmployee) {
+      fetchEmployeeData(selectedEmployee);
+    }
+  }, [selectedEmployee]);
 
   const fetchEmployeeData = async (id: string) => {
     try {
@@ -123,7 +142,7 @@ export default function EditEmployee() {
           birthDate: data.birthDate ? new Date(data.birthDate).toISOString().split('T')[0] : "",
           hireDate: data.hireDate ? new Date(data.hireDate).toISOString().split('T')[0] : "",
           profileImageUrl: data.profileImageUrl ?? null,
-          companyId: data.company.id, // Actualizamos companyId aquí
+          companyId: data.company.id,
           company: data.company
         });
       } else {
@@ -147,6 +166,12 @@ export default function EditEmployee() {
       ...prevState,
       companyId: value
     }));
+    setSelectedEmployee(""); // Reset the selected employee when company changes
+    setEmployees([]); // Clear the employees list when company changes
+  };
+
+  const handleEmployeeChange = (value: string) => {
+    setSelectedEmployee(value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -187,6 +212,46 @@ export default function EditEmployee() {
     <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
       <>
         <h1 className="text-3xl font-bold mb-8">Editar Empleado</h1>
+        <div className="mb-4">
+          <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+          <Select
+            value={employeeData.companyId}
+            onValueChange={handleCompanyChange}
+            required
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccionar empresa" />
+            </SelectTrigger>
+            <SelectContent>
+              {companies.map(companyRfc => (
+                <SelectItem key={companyRfc} value={companyRfc}>
+                  {companyRfc}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        {employeeData.companyId && (
+          <div className="mb-4">
+            <Label htmlFor="employeeSelect">Seleccionar Empleado</Label>
+            <Select
+              value={selectedEmployee}
+              onValueChange={handleEmployeeChange}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar empleado" />
+              </SelectTrigger>
+              <SelectContent>
+                {employees.map(employee => (
+                  <SelectItem key={employee.id} value={employee.id}>
+                    {employee.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Información General</h2>
@@ -281,25 +346,6 @@ export default function EditEmployee() {
                 required
               />
             </div>
-          </div>
-          <div>
-            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
-            <Select
-              value={employeeData.companyId}
-              onValueChange={handleCompanyChange}
-              required
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar empresa" />
-              </SelectTrigger>
-              <SelectContent>
-                {companies.map(companyRfc => (
-                  <SelectItem key={companyRfc} value={companyRfc}>
-                    {companyRfc}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
           <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
             <Button type="submit">Editar Empleado</Button>
