@@ -39,7 +39,12 @@ const CompanyPage = () => {
     }
   }, [companyRFC]);
 
+  useEffect(() => {
+    console.log('Current employees:', employees);
+  }, [employees]);
+
   const handleEmployeeSelect = (nss: string) => {
+    console.log(`Selected employee NSS: ${nss}`);
     setSelectedEmployeeNss(nss);
     router.push(`/tablero/empleados/editar/${companyRFC}/${nss}`);
   };
