@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { Company, Employee } from "@/utils/fetchData";
+import { Company, Employee } from "@/interfaces/types";
 
 // Define the type for the session with the user ID
 interface ExtendedSession {
