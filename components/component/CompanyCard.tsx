@@ -1,30 +1,9 @@
 // components\component\CompanyCard.tsx
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-
-export interface Company {
-  id: string;
-  name: string;
-  razonSocial: string;
-  rfc: string;
-  domicilioFiscalCalle: string;
-  domicilioFiscalNumero: string;
-  domicilioFiscalColonia: string;
-  domicilioFiscalMunicipio: string;
-  domicilioFiscalEstado: string;
-  domicilioFiscalCodigoPostal: string;
-  nombreComercial?: string;
-  objetoSocial: string;
-  representanteLegalNombre: string;
-  representanteLegalCurp: string;
-  capitalSocial: number;
-  registrosImss?: string;
-  registrosInfonavit?: string;
-  giroActividadEconomica: string;
-  certificaciones: string[];
-  logoUrl?: string;
-}
+import { Company } from '@/interfaces/types';
 
 interface CompanyCardProps {
   company: Company;
@@ -60,7 +39,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
         </div>
         <div>
           <p className="text-muted-foreground">Nombre Comercial:</p>
-          <p>{company.nombreComercial}</p>
+          <p>{company.nombreComercial || "N/A"}</p>
         </div>
       </CardContent>
     </Card>

@@ -4,7 +4,8 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
 import { getCompaniesList, getUserId } from "@/utils/fetchData";
-import CompanyCard, { Company } from "./CompanyCard";
+import CompanyCard from "./CompanyCard";
+import { Company } from '@/interfaces/types';
 
 export default function ListCompany() {
   const { data: session } = useSession();
@@ -23,7 +24,17 @@ export default function ListCompany() {
 
           const companiesData = await getCompaniesList();
           if (companiesData.companies) {
-            setCompanies(companiesData.companies);
+            const updatedCompanies = companiesData.companies.map((company: Company) => ({
+              ...company,
+              nombreComercial: company.nombreComercial ?? "",
+              representanteLegalCurp: company.representanteLegalCurp ?? "",
+              capitalSocial: company.capitalSocial ?? 0,
+              registrosImss: company.registrosImss ?? "",
+              registrosInfonavit: company.registrosInfonavit ?? "",
+              giroActividadEconomica: company.giroActividadEconomica ?? "",
+              logoUrl: company.logoUrl ?? ""
+            }));
+            setCompanies(updatedCompanies);
           } else {
             setMessage("Failed to fetch companies.");
           }
