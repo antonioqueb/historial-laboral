@@ -120,7 +120,7 @@ export default function EditEmployee() {
           const employeesData = await getEmployeesByCompany(employeeData.companyId);
           console.log("Fetched Employees Data:", employeesData);
 
-          setEmployees(employeesData.employees);
+          setEmployees(employeesData.employees); // Aquí debe ser employeesData.employees
         } catch (error) {
           console.error("Error fetching employees:", error);
         }
