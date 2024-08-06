@@ -10,18 +10,58 @@ import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
 import { getEmployeeByRfc, editEmployee, getCompaniesRFC, getUserId } from '@/utils/fetchData';
+import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType } from '@/interfaces/types';
+
+interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
+  role: SimpleRole;
+  department: SimpleDepartment;
+  jobTitle: SimpleJobTitle;
+  workShift: SimpleWorkShift;
+  contractType: SimpleContractType;
+}
 
 export default function EditEmployee() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialEmployeeId = searchParams.get("id");
 
-  const [employeeData, setEmployeeData] = useState({
+  const [employeeData, setEmployeeData] = useState<EditEmployeeData>({
     id: "",
     name: "",
     role: { id: "", name: "" },
     department: { id: "", name: "" },
     companyId: "",
+    company: { // Añadido para inicializar 'company'
+      id: "",
+      name: "",
+      userId: "",
+      user: { id: "", email: "", name: "", companies: [] },
+      employees: [],
+      razonSocial: "",
+      rfc: "",
+      domicilioFiscalCalle: "",
+      domicilioFiscalNumero: "",
+      domicilioFiscalColonia: "",
+      domicilioFiscalMunicipio: "",
+      domicilioFiscalEstado: "",
+      domicilioFiscalCodigoPostal: "",
+      nombreComercial: "",
+      objetoSocial: "",
+      representanteLegalNombre: "",
+      representanteLegalCurp: "",
+      capitalSocial: 0,
+      registrosImss: "",
+      registrosInfonavit: "",
+      giroActividadEconomica: "",
+      certificaciones: [],
+      reviewsGiven: [],
+      logoUrl: "",
+      roles: [],
+      workShifts: [],
+      departments: [],
+      contractTypes: [],
+      jobTitles: []
+    },
     socialSecurityNumber: "",
     CURP: "",
     RFC: "",
@@ -40,9 +80,12 @@ export default function EditEmployee() {
     jobTitle: { id: "", name: "" },
     workShift: { id: "", name: "" },
     contractType: { id: "", name: "" },
-    profileImageUrl: null as string | null,
+    profileImageUrl: null,
     createdAt: "",
-    updatedAt: ""
+    updatedAt: "",
+    reviewsReceived: [],
+    uploadedFiles: [],
+    employeeDepartments: []
   });
 
   const [message, setMessage] = useState<string | null>(null);
@@ -50,12 +93,16 @@ export default function EditEmployee() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userId = await getUserId();
-      const companyRFCs = await getCompaniesRFC();
-      setCompanies(companyRFCs.rfcs);
+      try {
+        const userId = await getUserId();
+        const companyRFCs = await getCompaniesRFC();
+        setCompanies(companyRFCs.rfcs);
 
-      if (initialEmployeeId) {
-        fetchEmployeeData(initialEmployeeId);
+        if (initialEmployeeId) {
+          fetchEmployeeData(initialEmployeeId);
+        }
+      } catch (error) {
+        console.error("Error fetching user data or companies:", error);
       }
     };
 
@@ -68,9 +115,15 @@ export default function EditEmployee() {
       if (data) {
         setEmployeeData({
           ...data,
+          role: { id: data.role.id, name: data.role.name },
+          department: { id: data.department.id, name: data.department.name },
+          jobTitle: { id: data.jobTitle.id, name: data.jobTitle.name },
+          workShift: { id: data.workShift.id, name: data.workShift.name },
+          contractType: { id: data.contractType.id, name: data.contractType.name },
           birthDate: data.birthDate ? new Date(data.birthDate).toISOString().split('T')[0] : "",
           hireDate: data.hireDate ? new Date(data.hireDate).toISOString().split('T')[0] : "",
-          profileImageUrl: data.profileImageUrl ?? null, // Asegurarse de que sea null si es undefined
+          profileImageUrl: data.profileImageUrl ?? null,
+          company: data.company // Asignar la compañía también
         });
       } else {
         setMessage("Failed to fetch employee data.");
@@ -92,7 +145,7 @@ export default function EditEmployee() {
     e.preventDefault();
 
     try {
-      editEmployeeSchema.parse(employeeData); // Validar datos con Zod
+      editEmployeeSchema.parse(employeeData);
     } catch (error) {
       if (error instanceof z.ZodError) {
         setMessage(error.errors.map(err => err.message).join(", "));
@@ -102,7 +155,7 @@ export default function EditEmployee() {
 
     const form = new FormData();
     Object.keys(employeeData).forEach(key => {
-      const value = employeeData[key as keyof typeof employeeData];
+      const value = employeeData[key as keyof EditEmployeeData];
       if (value !== null && value !== undefined && value !== '') {
         form.append(key, value as any);
       }
@@ -201,7 +254,7 @@ export default function EditEmployee() {
                 id="birthDate"
                 name="birthDate"
                 type="date"
-                value={employeeData.birthDate}
+                value={employeeData.birthDate ?? ""}
                 onChange={handleInputChange}
                 required
               />
@@ -212,7 +265,7 @@ export default function EditEmployee() {
                 id="hireDate"
                 name="hireDate"
                 type="date"
-                value={employeeData.hireDate}
+                value={employeeData.hireDate ?? ""}
                 onChange={handleInputChange}
                 required
               />
@@ -223,7 +276,7 @@ export default function EditEmployee() {
                 id="address"
                 name="address"
                 type="text"
-                value={employeeData.address}
+                value={employeeData.address ?? ""}
                 onChange={handleInputChange}
                 required
               />
@@ -234,7 +287,7 @@ export default function EditEmployee() {
                 id="phoneNumber"
                 name="phoneNumber"
                 type="text"
-                value={employeeData.phoneNumber}
+                value={employeeData.phoneNumber ?? ""}
                 onChange={handleInputChange}
                 required
               />

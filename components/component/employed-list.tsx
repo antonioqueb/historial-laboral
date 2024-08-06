@@ -1,8 +1,9 @@
-'use client'; // Asegura que el código se ejecute en el cliente
+'use client';
 
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
-import { getEmployeesByCompany, getCompaniesList, Employee, Company } from "@/utils/fetchData";
+import { getEmployeesByCompany, getCompaniesList } from "@/utils/fetchData";
+import { Company, Employee } from '@/interfaces/types';
 import { Button } from "../ui/button";
 import CompanyCard from "@/components/component/CompanyCard";
 import Image from "next/image";
@@ -117,7 +118,16 @@ export default function DashboardEmployedList() {
                 className={`cursor-pointer ${selectedCompany === company.id ? 'border-2 border-indigo-500' : ''}`}
                 onClick={() => setSelectedCompany(company.id)}
               >
-                <CompanyCard company={company} />
+                <CompanyCard company={{
+                  ...company,
+                  nombreComercial: company.nombreComercial ?? "",
+                  representanteLegalCurp: company.representanteLegalCurp ?? "",
+                  capitalSocial: company.capitalSocial ?? 0,
+                  registrosImss: company.registrosImss ?? "",
+                  registrosInfonavit: company.registrosInfonavit ?? "",
+                  giroActividadEconomica: company.giroActividadEconomica ?? "",
+                  logoUrl: company.logoUrl ?? ""
+                }} />
               </div>
             ))}
           </div>
@@ -149,9 +159,9 @@ export default function DashboardEmployedList() {
                     <span className="text-red-500">❌ No Autorizado</span>
                   )}
                 </div>
-                <p className="text-zinc-500 dark:text-zinc-400">{employee.role.name}</p> {/* Acceder a role.name */}
+                <p className="text-zinc-500 dark:text-zinc-400">{employee.role.name}</p>
                 <p className="text-sm line-clamp-2">{employee.description}</p>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department.name}</p> {/* Acceder a department.name */}
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department.name}</p>
                 <div className="flex space-x-2 mt-2">
                   {authorizedNSS[employee.socialSecurityNumber] ? (
                     <Button
@@ -184,3 +194,4 @@ export default function DashboardEmployedList() {
     </div>
   );
 }
+
