@@ -6,6 +6,7 @@ import { getEmployeesByCompany, getCompaniesList, Employee, Company } from "@/ut
 import { Button } from "../ui/button";
 import CompanyCard from "@/components/component/CompanyCard";
 import Image from "next/image";
+
 export default function DashboardEmployedList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -148,9 +149,9 @@ export default function DashboardEmployedList() {
                     <span className="text-red-500">❌ No Autorizado</span>
                   )}
                 </div>
-                <p className="text-zinc-500 dark:text-zinc-400">{employee.role}</p>
+                <p className="text-zinc-500 dark:text-zinc-400">{employee.role.name}</p> {/* Acceder a role.name */}
                 <p className="text-sm line-clamp-2">{employee.description}</p>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department}</p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department.name}</p> {/* Acceder a department.name */}
                 <div className="flex space-x-2 mt-2">
                   {authorizedNSS[employee.socialSecurityNumber] ? (
                     <Button
