@@ -21,7 +21,7 @@ const CompanyPage = () => {
     const fetchEmployees = async () => {
       try {
         console.log(`Fetching employees for company RFC: ${companyRFC}`);
-        const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${companyRFC}`);
+        const res = await fetch(`https://historiallaboral.com/api/listEmployeesByCompanyRFC?rfc=${companyRFC}`);
         console.log('Fetch response status:', res.status);
         if (res.ok) {
           const data = await res.json();
