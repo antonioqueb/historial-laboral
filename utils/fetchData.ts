@@ -40,10 +40,10 @@ export async function getCompaniesRFC(): Promise<{ rfcs: string[] }> {
   }
 }
 
-// Función para obtener los empleados filtrados por la compañía seleccionada
-export async function getEmployeesByCompany(selectedCompanyId: string): Promise<Employee[]> {
+// Función para obtener los empleados filtrados por el RFC de la compañía seleccionada
+export async function getEmployeesByCompany(selectedCompanyRFC: string): Promise<Employee[]> {
   try {
-    const response = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${selectedCompanyId}`);
+    const response = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${selectedCompanyRFC}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -54,6 +54,7 @@ export async function getEmployeesByCompany(selectedCompanyId: string): Promise<
     return [];
   }
 }
+
 
 
 // Función para obtener la lista de compañías

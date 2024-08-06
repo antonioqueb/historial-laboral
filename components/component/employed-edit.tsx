@@ -89,7 +89,7 @@ export default function EditEmployee() {
   });
 
   const [message, setMessage] = useState<string | null>(null);
-  const [companies, setCompanies] = useState<string[]>([]);
+  const [companies, setCompanies] = useState<{ name: string; rfc: string }[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
 
@@ -112,12 +112,12 @@ export default function EditEmployee() {
   }, []);
 
   useEffect(() => {
-    if (employeeData.companyId) {
+    if (employeeData.company.rfc) {
       const fetchEmployees = async () => {
         try {
-          console.log("Fetching employees for company ID:", employeeData.companyId);
+          console.log("Fetching employees for company RFC:", employeeData.company.rfc);
 
-          const employeesData = await getEmployeesByCompany(employeeData.companyId);
+          const employeesData = await getEmployeesByCompany(employeeData.company.rfc);
           console.log("Fetched Employees Data:", employeesData);
 
           setEmployees(employeesData);
@@ -128,7 +128,7 @@ export default function EditEmployee() {
 
       fetchEmployees();
     }
-  }, [employeeData.companyId]);
+  }, [employeeData.company.rfc]);
 
   useEffect(() => {
     if (selectedEmployee) {
@@ -173,10 +173,16 @@ export default function EditEmployee() {
   };
 
   const handleCompanyChange = (value: string) => {
-    console.log("Selected Company ID:", value);
+    const selectedCompany = companies.find(company => company.rfc === value);
+    console.log("Selected Company RFC:", value);
     setEmployeeData(prevState => ({
       ...prevState,
-      companyId: value
+      companyId: selectedCompany?.id ?? "",
+      company: {
+        ...prevState.company,
+        rfc: selectedCompany?.rfc ?? "",
+        name: selectedCompany?.name ?? ""
+      }
     }));
     setSelectedEmployee(""); // Reset the selected employee when company changes
     setEmployees([]); // Clear the employees list when company changes
@@ -228,7 +234,7 @@ export default function EditEmployee() {
         <div className="mb-4">
           <Label htmlFor="companySelect">Seleccionar Empresa</Label>
           <Select
-            value={employeeData.companyId}
+            value={employeeData.company.rfc}
             onValueChange={handleCompanyChange}
             required
           >
@@ -236,15 +242,15 @@ export default function EditEmployee() {
               <SelectValue placeholder="Seleccionar empresa" />
             </SelectTrigger>
             <SelectContent>
-              {companies.map(companyRfc => (
-                <SelectItem key={companyRfc} value={companyRfc}>
-                  {companyRfc}
+              {companies.map(company => (
+                <SelectItem key={company.rfc} value={company.rfc}>
+                  {company.name} - {company.rfc}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-        {employeeData.companyId && (
+        {employeeData.company.rfc && (
           <div className="mb-4">
             <Label htmlFor="employeeSelect">Seleccionar Empleado</Label>
             <Select
