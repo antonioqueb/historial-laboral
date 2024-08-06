@@ -31,7 +31,7 @@ export default function EditEmployee() {
     role: { id: "", name: "" },
     department: { id: "", name: "" },
     companyId: "",
-    company: { // Añadido para inicializar 'company'
+    company: {
       id: "",
       name: "",
       userId: "",
@@ -123,7 +123,7 @@ export default function EditEmployee() {
           birthDate: data.birthDate ? new Date(data.birthDate).toISOString().split('T')[0] : "",
           hireDate: data.hireDate ? new Date(data.hireDate).toISOString().split('T')[0] : "",
           profileImageUrl: data.profileImageUrl ?? null,
-          company: data.company // Asignar la compañía también
+          company: data.company
         });
       } else {
         setMessage("Failed to fetch employee data.");
@@ -179,25 +179,6 @@ export default function EditEmployee() {
     <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
       <>
         <h1 className="text-3xl font-bold mb-8">Editar Empleado</h1>
-        <div className="mb-4">
-          <Label htmlFor="companySelect">Seleccionar Empresa</Label>
-          <Select
-            value={employeeData.companyId}
-            onValueChange={value => setEmployeeData(prevState => ({ ...prevState, companyId: value }))}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar empresa" />
-            </SelectTrigger>
-            <SelectContent>
-              {companies.map(companyRfc => (
-                <SelectItem key={companyRfc} value={companyRfc}>
-                  {companyRfc}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Información General</h2>
@@ -293,7 +274,7 @@ export default function EditEmployee() {
               />
             </div>
           </div>
-          <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:grid-cols-3">
+          <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
             <Button type="submit">Editar Empleado</Button>
             <Link href="/tablero/empleados" className="ml-2">
               <Button type="button">Cancelar</Button>
