@@ -1,4 +1,5 @@
 // app/tablero/empleados/editar/[companyRFC]/page.tsx
+'use client';
 import { useSearchParams } from 'next/navigation';
 
 const CompanyPage = () => {
