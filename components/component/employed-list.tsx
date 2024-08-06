@@ -138,7 +138,7 @@ export default function DashboardEmployedList() {
             <div key={employee.id} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden">
               <div className="aspect-square">
                 <Image
-                  alt={`Foto de ${employee.name}`}
+                  alt={`Foto de ${employee.name ?? "N/A"}`}
                   className="w-full h-full object-cover"
                   height={400}
                   src={employee.profileImageUrl ? employee.profileImageUrl : "/placeholder.svg"}
@@ -151,7 +151,7 @@ export default function DashboardEmployedList() {
                 />
               </div>
               <div className="p-4 space-y-2">
-                <h3 className="text-lg font-semibold">{employee.name}</h3>
+                <h3 className="text-lg font-semibold">{employee.name ?? "Nombre no disponible"}</h3>
                 <div className="flex items-center">
                   {authorizedNSS[employee.socialSecurityNumber] ? (
                     <span className="text-green-500">✔️ Autorizado</span>
@@ -159,9 +159,9 @@ export default function DashboardEmployedList() {
                     <span className="text-red-500">❌ No Autorizado</span>
                   )}
                 </div>
-                <p className="text-zinc-500 dark:text-zinc-400">{employee.role.name}</p>
-                <p className="text-sm line-clamp-2">{employee.description}</p>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department.name}</p>
+                <p className="text-zinc-500 dark:text-zinc-400">{employee.role?.name ?? "Rol no disponible"}</p>
+                <p className="text-sm line-clamp-2">{employee.description ?? "Descripción no disponible"}</p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Departamento: {employee.department?.name ?? "Departamento no disponible"}</p>
                 <div className="flex space-x-2 mt-2">
                   {authorizedNSS[employee.socialSecurityNumber] ? (
                     <Button
@@ -194,4 +194,3 @@ export default function DashboardEmployedList() {
     </div>
   );
 }
-
