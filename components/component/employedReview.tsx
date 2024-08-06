@@ -8,10 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Link from 'next/link';
-import { createReview, getCompaniesList, getEmployeesByCompany, getUserId, Employee, Company } from '@/utils/fetchData';
+import { createReview, getCompaniesList, getEmployeesByCompany, getUserId} from '@/utils/fetchData';
 import { reviewSchema } from "@/schemas/reviewSchema"; // Importar el esquema de validación
 import { z } from "zod";
 import * as Slider from '@radix-ui/react-slider';
+import { Employee, Company} from "@/interfaces/types";
+
 
 interface ReviewData {
   employeeId: string;
