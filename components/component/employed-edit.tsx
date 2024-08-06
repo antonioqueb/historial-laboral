@@ -97,7 +97,11 @@ export default function EditEmployee() {
     const fetchUserData = async () => {
       try {
         const userId = await getUserId();
+        console.log("Fetched User ID:", userId);
+
         const companyRFCs = await getCompaniesRFC();
+        console.log("Fetched Company RFCs:", companyRFCs);
+
         setCompanies(companyRFCs.rfcs);
       } catch (error) {
         console.error("Error fetching user data or companies:", error);
@@ -111,8 +115,12 @@ export default function EditEmployee() {
     if (employeeData.companyId) {
       const fetchEmployees = async () => {
         try {
+          console.log("Fetching employees for company ID:", employeeData.companyId);
+
           const employeesData = await getEmployeesByCompany(employeeData.companyId);
-          setEmployees(employeesData);
+          console.log("Fetched Employees Data:", employeesData);
+
+          setEmployees(employeesData.employees);
         } catch (error) {
           console.error("Error fetching employees:", error);
         }
@@ -130,7 +138,10 @@ export default function EditEmployee() {
 
   const fetchEmployeeData = async (id: string) => {
     try {
+      console.log("Fetching data for employee ID:", id);
       const data = await getEmployeeByRfc(id);
+      console.log("Fetched Employee Data:", data);
+
       if (data) {
         setEmployeeData({
           ...data,
@@ -162,6 +173,7 @@ export default function EditEmployee() {
   };
 
   const handleCompanyChange = (value: string) => {
+    console.log("Selected Company ID:", value);
     setEmployeeData(prevState => ({
       ...prevState,
       companyId: value
@@ -171,6 +183,7 @@ export default function EditEmployee() {
   };
 
   const handleEmployeeChange = (value: string) => {
+    console.log("Selected Employee ID:", value);
     setSelectedEmployee(value);
   };
 
