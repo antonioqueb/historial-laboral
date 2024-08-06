@@ -123,6 +123,7 @@ export default function EditEmployee() {
           birthDate: data.birthDate ? new Date(data.birthDate).toISOString().split('T')[0] : "",
           hireDate: data.hireDate ? new Date(data.hireDate).toISOString().split('T')[0] : "",
           profileImageUrl: data.profileImageUrl ?? null,
+          companyId: data.company.id, // Actualizamos companyId aquí
           company: data.company
         });
       } else {
@@ -138,6 +139,13 @@ export default function EditEmployee() {
     setEmployeeData(prevState => ({
       ...prevState,
       [name]: value
+    }));
+  };
+
+  const handleCompanyChange = (value: string) => {
+    setEmployeeData(prevState => ({
+      ...prevState,
+      companyId: value
     }));
   };
 
@@ -273,6 +281,25 @@ export default function EditEmployee() {
                 required
               />
             </div>
+          </div>
+          <div>
+            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+            <Select
+              value={employeeData.companyId}
+              onValueChange={handleCompanyChange}
+              required
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar empresa" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map(companyRfc => (
+                  <SelectItem key={companyRfc} value={companyRfc}>
+                    {companyRfc}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:col-span-3">
             <Button type="submit">Editar Empleado</Button>
