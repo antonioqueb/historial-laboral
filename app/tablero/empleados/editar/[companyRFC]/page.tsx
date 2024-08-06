@@ -22,12 +22,18 @@ const CompanyPage = () => {
       try {
         console.log(`Fetching employees for company RFC: ${companyRFC}`);
         const res = await fetch(`/api/listEmployeesByCompanyRFC?rfc=${companyRFC}`);
+        console.log('Fetch response status:', res.status);
         if (res.ok) {
           const data = await res.json();
-          console.log('Fetched employees:', data.employees);
-          setEmployees(data.employees);
+          console.log('Fetched employees data:', data);
+          if (data && data.employees) {
+            setEmployees(data.employees);
+            console.log('Employees set in state:', data.employees);
+          } else {
+            console.error('No employees found in response data');
+          }
         } else {
-          console.error('Failed to fetch employees');
+          console.error('Failed to fetch employees, response not OK');
         }
       } catch (error) {
         console.error('Failed to fetch employees', error);
