@@ -1,9 +1,9 @@
 // app/tablero/empleados/editar/[companyRFC]/page.tsx
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 
 const CompanyPage = () => {
-  const router = useRouter();
-  const { companyRFC } = router.query;
+  const searchParams = useSearchParams();
+  const companyRFC = searchParams.get('companyRFC');
 
   return (
     <div>
