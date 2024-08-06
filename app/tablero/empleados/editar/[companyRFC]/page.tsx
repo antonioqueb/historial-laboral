@@ -24,6 +24,8 @@ const CompanyPage = () => {
         if (res.ok) {
           const data = await res.json();
           setEmployees(data.employees);
+        } else {
+          console.error('Failed to fetch employees');
         }
       } catch (error) {
         console.error('Failed to fetch employees', error);
@@ -53,11 +55,17 @@ const CompanyPage = () => {
           <SelectValue placeholder="Seleccionar empleado" />
         </SelectTrigger>
         <SelectContent>
-          {employees.map(employee => (
-            <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
-              {employee.name}
+          {employees.length > 0 ? (
+            employees.map(employee => (
+              <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
+                {employee.name}
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem value="no-employees" disabled>
+              No hay empleados disponibles
             </SelectItem>
-          ))}
+          )}
         </SelectContent>
       </Select>
     </div>
