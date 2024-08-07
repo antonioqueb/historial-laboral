@@ -8,23 +8,8 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany } from '@/utils/fetchData';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company } from '@/interfaces/types';
-
-// Función para obtener los tipos de sangre desde la API
-const getBloodTypes = async (): Promise<string[]> => {
-  try {
-    const response = await fetch('https://historiallaboral.com/api/bloodTypes');
-    if (!response.ok) {
-      throw new Error('Failed to fetch blood types');
-    }
-    const data = await response.json();
-    return data.bloodTypes;
-  } catch (error) {
-    console.error("Error al obtener los tipos de sangre:", error);
-    return [];
-  }
-};
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;

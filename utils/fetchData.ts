@@ -303,3 +303,17 @@ export const getEmployeeByNss = async (nss: string): Promise<Employee | null> =>
   }
 };
 
+// Función para obtener los tipos de sangre desde la API
+export const getBloodTypes = async (): Promise<string[]> => {
+  try {
+    const response = await fetch('https://historiallaboral.com/api/bloodTypes');
+    if (!response.ok) {
+      throw new Error('Failed to fetch blood types');
+    }
+    const data = await response.json();
+    return data.bloodTypes;
+  } catch (error) {
+    console.error("Error al obtener los tipos de sangre:", error);
+    return [];
+  }
+};
