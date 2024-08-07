@@ -8,8 +8,8 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany, createDepartment, editDepartment, deleteDepartment, getRolesByCompany, createRole, editRole, deleteRole } from '@/utils/fetchData';
-import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department, Role } from '@/interfaces/types';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany, createDepartment, editDepartment, deleteDepartment, getRolesByCompany, createRole, editRole, deleteRole, getContractTypesByCompany, createContractType, editContractType, deleteContractType } from '@/utils/fetchData';
+import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department, Role, ContractType } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;
@@ -110,6 +110,13 @@ const [roles, setRoles] = useState<Role[]>([]);
 const [newRoleName, setNewRoleName] = useState("");
 const [editingRole, setEditingRole] = useState<Role | null>(null);
 const [isCreatingRole, setIsCreatingRole] = useState(false);
+
+// ContractType
+const [contractTypes, setContractTypes] = useState<ContractType[]>([]);
+const [newContractTypeName, setNewContractTypeName] = useState("");
+const [editingContractType, setEditingContractType] = useState<ContractType | null>(null);
+const [isCreatingContractType, setIsCreatingContractType] = useState(false);
+
 
 
 
@@ -377,6 +384,58 @@ const [isCreatingRole, setIsCreatingRole] = useState(false);
       console.error("Error deleting role:", error);
     }
   };
+
+
+
+
+  // ContractType
+  useEffect(() => {
+    if (employeeData.company.rfc) {
+      const fetchContractTypes = async () => {
+        try {
+          const contractTypesData = await getContractTypesByCompany(employeeData.company.rfc);
+          setContractTypes(contractTypesData);
+        } catch (error) {
+          console.error("Error fetching contract types:", error);
+        }
+      };
+  
+      fetchContractTypes();
+    }
+  }, [employeeData.company.rfc]);
+  
+  const handleCreateContractType = async () => {
+    if (!newContractTypeName) return;
+    try {
+      const newContractType = await createContractType(employeeData.company.rfc, newContractTypeName);
+      setContractTypes([...contractTypes, newContractType]);
+      setNewContractTypeName("");
+      setIsCreatingContractType(false);
+    } catch (error) {
+      console.error("Error creating contract type:", error);
+    }
+  };
+  
+  const handleEditContractType = async () => {
+    if (!editingContractType) return;
+    try {
+      await editContractType(employeeData.company.rfc, editingContractType.id, editingContractType.name);
+      setContractTypes(contractTypes.map(ct => ct.id === editingContractType.id ? editingContractType : ct));
+      setEditingContractType(null);
+    } catch (error) {
+      console.error("Error editing contract type:", error);
+    }
+  };
+  
+  const handleDeleteContractType = async (id: string) => {
+    try {
+      await deleteContractType(employeeData.company.rfc, id);
+      setContractTypes(contractTypes.filter(ct => ct.id !== id));
+    } catch (error) {
+      console.error("Error deleting contract type:", error);
+    }
+  };
+  
   
   
 
@@ -610,17 +669,57 @@ const [isCreatingRole, setIsCreatingRole] = useState(false);
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="contractType">Tipo de Contrato</Label>
-                <Input
-                  id="contractType"
-                  name="contractType"
-                  type="text"
-                  value={employeeData.contractType.name || ''}
-                  onChange={handleInputChange}
+              <section className="mb-8">
+              <h2 className="text-xl font-semibold mb-4">Gestión de Tipos de Contrato</h2>
+              <div className="mb-4">
+                <Label htmlFor="contractTypeSelect">Seleccionar Tipo de Contrato</Label>
+                <Select
+                  value={employeeData.contractType.id || ''}
+                  onValueChange={(value) => {
+                    const selectedContractType = contractTypes.find(ct => ct.id === value);
+                    setEmployeeData({ ...employeeData, contractType: { id: value, name: selectedContractType?.name || '' } });
+                  }}
                   required
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar tipo de contrato" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {contractTypes.map(contractType => (
+                      <SelectItem key={contractType.id} value={contractType.id}>
+                        {contractType.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+              <div className="flex flex-col space-y-2">
+                {contractTypes.map(contractType => (
+                  <div key={contractType.id} className="flex justify-between items-center">
+                    <span>{contractType.name}</span>
+                    <div className="space-x-2">
+                      <Button onClick={() => setEditingContractType(contractType)}>Editar</Button>
+                      <Button onClick={() => handleDeleteContractType(contractType.id)}>Eliminar</Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4">
+                {isCreatingContractType ? (
+                  <div className="flex space-x-2">
+                    <Input
+                      placeholder="Nuevo nombre del tipo de contrato"
+                      value={newContractTypeName}
+                      onChange={(e) => setNewContractTypeName(e.target.value)}
+                    />
+                    <Button onClick={handleCreateContractType}>Crear</Button>
+                    <Button onClick={() => setIsCreatingContractType(false)}>Cancelar</Button>
+                  </div>
+                ) : (
+                  <Button onClick={() => setIsCreatingContractType(true)}>Añadir Tipo de Contrato</Button>
+                )}
+              </div>
+            </section>
               <div>
                 <Label htmlFor="hireDate">Fecha de Contratación</Label>
                 <Input

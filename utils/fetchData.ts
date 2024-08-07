@@ -1,4 +1,4 @@
-import { Company, Employee, Review, Department, Role   } from '@/interfaces/types';
+import { Company, Employee, Review, Department, Role, ContractType   } from '@/interfaces/types';
 
 // Función para cargar archivos de empleados por RFC
 export async function uploadEmployeeFiles(rfc: string, files: File[]): Promise<{ success: boolean; error?: string }> {
@@ -529,6 +529,87 @@ export async function deleteRole(rfc: string, id: string): Promise<void> {
     });
     if (!response.ok) {
       throw new Error(`Error deleting role: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+
+
+}
+
+
+
+
+
+
+// Obtener todos los tipos de contrato de una empresa
+export async function getContractTypesByCompany(rfc: string): Promise<ContractType[]> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/ContractType?rfc=${rfc}`);
+    if (!response.ok) {
+      throw new Error(`Error fetching contract types: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+// Crear un nuevo tipo de contrato
+export async function createContractType(rfc: string, name: string): Promise<ContractType> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/ContractType?rfc=${rfc}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error creating contract type: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Editar un tipo de contrato existente
+export async function editContractType(rfc: string, id: string, name: string): Promise<void> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/ContractType?rfc=${rfc}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, name }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error editing contract type: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Eliminar un tipo de contrato existente
+export async function deleteContractType(rfc: string, id: string): Promise<void> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/ContractType?rfc=${rfc}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error deleting contract type: ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
