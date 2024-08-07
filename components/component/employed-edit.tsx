@@ -8,8 +8,8 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany, createDepartment, editDepartment, deleteDepartment } from '@/utils/fetchData';
-import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department } from '@/interfaces/types';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany, createDepartment, editDepartment, deleteDepartment, getRolesByCompany, createRole, editRole, deleteRole } from '@/utils/fetchData';
+import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department, Role } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;
@@ -104,6 +104,13 @@ const [departments, setDepartments] = useState<Department[]>([]);
 const [newDepartmentName, setNewDepartmentName] = useState("");
 const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
 const [isCreating, setIsCreating] = useState(false);
+
+// Roles
+const [roles, setRoles] = useState<Role[]>([]);
+const [newRoleName, setNewRoleName] = useState("");
+const [editingRole, setEditingRole] = useState<Role | null>(null);
+const [isCreatingRole, setIsCreatingRole] = useState(false);
+
 
 
   
@@ -273,6 +280,7 @@ const [isCreating, setIsCreating] = useState(false);
     }
   };
 
+  // Departament
 
   useEffect(() => {
     if (employeeData.company.rfc) {
@@ -320,6 +328,56 @@ const [isCreating, setIsCreating] = useState(false);
       console.error("Error deleting department:", error);
     }
   };
+
+  // Roles
+
+  useEffect(() => {
+    if (employeeData.company.rfc) {
+      const fetchRoles = async () => {
+        try {
+          const rolesData = await getRolesByCompany(employeeData.company.rfc);
+          setRoles(rolesData);
+        } catch (error) {
+          console.error("Error fetching roles:", error);
+        }
+      };
+  
+      fetchRoles();
+    }
+  }, [employeeData.company.rfc]);
+  
+  const handleCreateRole = async () => {
+    if (!newRoleName) return;
+    try {
+      const newRole = await createRole(employeeData.company.rfc, newRoleName);
+      setRoles([...roles, newRole]);
+      setNewRoleName("");
+      setIsCreatingRole(false);
+    } catch (error) {
+      console.error("Error creating role:", error);
+    }
+  };
+  
+  const handleEditRole = async () => {
+    if (!editingRole) return;
+    try {
+      await editRole(employeeData.company.rfc, editingRole.id, editingRole.name);
+      setRoles(roles.map(r => r.id === editingRole.id ? editingRole : r));
+      setEditingRole(null);
+    } catch (error) {
+      console.error("Error editing role:", error);
+    }
+  };
+  
+  const handleDeleteRole = async (id: string) => {
+    try {
+      await deleteRole(employeeData.company.rfc, id);
+      setRoles(roles.filter(r => r.id !== id));
+    } catch (error) {
+      console.error("Error deleting role:", error);
+    }
+  };
+  
   
 
   return (
@@ -428,17 +486,57 @@ const [isCreating, setIsCreating] = useState(false);
           <section>
             <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="role">Rol</Label>
-                <Input
-                  id="role"
-                  name="role"
-                  type="text"
-                  value={employeeData.role.name || ''}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+            <section className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Gestión de Roles</h2>
+            <div className="mb-4">
+              <Label htmlFor="roleSelect">Seleccionar Rol</Label>
+              <Select
+                value={employeeData.role.id || ''}
+                onValueChange={(value) => {
+                  const selectedRole = roles.find(role => role.id === value);
+                  setEmployeeData({ ...employeeData, role: { id: value, name: selectedRole?.name || '' } });
+                }}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar rol" />
+                </SelectTrigger>
+                <SelectContent>
+                  {roles.map(role => (
+                    <SelectItem key={role.id} value={role.id}>
+                      {role.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col space-y-2">
+              {roles.map(role => (
+                <div key={role.id} className="flex justify-between items-center">
+                  <span>{role.name}</span>
+                  <div className="space-x-2">
+                    <Button onClick={() => setEditingRole(role)}>Editar</Button>
+                    <Button onClick={() => handleDeleteRole(role.id)}>Eliminar</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4">
+              {isCreatingRole ? (
+                <div className="flex space-x-2">
+                  <Input
+                    placeholder="Nuevo nombre del rol"
+                    value={newRoleName}
+                    onChange={(e) => setNewRoleName(e.target.value)}
+                  />
+                  <Button onClick={handleCreateRole}>Crear</Button>
+                  <Button onClick={() => setIsCreatingRole(false)}>Cancelar</Button>
+                </div>
+              ) : (
+                <Button onClick={() => setIsCreatingRole(true)}>Añadir Rol</Button>
+              )}
+            </div>
+          </section>
               <section className="mb-8">
               <h2 className="text-xl font-semibold mb-4">Gestión de Departamentos</h2>
               <div className="mb-4">
