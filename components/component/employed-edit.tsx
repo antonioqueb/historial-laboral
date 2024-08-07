@@ -552,7 +552,7 @@ export default function EditEmployee() {
           <h2 className="text-xl font-semibold mb-4">Seleccionar Empresa y Empleado</h2>
           <div className="mb-4">
             <Label htmlFor="companySelect" className="block mb-2">Seleccionar Empresa</Label>
-            <div className="w-full">
+            <div className="w-full flex items-center space-x-2">
               <Select
                 value={employeeData.company.rfc || ''}
                 onValueChange={handleCompanyChange}
@@ -575,7 +575,7 @@ export default function EditEmployee() {
           {employeeData.company.rfc && (
             <div className="mb-4">
               <Label htmlFor="employeeSelect" className="block mb-2">Seleccionar Empleado</Label>
-              <div className="w-full">
+              <div className="w-full flex items-center space-x-2">
                 <Select
                   value={selectedEmployee || ''}
                   onValueChange={handleEmployeeChange}
@@ -657,28 +657,26 @@ export default function EditEmployee() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="role" className="block mb-2">Rol</Label>
-                <div className="flex items-center space-x-2">
-                  <div className="w-full">
-                    <Select
-                      value={employeeData.role.id || ''}
-                      onValueChange={(value) => {
-                        const selectedRole = roles.find(role => role.id === value);
-                        setEmployeeData({ ...employeeData, role: { id: value, name: selectedRole?.name || '' } });
-                      }}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar rol" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {roles.map(role => (
-                          <SelectItem key={role.id} value={role.id}>
-                            {role.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="w-full flex items-center space-x-2">
+                  <Select
+                    value={employeeData.role.id || ''}
+                    onValueChange={(value) => {
+                      const selectedRole = roles.find(role => role.id === value);
+                      setEmployeeData({ ...employeeData, role: { id: value, name: selectedRole?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar rol" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {roles.map(role => (
+                        <SelectItem key={role.id} value={role.id}>
+                          {role.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="ghost" className="ml-2">
@@ -729,28 +727,26 @@ export default function EditEmployee() {
 
               <div>
                 <Label htmlFor="department" className="block mb-2">Departamento</Label>
-                <div className="flex items-center space-x-2">
-                  <div className="w-full">
-                    <Select
-                      value={employeeData.department.id || ''}
-                      onValueChange={(value) => {
-                        const selectedDepartment = departments.find(dept => dept.id === value);
-                        setEmployeeData({ ...employeeData, department: { id: value, name: selectedDepartment?.name || '' } });
-                      }}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar departamento" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {departments.map(department => (
-                          <SelectItem key={department.id} value={department.id}>
-                            {department.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="w-full flex items-center space-x-2">
+                  <Select
+                    value={employeeData.department.id || ''}
+                    onValueChange={(value) => {
+                      const selectedDepartment = departments.find(dept => dept.id === value);
+                      setEmployeeData({ ...employeeData, department: { id: value, name: selectedDepartment?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar departamento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {departments.map(department => (
+                        <SelectItem key={department.id} value={department.id}>
+                          {department.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="ghost" className="ml-2">
@@ -801,28 +797,26 @@ export default function EditEmployee() {
 
               <div>
                 <Label htmlFor="jobTitle" className="block mb-2">Título del Puesto</Label>
-                <div className="flex items-center space-x-2">
-                  <div className="w-full">
-                    <Select
-                      value={employeeData.jobTitle.id || ''}
-                      onValueChange={(value) => {
-                        const selectedJobTitle = jobTitles.find(jt => jt.id === value);
-                        setEmployeeData({ ...employeeData, jobTitle: { id: value, name: selectedJobTitle?.name || '' } });
-                      }}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar título del puesto" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {jobTitles.map(jobTitle => (
-                          <SelectItem key={jobTitle.id} value={jobTitle.id}>
-                            {jobTitle.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="w-full flex items-center space-x-2">
+                  <Select
+                    value={employeeData.jobTitle.id || ''}
+                    onValueChange={(value) => {
+                      const selectedJobTitle = jobTitles.find(jt => jt.id === value);
+                      setEmployeeData({ ...employeeData, jobTitle: { id: value, name: selectedJobTitle?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar título del puesto" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {jobTitles.map(jobTitle => (
+                        <SelectItem key={jobTitle.id} value={jobTitle.id}>
+                          {jobTitle.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="ghost" className="ml-2">
@@ -873,28 +867,26 @@ export default function EditEmployee() {
 
               <div>
                 <Label htmlFor="workShift" className="block mb-2">Turno de Trabajo</Label>
-                <div className="flex items-center space-x-2">
-                  <div className="w-full">
-                    <Select
-                      value={employeeData.workShift.id || ''}
-                      onValueChange={(value) => {
-                        const selectedWorkShift = workShifts.find(ws => ws.id === value);
-                        setEmployeeData({ ...employeeData, workShift: { id: value, name: selectedWorkShift?.name || '' } });
-                      }}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar turno de trabajo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {workShifts.map(workShift => (
-                          <SelectItem key={workShift.id} value={workShift.id}>
-                            {workShift.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="w-full flex items-center space-x-2">
+                  <Select
+                    value={employeeData.workShift.id || ''}
+                    onValueChange={(value) => {
+                      const selectedWorkShift = workShifts.find(ws => ws.id === value);
+                      setEmployeeData({ ...employeeData, workShift: { id: value, name: selectedWorkShift?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar turno de trabajo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {workShifts.map(workShift => (
+                        <SelectItem key={workShift.id} value={workShift.id}>
+                          {workShift.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="ghost" className="ml-2">
@@ -945,28 +937,26 @@ export default function EditEmployee() {
 
               <div>
                 <Label htmlFor="contractType" className="block mb-2">Tipo de Contrato</Label>
-                <div className="flex items-center space-x-2">
-                  <div className="w-full">
-                    <Select
-                      value={employeeData.contractType.id || ''}
-                      onValueChange={(value) => {
-                        const selectedContractType = contractTypes.find(ct => ct.id === value);
-                        setEmployeeData({ ...employeeData, contractType: { id: value, name: selectedContractType?.name || '' } });
-                      }}
-                      required
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar tipo de contrato" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {contractTypes.map(contractType => (
-                          <SelectItem key={contractType.id} value={contractType.id}>
-                            {contractType.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="w-full flex items-center space-x-2">
+                  <Select
+                    value={employeeData.contractType.id || ''}
+                    onValueChange={(value) => {
+                      const selectedContractType = contractTypes.find(ct => ct.id === value);
+                      setEmployeeData({ ...employeeData, contractType: { id: value, name: selectedContractType?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar tipo de contrato" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {contractTypes.map(contractType => (
+                        <SelectItem key={contractType.id} value={contractType.id}>
+                          {contractType.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="ghost" className="ml-2">
@@ -1071,7 +1061,7 @@ export default function EditEmployee() {
               </div>
               <div>
                 <Label htmlFor="maritalStatus" className="block mb-2">Estado Civil</Label>
-                <div className="w-full">
+                <div className="w-full flex items-center space-x-2">
                   <Select
                     value={employeeData.maritalStatus || ''}
                     onValueChange={(value) => setEmployeeData({ ...employeeData, maritalStatus: value })}
@@ -1092,7 +1082,7 @@ export default function EditEmployee() {
               </div>
               <div>
                 <Label htmlFor="nationality" className="block mb-2">Nacionalidad</Label>
-                <div className="w-full">
+                <div className="w-full flex items-center space-x-2">
                   <Select
                     value={employeeData.nationality || ''}
                     onValueChange={(value) => setEmployeeData({ ...employeeData, nationality: value })}
@@ -1121,7 +1111,7 @@ export default function EditEmployee() {
               </div>
               <div>
                 <Label htmlFor="educationLevel" className="block mb-2">Nivel Educativo</Label>
-                <div className="w-full">
+                <div className="w-full flex items-center space-x-2">
                   <Select
                     value={employeeData.educationLevel || ''}
                     onValueChange={(value) => setEmployeeData({ ...employeeData, educationLevel: value })}
@@ -1142,7 +1132,7 @@ export default function EditEmployee() {
               </div>
               <div>
                 <Label htmlFor="gender" className="block mb-2">Género</Label>
-                <div className="w-full">
+                <div className="w-full flex items-center space-x-2">
                   <Select
                     value={employeeData.gender || ''}
                     onValueChange={(value) => setEmployeeData({ ...employeeData, gender: value })}
@@ -1163,7 +1153,7 @@ export default function EditEmployee() {
               </div>
               <div>
                 <Label htmlFor="bloodType" className="block mb-2">Tipo de Sangre</Label>
-                <div className="w-full">
+                <div className="w-full flex items-center space-x-2">
                   <Select
                     value={employeeData.bloodType || ''}
                     onValueChange={(value) => setEmployeeData({ ...employeeData, bloodType: value })}
