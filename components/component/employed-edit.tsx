@@ -13,7 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
+import { FaEdit } from 'react-icons/fa';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
 import { 
@@ -596,8 +597,8 @@ export default function EditEmployee() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Información General</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="name">Nombre</Label>
+              <div className="flex items-center">
+                <Label htmlFor="name" className="flex-grow">Nombre</Label>
                 <Input
                   id="name"
                   name="name"
@@ -607,8 +608,8 @@ export default function EditEmployee() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="email">Correo Electrónico</Label>
+              <div className="flex items-center">
+                <Label htmlFor="email" className="flex-grow">Correo Electrónico</Label>
                 <Input
                   id="email"
                   name="email"
@@ -618,8 +619,8 @@ export default function EditEmployee() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="phoneNumber">Número de Teléfono</Label>
+              <div className="flex items-center">
+                <Label htmlFor="phoneNumber" className="flex-grow">Número de Teléfono</Label>
                 <Input
                   id="phoneNumber"
                   name="phoneNumber"
@@ -629,8 +630,8 @@ export default function EditEmployee() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="address">Dirección</Label>
+              <div className="flex items-center">
+                <Label htmlFor="address" className="flex-grow">Dirección</Label>
                 <Input
                   id="address"
                   name="address"
@@ -646,8 +647,8 @@ export default function EditEmployee() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="role">Rol</Label>
+              <div className="flex items-center">
+                <Label htmlFor="role" className="flex-grow">Rol</Label>
                 <Select
                   value={employeeData.role.id || ''}
                   onValueChange={(value) => {
@@ -667,9 +668,54 @@ export default function EditEmployee() {
                     ))}
                   </SelectContent>
                 </Select>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" className="ml-2">
+                      <FaEdit />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Editar Roles</DialogTitle>
+                      <DialogDescription>
+                        Gestiona roles desde aquí.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <section className="mb-8">
+                      <h2 className="text-xl font-semibold mb-4">Roles</h2>
+                      <div className="flex flex-col space-y-2">
+                        {roles.map(role => (
+                          <div key={role.id} className="flex justify-between items-center">
+                            <span>{role.name}</span>
+                            <div className="space-x-2">
+                              <Button onClick={() => setEditingRole(role)}>Editar</Button>
+                              <Button onClick={() => handleDeleteRole(role.id)}>Eliminar</Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4">
+                        {isCreatingRole ? (
+                          <div className="flex space-x-2">
+                            <Input
+                              placeholder="Nuevo nombre del rol"
+                              value={newRoleName}
+                              onChange={(e) => setNewRoleName(e.target.value)}
+                            />
+                            <Button onClick={handleCreateRole}>Crear</Button>
+                            <Button onClick={() => setIsCreatingRole(false)}>Cancelar</Button>
+                          </div>
+                        ) : (
+                          <Button onClick={() => setIsCreatingRole(true)}>Añadir Rol</Button>
+                        )}
+                      </div>
+                    </section>
+                  </DialogContent>
+                </Dialog>
               </div>
-              <div>
-                <Label htmlFor="department">Departamento</Label>
+
+              <div className="flex items-center">
+                <Label htmlFor="department" className="flex-grow">Departamento</Label>
                 <Select
                   value={employeeData.department.id || ''}
                   onValueChange={(value) => {
@@ -689,9 +735,54 @@ export default function EditEmployee() {
                     ))}
                   </SelectContent>
                 </Select>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" className="ml-2">
+                      <FaEdit />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Editar Departamentos</DialogTitle>
+                      <DialogDescription>
+                        Gestiona departamentos desde aquí.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <section className="mb-8">
+                      <h2 className="text-xl font-semibold mb-4">Departamentos</h2>
+                      <div className="flex flex-col space-y-2">
+                        {departments.map(department => (
+                          <div key={department.id} className="flex justify-between items-center">
+                            <span>{department.name}</span>
+                            <div className="space-x-2">
+                              <Button onClick={() => setEditingDepartment(department)}>Editar</Button>
+                              <Button onClick={() => handleDeleteDepartment(department.id)}>Eliminar</Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4">
+                        {isCreating ? (
+                          <div className="flex space-x-2">
+                            <Input
+                              placeholder="Nuevo nombre del departamento"
+                              value={newDepartmentName}
+                              onChange={(e) => setNewDepartmentName(e.target.value)}
+                            />
+                            <Button onClick={handleCreateDepartment}>Crear</Button>
+                            <Button onClick={() => setIsCreating(false)}>Cancelar</Button>
+                          </div>
+                        ) : (
+                          <Button onClick={() => setIsCreating(true)}>Añadir Departamento</Button>
+                        )}
+                      </div>
+                    </section>
+                  </DialogContent>
+                </Dialog>
               </div>
-              <div>
-                <Label htmlFor="jobTitle">Título del Puesto</Label>
+
+              <div className="flex items-center">
+                <Label htmlFor="jobTitle" className="flex-grow">Título del Puesto</Label>
                 <Select
                   value={employeeData.jobTitle.id || ''}
                   onValueChange={(value) => {
@@ -711,9 +802,54 @@ export default function EditEmployee() {
                     ))}
                   </SelectContent>
                 </Select>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" className="ml-2">
+                      <FaEdit />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Editar Títulos de Trabajo</DialogTitle>
+                      <DialogDescription>
+                        Gestiona títulos de trabajo desde aquí.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <section className="mb-8">
+                      <h2 className="text-xl font-semibold mb-4">Títulos de Trabajo</h2>
+                      <div className="flex flex-col space-y-2">
+                        {jobTitles.map(jobTitle => (
+                          <div key={jobTitle.id} className="flex justify-between items-center">
+                            <span>{jobTitle.name}</span>
+                            <div className="space-x-2">
+                              <Button onClick={() => setEditingJobTitle(jobTitle)}>Editar</Button>
+                              <Button onClick={() => handleDeleteJobTitle(jobTitle.id)}>Eliminar</Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4">
+                        {isCreatingJobTitle ? (
+                          <div className="flex space-x-2">
+                            <Input
+                              placeholder="Nuevo nombre del título de trabajo"
+                              value={newJobTitleName}
+                              onChange={(e) => setNewJobTitleName(e.target.value)}
+                            />
+                            <Button onClick={handleCreateJobTitle}>Crear</Button>
+                            <Button onClick={() => setIsCreatingJobTitle(false)}>Cancelar</Button>
+                          </div>
+                        ) : (
+                          <Button onClick={() => setIsCreatingJobTitle(true)}>Añadir Título de Trabajo</Button>
+                        )}
+                      </div>
+                    </section>
+                  </DialogContent>
+                </Dialog>
               </div>
-              <div>
-                <Label htmlFor="workShift">Turno de Trabajo</Label>
+
+              <div className="flex items-center">
+                <Label htmlFor="workShift" className="flex-grow">Turno de Trabajo</Label>
                 <Select
                   value={employeeData.workShift.id || ''}
                   onValueChange={(value) => {
@@ -733,9 +869,54 @@ export default function EditEmployee() {
                     ))}
                   </SelectContent>
                 </Select>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" className="ml-2">
+                      <FaEdit />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Editar Turnos de Trabajo</DialogTitle>
+                      <DialogDescription>
+                        Gestiona turnos de trabajo desde aquí.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <section className="mb-8">
+                      <h2 className="text-xl font-semibold mb-4">Turnos de Trabajo</h2>
+                      <div className="flex flex-col space-y-2">
+                        {workShifts.map(workShift => (
+                          <div key={workShift.id} className="flex justify-between items-center">
+                            <span>{workShift.name}</span>
+                            <div className="space-x-2">
+                              <Button onClick={() => setEditingWorkShift(workShift)}>Editar</Button>
+                              <Button onClick={() => handleDeleteWorkShift(workShift.id)}>Eliminar</Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4">
+                        {isCreatingWorkShift ? (
+                          <div className="flex space-x-2">
+                            <Input
+                              placeholder="Nuevo nombre del turno de trabajo"
+                              value={newWorkShiftName}
+                              onChange={(e) => setNewWorkShiftName(e.target.value)}
+                            />
+                            <Button onClick={handleCreateWorkShift}>Crear</Button>
+                            <Button onClick={() => setIsCreatingWorkShift(false)}>Cancelar</Button>
+                          </div>
+                        ) : (
+                          <Button onClick={() => setIsCreatingWorkShift(true)}>Añadir Turno de Trabajo</Button>
+                        )}
+                      </div>
+                    </section>
+                  </DialogContent>
+                </Dialog>
               </div>
-              <div>
-                <Label htmlFor="contractType">Tipo de Contrato</Label>
+
+              <div className="flex items-center">
+                <Label htmlFor="contractType" className="flex-grow">Tipo de Contrato</Label>
                 <Select
                   value={employeeData.contractType.id || ''}
                   onValueChange={(value) => {
@@ -755,9 +936,54 @@ export default function EditEmployee() {
                     ))}
                   </SelectContent>
                 </Select>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" className="ml-2">
+                      <FaEdit />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Editar Tipos de Contrato</DialogTitle>
+                      <DialogDescription>
+                        Gestiona tipos de contrato desde aquí.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <section className="mb-8">
+                      <h2 className="text-xl font-semibold mb-4">Tipos de Contrato</h2>
+                      <div className="flex flex-col space-y-2">
+                        {contractTypes.map(contractType => (
+                          <div key={contractType.id} className="flex justify-between items-center">
+                            <span>{contractType.name}</span>
+                            <div className="space-x-2">
+                              <Button onClick={() => setEditingContractType(contractType)}>Editar</Button>
+                              <Button onClick={() => handleDeleteContractType(contractType.id)}>Eliminar</Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4">
+                        {isCreatingContractType ? (
+                          <div className="flex space-x-2">
+                            <Input
+                              placeholder="Nuevo nombre del tipo de contrato"
+                              value={newContractTypeName}
+                              onChange={(e) => setNewContractTypeName(e.target.value)}
+                            />
+                            <Button onClick={handleCreateContractType}>Crear</Button>
+                            <Button onClick={() => setIsCreatingContractType(false)}>Cancelar</Button>
+                          </div>
+                        ) : (
+                          <Button onClick={() => setIsCreatingContractType(true)}>Añadir Tipo de Contrato</Button>
+                        )}
+                      </div>
+                    </section>
+                  </DialogContent>
+                </Dialog>
               </div>
-              <div>
-                <Label htmlFor="hireDate">Fecha de Contratación</Label>
+
+              <div className="flex items-center">
+                <Label htmlFor="hireDate" className="flex-grow">Fecha de Contratación</Label>
                 <Input
                   id="hireDate"
                   name="hireDate"
@@ -773,8 +999,8 @@ export default function EditEmployee() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
+              <div className="flex items-center">
+                <Label htmlFor="birthDate" className="flex-grow">Fecha de Nacimiento</Label>
                 <Input
                   id="birthDate"
                   name="birthDate"
@@ -784,8 +1010,8 @@ export default function EditEmployee() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="emergencyContact">Nombre del Contacto de Emergencia</Label>
+              <div className="flex items-center">
+                <Label htmlFor="emergencyContact" className="flex-grow">Nombre del Contacto de Emergencia</Label>
                 <Input
                   id="emergencyContact"
                   name="emergencyContact"
@@ -795,8 +1021,8 @@ export default function EditEmployee() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="emergencyPhone">Teléfono del Contacto de Emergencia</Label>
+              <div className="flex items-center">
+                <Label htmlFor="emergencyPhone" className="flex-grow">Teléfono del Contacto de Emergencia</Label>
                 <Input
                   id="emergencyPhone"
                   name="emergencyPhone"
@@ -806,8 +1032,8 @@ export default function EditEmployee() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="maritalStatus">Estado Civil</Label>
+              <div className="flex items-center">
+                <Label htmlFor="maritalStatus" className="flex-grow">Estado Civil</Label>
                 <Select
                   value={employeeData.maritalStatus || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, maritalStatus: value })}
@@ -825,8 +1051,8 @@ export default function EditEmployee() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="nationality">Nacionalidad</Label>
+              <div className="flex items-center">
+                <Label htmlFor="nationality" className="flex-grow">Nacionalidad</Label>
                 <Select
                   value={employeeData.nationality || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, nationality: value })}
@@ -851,8 +1077,8 @@ export default function EditEmployee() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="educationLevel">Nivel Educativo</Label>
+              <div className="flex items-center">
+                <Label htmlFor="educationLevel" className="flex-grow">Nivel Educativo</Label>
                 <Select
                   value={employeeData.educationLevel || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, educationLevel: value })}
@@ -870,8 +1096,8 @@ export default function EditEmployee() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="gender">Género</Label>
+              <div className="flex items-center">
+                <Label htmlFor="gender" className="flex-grow">Género</Label>
                 <Select
                   value={employeeData.gender || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, gender: value })}
@@ -889,8 +1115,8 @@ export default function EditEmployee() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="bloodType">Tipo de Sangre</Label>
+              <div className="flex items-center">
+                <Label htmlFor="bloodType" className="flex-grow">Tipo de Sangre</Label>
                 <Select
                   value={employeeData.bloodType || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, bloodType: value })}
@@ -922,169 +1148,6 @@ export default function EditEmployee() {
         {message && (
           <p className="text-center text-green-600 text-md italic mt-4">{message}</p>
         )}
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">Gestionar Datos de Empresa</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Administración de la Empresa</DialogTitle>
-              <DialogDescription>
-                Gestiona roles, departamentos, títulos de trabajo, turnos de trabajo y tipos de contrato desde aquí.
-              </DialogDescription>
-            </DialogHeader>
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Roles</h2>
-              <div className="flex flex-col space-y-2">
-                {roles.map(role => (
-                  <div key={role.id} className="flex justify-between items-center">
-                    <span>{role.name}</span>
-                    <div className="space-x-2">
-                      <Button onClick={() => setEditingRole(role)}>Editar</Button>
-                      <Button onClick={() => handleDeleteRole(role.id)}>Eliminar</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                {isCreatingRole ? (
-                  <div className="flex space-x-2">
-                    <Input
-                      placeholder="Nuevo nombre del rol"
-                      value={newRoleName}
-                      onChange={(e) => setNewRoleName(e.target.value)}
-                    />
-                    <Button onClick={handleCreateRole}>Crear</Button>
-                    <Button onClick={() => setIsCreatingRole(false)}>Cancelar</Button>
-                  </div>
-                ) : (
-                  <Button onClick={() => setIsCreatingRole(true)}>Añadir Rol</Button>
-                )}
-              </div>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Departamentos</h2>
-              <div className="flex flex-col space-y-2">
-                {departments.map(department => (
-                  <div key={department.id} className="flex justify-between items-center">
-                    <span>{department.name}</span>
-                    <div className="space-x-2">
-                      <Button onClick={() => setEditingDepartment(department)}>Editar</Button>
-                      <Button onClick={() => handleDeleteDepartment(department.id)}>Eliminar</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                {isCreating ? (
-                  <div className="flex space-x-2">
-                    <Input
-                      placeholder="Nuevo nombre del departamento"
-                      value={newDepartmentName}
-                      onChange={(e) => setNewDepartmentName(e.target.value)}
-                    />
-                    <Button onClick={handleCreateDepartment}>Crear</Button>
-                    <Button onClick={() => setIsCreating(false)}>Cancelar</Button>
-                  </div>
-                ) : (
-                  <Button onClick={() => setIsCreating(true)}>Añadir Departamento</Button>
-                )}
-              </div>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Títulos de Trabajo</h2>
-              <div className="flex flex-col space-y-2">
-                {jobTitles.map(jobTitle => (
-                  <div key={jobTitle.id} className="flex justify-between items-center">
-                    <span>{jobTitle.name}</span>
-                    <div className="space-x-2">
-                      <Button onClick={() => setEditingJobTitle(jobTitle)}>Editar</Button>
-                      <Button onClick={() => handleDeleteJobTitle(jobTitle.id)}>Eliminar</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                {isCreatingJobTitle ? (
-                  <div className="flex space-x-2">
-                    <Input
-                      placeholder="Nuevo nombre del título de trabajo"
-                      value={newJobTitleName}
-                      onChange={(e) => setNewJobTitleName(e.target.value)}
-                    />
-                    <Button onClick={handleCreateJobTitle}>Crear</Button>
-                    <Button onClick={() => setIsCreatingJobTitle(false)}>Cancelar</Button>
-                  </div>
-                ) : (
-                  <Button onClick={() => setIsCreatingJobTitle(true)}>Añadir Título de Trabajo</Button>
-                )}
-              </div>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Turnos de Trabajo</h2>
-              <div className="flex flex-col space-y-2">
-                {workShifts.map(workShift => (
-                  <div key={workShift.id} className="flex justify-between items-center">
-                    <span>{workShift.name}</span>
-                    <div className="space-x-2">
-                      <Button onClick={() => setEditingWorkShift(workShift)}>Editar</Button>
-                      <Button onClick={() => handleDeleteWorkShift(workShift.id)}>Eliminar</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                {isCreatingWorkShift ? (
-                  <div className="flex space-x-2">
-                    <Input
-                      placeholder="Nuevo nombre del turno de trabajo"
-                      value={newWorkShiftName}
-                      onChange={(e) => setNewWorkShiftName(e.target.value)}
-                    />
-                    <Button onClick={handleCreateWorkShift}>Crear</Button>
-                    <Button onClick={() => setIsCreatingWorkShift(false)}>Cancelar</Button>
-                  </div>
-                ) : (
-                  <Button onClick={() => setIsCreatingWorkShift(true)}>Añadir Turno de Trabajo</Button>
-                )}
-              </div>
-            </section>
-
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Tipos de Contrato</h2>
-              <div className="flex flex-col space-y-2">
-                {contractTypes.map(contractType => (
-                  <div key={contractType.id} className="flex justify-between items-center">
-                    <span>{contractType.name}</span>
-                    <div className="space-x-2">
-                      <Button onClick={() => setEditingContractType(contractType)}>Editar</Button>
-                      <Button onClick={() => handleDeleteContractType(contractType.id)}>Eliminar</Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4">
-                {isCreatingContractType ? (
-                  <div className="flex space-x-2">
-                    <Input
-                      placeholder="Nuevo nombre del tipo de contrato"
-                      value={newContractTypeName}
-                      onChange={(e) => setNewContractTypeName(e.target.value)}
-                    />
-                    <Button onClick={handleCreateContractType}>Crear</Button>
-                    <Button onClick={() => setIsCreatingContractType(false)}>Cancelar</Button>
-                  </div>
-                ) : (
-                  <Button onClick={() => setIsCreatingContractType(true)}>Añadir Tipo de Contrato</Button>
-                )}
-              </div>
-            </section>
-          </DialogContent>
-        </Dialog>
       </main>
     </div>
   );
