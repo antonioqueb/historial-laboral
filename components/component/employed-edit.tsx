@@ -235,7 +235,8 @@ export default function EditEmployee() {
           <h1 className="text-3xl font-bold mb-8">Editar Empleado</h1>
         </header>
 
-        <section>
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">Seleccionar Empresa y Empleado</h2>
           <div className="mb-4">
             <Label htmlFor="companySelect">Seleccionar Empresa</Label>
             <Select
@@ -279,10 +280,10 @@ export default function EditEmployee() {
           )}
         </section>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
           <section>
-            <h2 className="text-xl font-semibold">Información General</h2>
-            <div className="space-y-4">
+            <h2 className="text-xl font-semibold mb-4">Información General</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="name">Nombre</Label>
                 <Input
@@ -294,6 +295,45 @@ export default function EditEmployee() {
                   required
                 />
               </div>
+              <div>
+                <Label htmlFor="email">Correo Electrónico</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={employeeData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="phoneNumber">Número de Teléfono</Label>
+                <Input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="text"
+                  value={employeeData.phoneNumber}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="address">Dirección</Label>
+                <Input
+                  id="address"
+                  name="address"
+                  type="text"
+                  value={employeeData.address}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="role">Rol</Label>
                 <Input
@@ -317,29 +357,34 @@ export default function EditEmployee() {
                 />
               </div>
               <div>
-                <Label htmlFor="email">Correo Electrónico</Label>
+                <Label htmlFor="jobTitle">Título del Puesto</Label>
                 <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={employeeData.email}
+                  id="jobTitle"
+                  name="jobTitle"
+                  type="text"
+                  value={employeeData.jobTitle.name}
                   onChange={handleInputChange}
                   required
                 />
               </div>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold">Información Adicional</h2>
-            <div className="space-y-4">
               <div>
-                <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
+                <Label htmlFor="workShift">Turno de Trabajo</Label>
                 <Input
-                  id="birthDate"
-                  name="birthDate"
-                  type="date"
-                  value={employeeData.birthDate ?? ""}
+                  id="workShift"
+                  name="workShift"
+                  type="text"
+                  value={employeeData.workShift.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="contractType">Tipo de Contrato</Label>
+                <Input
+                  id="contractType"
+                  name="contractType"
+                  type="text"
+                  value={employeeData.contractType.name}
                   onChange={handleInputChange}
                   required
                 />
@@ -350,29 +395,24 @@ export default function EditEmployee() {
                   id="hireDate"
                   name="hireDate"
                   type="date"
-                  value={employeeData.hireDate ?? ""}
+                  value={employeeData.hireDate}
                   onChange={handleInputChange}
                   required
                 />
               </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="address">Dirección</Label>
+                <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
                 <Input
-                  id="address"
-                  name="address"
-                  type="text"
-                  value={employeeData.address ?? ""}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="phoneNumber">Número de Teléfono</Label>
-                <Input
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  type="text"
-                  value={employeeData.phoneNumber ?? ""}
+                  id="birthDate"
+                  name="birthDate"
+                  type="date"
+                  value={employeeData.birthDate}
                   onChange={handleInputChange}
                   required
                 />
@@ -383,7 +423,7 @@ export default function EditEmployee() {
                   id="emergencyContact"
                   name="emergencyContact"
                   type="text"
-                  value={employeeData.emergencyContact ?? ""}
+                  value={employeeData.emergencyContact}
                   onChange={handleInputChange}
                   required
                 />
@@ -394,7 +434,7 @@ export default function EditEmployee() {
                   id="emergencyPhone"
                   name="emergencyPhone"
                   type="text"
-                  value={employeeData.emergencyPhone ?? ""}
+                  value={employeeData.emergencyPhone}
                   onChange={handleInputChange}
                   required
                 />
@@ -405,7 +445,7 @@ export default function EditEmployee() {
                   id="maritalStatus"
                   name="maritalStatus"
                   type="text"
-                  value={employeeData.maritalStatus ?? ""}
+                  value={employeeData.maritalStatus}
                   onChange={handleInputChange}
                   required
                 />
@@ -416,7 +456,7 @@ export default function EditEmployee() {
                   id="nationality"
                   name="nationality"
                   type="text"
-                  value={employeeData.nationality ?? ""}
+                  value={employeeData.nationality}
                   onChange={handleInputChange}
                   required
                 />
@@ -427,7 +467,7 @@ export default function EditEmployee() {
                   id="educationLevel"
                   name="educationLevel"
                   type="text"
-                  value={employeeData.educationLevel ?? ""}
+                  value={employeeData.educationLevel}
                   onChange={handleInputChange}
                   required
                 />
@@ -438,7 +478,7 @@ export default function EditEmployee() {
                   id="gender"
                   name="gender"
                   type="text"
-                  value={employeeData.gender ?? ""}
+                  value={employeeData.gender}
                   onChange={handleInputChange}
                   required
                 />
@@ -449,7 +489,7 @@ export default function EditEmployee() {
                   id="bloodType"
                   name="bloodType"
                   type="text"
-                  value={employeeData.bloodType ?? ""}
+                  value={employeeData.bloodType}
                   onChange={handleInputChange}
                   required
                 />
@@ -457,7 +497,7 @@ export default function EditEmployee() {
             </div>
           </section>
 
-          <section className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:grid-cols-3">
+          <section className="flex justify-end">
             <Button type="submit">Editar Empleado</Button>
             <Link href="/tablero/empleados" className="ml-2">
               <Button type="button">Cancelar</Button>
