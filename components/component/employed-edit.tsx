@@ -8,7 +8,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders } from '@/utils/fetchData';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
@@ -95,9 +95,17 @@ export default function EditEmployee() {
   const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
   const [educationLevels, setEducationLevels] = useState<string[]>([]);
   const [genders, setGenders] = useState<string[]>([]);
+  const [nationalities, setNationalities] = useState<{ sigla: string, nombre: string }[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string, nombre: string }[]>([]);
+  
 
-
-
+  useEffect(() => {
+    setFilteredNationalities(
+      nationalities.filter(nat => nat.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  }, [searchTerm, nationalities]);
+  
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -145,15 +153,23 @@ export default function EditEmployee() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [types, statuses, levels, gendersData] = await Promise.all([getBloodTypes(), getCivilStatuses(), getEducationLevels(), getGenders()]);
+      const [types, statuses, levels, gendersData, nationalitiesData] = await Promise.all([
+        getBloodTypes(),
+        getCivilStatuses(),
+        getEducationLevels(),
+        getGenders(),
+        getNationalities()
+      ]);
       setBloodTypes(types);
       setCivilStatuses(statuses);
       setEducationLevels(levels);
       setGenders(gendersData);
+      setNationalities(nationalitiesData);
     };
   
     fetchData();
   }, []);
+  
   
   
 
@@ -479,16 +495,31 @@ export default function EditEmployee() {
                     </SelectContent>
                   </Select>
                 </div>
-              <div>
+                <div>
                 <Label htmlFor="nationality">Nacionalidad</Label>
-                <Input
-                  id="nationality"
-                  name="nationality"
-                  type="text"
+                <Select
                   value={employeeData.nationality || ''}
-                  onChange={handleInputChange}
+                  onValueChange={(value) => setEmployeeData({ ...employeeData, nationality: value })}
                   required
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar nacionalidad" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <div className="px-4 py-2">
+                      <Input
+                        placeholder="Buscar nacionalidad"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </div>
+                    {filteredNationalities.map((nationality) => (
+                      <SelectItem key={nationality.sigla} value={nationality.nombre}>
+                        {nationality.nombre}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <Label htmlFor="educationLevel">Nivel Educativo</Label>

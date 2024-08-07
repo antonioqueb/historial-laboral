@@ -363,3 +363,19 @@ export const getGenders = async (): Promise<string[]> => {
     return [];
   }
 };
+
+
+// Función para obtener las nacionalidades desde la API
+export const getNationalities = async (): Promise<{ sigla: string, nombre: string }[]> => {
+  try {
+    const response = await fetch('https://historiallaboral.com/api/Nationalities');
+    if (!response.ok) {
+      throw new Error('Failed to fetch nationalities');
+    }
+    const data = await response.json();
+    return data.nationalities;
+  } catch (error) {
+    console.error("Error al obtener las nacionalidades:", error);
+    return [];
+  }
+};
