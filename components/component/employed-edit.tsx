@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -362,6 +361,83 @@ export default function EditEmployee() {
                 name="phoneNumber"
                 type="text"
                 value={employeeData.phoneNumber ?? ""}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="emergencyContact">Contacto de Emergencia</Label>
+              <Input
+                id="emergencyContact"
+                name="emergencyContact"
+                type="text"
+                value={employeeData.emergencyContact ?? ""}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="emergencyPhone">Teléfono de Emergencia</Label>
+              <Input
+                id="emergencyPhone"
+                name="emergencyPhone"
+                type="text"
+                value={employeeData.emergencyPhone ?? ""}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="maritalStatus">Estado Civil</Label>
+              <Input
+                id="maritalStatus"
+                name="maritalStatus"
+                type="text"
+                value={employeeData.maritalStatus ?? ""}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="nationality">Nacionalidad</Label>
+              <Input
+                id="nationality"
+                name="nationality"
+                type="text"
+                value={employeeData.nationality ?? ""}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="educationLevel">Nivel Educativo</Label>
+              <Input
+                id="educationLevel"
+                name="educationLevel"
+                type="text"
+                value={employeeData.educationLevel ?? ""}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="gender">Género</Label>
+              <Input
+                id="gender"
+                name="gender"
+                type="text"
+                value={employeeData.gender ?? ""}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="bloodType">Tipo de Sangre</Label>
+              <Input
+                id="bloodType"
+                name="bloodType"
+                type="text"
+                value={employeeData.bloodType ?? ""}
                 onChange={handleInputChange}
                 required
               />
