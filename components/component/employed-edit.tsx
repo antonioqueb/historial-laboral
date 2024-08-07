@@ -8,8 +8,8 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities } from '@/utils/fetchData';
-import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company } from '@/interfaces/types';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany, createDepartment, editDepartment, deleteDepartment } from '@/utils/fetchData';
+import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;
@@ -98,6 +98,14 @@ export default function EditEmployee() {
   const [nationalities, setNationalities] = useState<{ sigla: string, nombre: string }[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredNationalities, setFilteredNationalities] = useState<{ sigla: string, nombre: string }[]>([]);
+
+// Departament
+const [departments, setDepartments] = useState<Department[]>([]);
+const [newDepartmentName, setNewDepartmentName] = useState("");
+const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
+const [isCreating, setIsCreating] = useState(false);
+
+
   
 
   useEffect(() => {
@@ -265,6 +273,55 @@ export default function EditEmployee() {
     }
   };
 
+
+  useEffect(() => {
+    if (employeeData.company.rfc) {
+      const fetchDepartments = async () => {
+        try {
+          const departmentsData = await getDepartmentsByCompany(employeeData.company.rfc);
+          setDepartments(departmentsData);
+        } catch (error) {
+          console.error("Error fetching departments:", error);
+        }
+      };
+  
+      fetchDepartments();
+    }
+  }, [employeeData.company.rfc]);
+  
+  const handleCreateDepartment = async () => {
+    if (!newDepartmentName) return;
+    try {
+      const newDepartment = await createDepartment(employeeData.company.rfc, newDepartmentName);
+      setDepartments([...departments, newDepartment]);
+      setNewDepartmentName("");
+      setIsCreating(false);
+    } catch (error) {
+      console.error("Error creating department:", error);
+    }
+  };
+  
+  const handleEditDepartment = async () => {
+    if (!editingDepartment) return;
+    try {
+      await editDepartment(employeeData.company.rfc, editingDepartment.id, editingDepartment.name);
+      setDepartments(departments.map(d => d.id === editingDepartment.id ? editingDepartment : d));
+      setEditingDepartment(null);
+    } catch (error) {
+      console.error("Error editing department:", error);
+    }
+  };
+  
+  const handleDeleteDepartment = async (id: string) => {
+    try {
+      await deleteDepartment(employeeData.company.rfc, id);
+      setDepartments(departments.filter(d => d.id !== id));
+    } catch (error) {
+      console.error("Error deleting department:", error);
+    }
+  };
+  
+
   return (
     <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
       <main>
@@ -382,17 +439,57 @@ export default function EditEmployee() {
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor="department">Departamento</Label>
-                <Input
-                  id="department"
-                  name="department"
-                  type="text"
-                  value={employeeData.department.name || ''}
-                  onChange={handleInputChange}
+              <section className="mb-8">
+              <h2 className="text-xl font-semibold mb-4">Gestión de Departamentos</h2>
+              <div className="mb-4">
+                <Label htmlFor="departmentSelect">Seleccionar Departamento</Label>
+                <Select
+                  value={employeeData.department.id || ''}
+                  onValueChange={(value) => {
+                    const selectedDepartment = departments.find(dept => dept.id === value);
+                    setEmployeeData({ ...employeeData, department: { id: value, name: selectedDepartment?.name || '' } });
+                  }}
                   required
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar departamento" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departments.map(department => (
+                      <SelectItem key={department.id} value={department.id}>
+                        {department.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+              <div className="flex flex-col space-y-2">
+                {departments.map(department => (
+                  <div key={department.id} className="flex justify-between items-center">
+                    <span>{department.name}</span>
+                    <div className="space-x-2">
+                      <Button onClick={() => setEditingDepartment(department)}>Editar</Button>
+                      <Button onClick={() => handleDeleteDepartment(department.id)}>Eliminar</Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4">
+                {isCreating ? (
+                  <div className="flex space-x-2">
+                    <Input
+                      placeholder="Nuevo nombre del departamento"
+                      value={newDepartmentName}
+                      onChange={(e) => setNewDepartmentName(e.target.value)}
+                    />
+                    <Button onClick={handleCreateDepartment}>Crear</Button>
+                    <Button onClick={() => setIsCreating(false)}>Cancelar</Button>
+                  </div>
+                ) : (
+                  <Button onClick={() => setIsCreating(true)}>Añadir Departamento</Button>
+                )}
+              </div>
+            </section>
               <div>
                 <Label htmlFor="jobTitle">Título del Puesto</Label>
                 <Input

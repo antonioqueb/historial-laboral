@@ -1,4 +1,4 @@
-import { Company, Employee, Review } from '@/interfaces/types';
+import { Company, Employee, Review, Department  } from '@/interfaces/types';
 
 // Función para cargar archivos de empleados por RFC
 export async function uploadEmployeeFiles(rfc: string, files: File[]): Promise<{ success: boolean; error?: string }> {
@@ -379,3 +379,81 @@ export const getNationalities = async (): Promise<{ sigla: string, nombre: strin
     return [];
   }
 };
+
+
+
+
+
+// Obtener todos los departamentos de una empresa
+export async function getDepartmentsByCompany(rfc: string): Promise<Department[]> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/Department?rfc=${rfc}`);
+    if (!response.ok) {
+      throw new Error(`Error fetching departments: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+// Crear un nuevo departamento
+export async function createDepartment(rfc: string, name: string): Promise<Department> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/Department?rfc=${rfc}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error creating department: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Editar un departamento existente
+export async function editDepartment(rfc: string, id: string, name: string): Promise<void> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/Department?rfc=${rfc}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, name }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error editing department: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Eliminar un departamento existente
+export async function deleteDepartment(rfc: string, id: string): Promise<void> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/Department?rfc=${rfc}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error deleting department: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
