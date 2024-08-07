@@ -291,7 +291,7 @@ export async function getReviewsByNSS(nss: string): Promise<{ reviews: Review[] 
 // Función para obtener empleado por NSS
 export const getEmployeeByNss = async (nss: string): Promise<Employee | null> => {
   try {
-    const response = await fetch(`/api/getEmployeeByNss?nss=${nss}`);
+    const response = await fetch(`https://historiallaboral.com/api/getEmployeeByNss?nss=${nss}`);
     if (!response.ok) {
       throw new Error('Failed to fetch employee data');
     }
@@ -302,3 +302,4 @@ export const getEmployeeByNss = async (nss: string): Promise<Employee | null> =>
     return null;
   }
 };
+

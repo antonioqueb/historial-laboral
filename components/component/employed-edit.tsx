@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -101,7 +100,6 @@ export default function EditEmployee() {
         const companyRFCs = await getCompaniesRFC();
         console.log("Fetched Company RFCs:", companyRFCs);
 
-        // Transformar los RFCs a objetos con id
         const companiesFormatted = companyRFCs.rfcs.map((rfc: string) => ({ id: rfc, name: rfc, rfc }));
         setCompanies(companiesFormatted);
       } catch (error) {
@@ -140,7 +138,7 @@ export default function EditEmployee() {
   const fetchEmployeeData = async (nss: string) => {
     try {
       console.log("Fetching data for employee NSS:", nss);
-      const data = await getEmployeeByNss(nss); // Cambiado a getEmployeeByNss
+      const data = await getEmployeeByNss(nss);
       console.log("Fetched Employee Data:", data);
 
       if (data) {
@@ -154,8 +152,8 @@ export default function EditEmployee() {
           birthDate: data.birthDate ? new Date(data.birthDate).toISOString().split('T')[0] : "",
           hireDate: data.hireDate ? new Date(data.hireDate).toISOString().split('T')[0] : "",
           profileImageUrl: data.profileImageUrl ?? null,
-          companyId: data.company.id,
-          company: data.company
+          companyId: data.companyId,
+          company: { ...employeeData.company, id: data.companyId }
         });
       } else {
         setMessage("Failed to fetch employee data.");
@@ -181,7 +179,7 @@ export default function EditEmployee() {
       companyId: selectedCompany?.id ?? "",
       company: {
         ...prevState.company,
-        id: selectedCompany?.id ?? "", // Aseguramos que id se establece correctamente
+        id: selectedCompany?.id ?? "",
         rfc: selectedCompany?.rfc ?? "",
         name: selectedCompany?.name ?? ""
       }
