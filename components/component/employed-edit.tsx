@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -9,7 +7,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByRfc, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany } from '@/utils/fetchData';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
@@ -138,10 +136,10 @@ export default function EditEmployee() {
     }
   }, [selectedEmployee]);
 
-  const fetchEmployeeData = async (rfc: string) => {
+  const fetchEmployeeData = async (nss: string) => {
     try {
-      console.log("Fetching data for employee RFC:", rfc);
-      const data = await getEmployeeByRfc(rfc);
+      console.log("Fetching data for employee NSS:", nss);
+      const data = await getEmployeeByNss(nss); // Cambiado a getEmployeeByNss
       console.log("Fetched Employee Data:", data);
 
       if (data) {
@@ -192,7 +190,7 @@ export default function EditEmployee() {
   };
 
   const handleEmployeeChange = (value: string) => {
-    console.log("Selected Employee RFC:", value);
+    console.log("Selected Employee NSS:", value);
     setSelectedEmployee(value);
   };
 
@@ -266,7 +264,7 @@ export default function EditEmployee() {
               </SelectTrigger>
               <SelectContent>
                 {employees.map(employee => (
-                  <SelectItem key={employee.RFC} value={employee.RFC}>
+                  <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
                     {employee.name}
                   </SelectItem>
                 ))}

@@ -1,5 +1,3 @@
-// utils/fetchData.ts
-
 import { Company, Employee, Review } from '@/interfaces/types';
 
 // Función para cargar archivos de empleados por RFC
@@ -54,8 +52,6 @@ export async function getEmployeesByCompany(selectedCompanyRFC: string): Promise
     return [];
   }
 }
-
-
 
 // Función para obtener la lista de compañías
 export async function getCompaniesList(): Promise<{ companies: Company[] }> {
@@ -292,18 +288,17 @@ export async function getReviewsByNSS(nss: string): Promise<{ reviews: Review[] 
   }
 }
 
-// Función para obtener los datos de un empleado por su RFC
-export async function getEmployeeByRfc(rfc: string): Promise<Employee | null> {
+// Función para obtener empleado por NSS
+export const getEmployeeByNss = async (nss: string): Promise<Employee | null> => {
   try {
-    const response = await fetch(`/api/getEmployeeByRfc?rfc=${rfc}`);
-    if (response.ok) {
-      const data = await response.json();
-      return data.employee || null;
-    } else {
+    const response = await fetch(`/api/getEmployeeByNss?nss=${nss}`);
+    if (!response.ok) {
       throw new Error('Failed to fetch employee data');
     }
+    const data = await response.json();
+    return data.employee || null;
   } catch (error) {
-    console.error("Error al obtener los datos del empleado:", error);
+    console.error("Error al obtener el empleado:", error);
     return null;
   }
-}
+};
