@@ -8,8 +8,8 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany, createDepartment, editDepartment, deleteDepartment, getRolesByCompany, createRole, editRole, deleteRole, getContractTypesByCompany, createContractType, editContractType, deleteContractType } from '@/utils/fetchData';
-import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department, Role, ContractType } from '@/interfaces/types';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany, createDepartment, editDepartment, deleteDepartment, getRolesByCompany, createRole, editRole, deleteRole, getContractTypesByCompany, createContractType, editContractType, deleteContractType, getJobTitlesByCompany, createJobTitle, editJobTitle, deleteJobTitle } from '@/utils/fetchData';
+import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department, Role, ContractType, JobTitle } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;
@@ -116,6 +116,13 @@ const [contractTypes, setContractTypes] = useState<ContractType[]>([]);
 const [newContractTypeName, setNewContractTypeName] = useState("");
 const [editingContractType, setEditingContractType] = useState<ContractType | null>(null);
 const [isCreatingContractType, setIsCreatingContractType] = useState(false);
+
+// JobTitle
+const [jobTitles, setJobTitles] = useState<JobTitle[]>([]);
+const [newJobTitleName, setNewJobTitleName] = useState("");
+const [editingJobTitle, setEditingJobTitle] = useState<JobTitle | null>(null);
+const [isCreatingJobTitle, setIsCreatingJobTitle] = useState(false);
+
 
 
 
@@ -436,6 +443,53 @@ const [isCreatingContractType, setIsCreatingContractType] = useState(false);
     }
   };
   
+  // JobTitle
+  useEffect(() => {
+    if (employeeData.company.rfc) {
+      const fetchJobTitles = async () => {
+        try {
+          const jobTitlesData = await getJobTitlesByCompany(employeeData.company.rfc);
+          setJobTitles(jobTitlesData);
+        } catch (error) {
+          console.error("Error fetching job titles:", error);
+        }
+      };
+  
+      fetchJobTitles();
+    }
+  }, [employeeData.company.rfc]);
+  
+  const handleCreateJobTitle = async () => {
+    if (!newJobTitleName) return;
+    try {
+      const newJobTitle = await createJobTitle(employeeData.company.rfc, newJobTitleName);
+      setJobTitles([...jobTitles, newJobTitle]);
+      setNewJobTitleName("");
+      setIsCreatingJobTitle(false);
+    } catch (error) {
+      console.error("Error creating job title:", error);
+    }
+  };
+  
+  const handleEditJobTitle = async () => {
+    if (!editingJobTitle) return;
+    try {
+      await editJobTitle(employeeData.company.rfc, editingJobTitle.id, editingJobTitle.name);
+      setJobTitles(jobTitles.map(jt => jt.id === editingJobTitle.id ? editingJobTitle : jt));
+      setEditingJobTitle(null);
+    } catch (error) {
+      console.error("Error editing job title:", error);
+    }
+  };
+  
+  const handleDeleteJobTitle = async (id: string) => {
+    try {
+      await deleteJobTitle(employeeData.company.rfc, id);
+      setJobTitles(jobTitles.filter(jt => jt.id !== id));
+    } catch (error) {
+      console.error("Error deleting job title:", error);
+    }
+  };
   
   
 
@@ -647,17 +701,57 @@ const [isCreatingContractType, setIsCreatingContractType] = useState(false);
                 )}
               </div>
             </section>
-              <div>
-                <Label htmlFor="jobTitle">Título del Puesto</Label>
-                <Input
-                  id="jobTitle"
-                  name="jobTitle"
-                  type="text"
-                  value={employeeData.jobTitle.name || ''}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+            <section className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Gestión de Títulos de Trabajo</h2>
+            <div className="mb-4">
+              <Label htmlFor="jobTitleSelect">Seleccionar Título de Trabajo</Label>
+              <Select
+                value={employeeData.jobTitle.id || ''}
+                onValueChange={(value) => {
+                  const selectedJobTitle = jobTitles.find(jt => jt.id === value);
+                  setEmployeeData({ ...employeeData, jobTitle: { id: value, name: selectedJobTitle?.name || '' } });
+                }}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar título de trabajo" />
+                </SelectTrigger>
+                <SelectContent>
+                  {jobTitles.map(jobTitle => (
+                    <SelectItem key={jobTitle.id} value={jobTitle.id}>
+                      {jobTitle.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col space-y-2">
+              {jobTitles.map(jobTitle => (
+                <div key={jobTitle.id} className="flex justify-between items-center">
+                  <span>{jobTitle.name}</span>
+                  <div className="space-x-2">
+                    <Button onClick={() => setEditingJobTitle(jobTitle)}>Editar</Button>
+                    <Button onClick={() => handleDeleteJobTitle(jobTitle.id)}>Eliminar</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4">
+              {isCreatingJobTitle ? (
+                <div className="flex space-x-2">
+                  <Input
+                    placeholder="Nuevo nombre del título de trabajo"
+                    value={newJobTitleName}
+                    onChange={(e) => setNewJobTitleName(e.target.value)}
+                  />
+                  <Button onClick={handleCreateJobTitle}>Crear</Button>
+                  <Button onClick={() => setIsCreatingJobTitle(false)}>Cancelar</Button>
+                </div>
+              ) : (
+                <Button onClick={() => setIsCreatingJobTitle(true)}>Añadir Título de Trabajo</Button>
+              )}
+            </div>
+          </section>
               <div>
                 <Label htmlFor="workShift">Turno de Trabajo</Label>
                 <Input

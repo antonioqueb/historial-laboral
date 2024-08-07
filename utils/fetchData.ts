@@ -1,4 +1,4 @@
-import { Company, Employee, Review, Department, Role, ContractType   } from '@/interfaces/types';
+import { Company, Employee, Review, Department, Role, ContractType, JobTitle    } from '@/interfaces/types';
 
 // Función para cargar archivos de empleados por RFC
 export async function uploadEmployeeFiles(rfc: string, files: File[]): Promise<{ success: boolean; error?: string }> {
@@ -610,6 +610,86 @@ export async function deleteContractType(rfc: string, id: string): Promise<void>
     });
     if (!response.ok) {
       throw new Error(`Error deleting contract type: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+
+
+
+
+
+// Obtener todos los títulos de trabajo de una empresa
+export async function getJobTitlesByCompany(rfc: string): Promise<JobTitle[]> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/JobTitle?rfc=${rfc}`);
+    if (!response.ok) {
+      throw new Error(`Error fetching job titles: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+// Crear un nuevo título de trabajo
+export async function createJobTitle(rfc: string, name: string): Promise<JobTitle> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/JobTitle?rfc=${rfc}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error creating job title: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Editar un título de trabajo existente
+export async function editJobTitle(rfc: string, id: string, name: string): Promise<void> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/JobTitle?rfc=${rfc}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, name }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error editing job title: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Eliminar un título de trabajo existente
+export async function deleteJobTitle(rfc: string, id: string): Promise<void> {
+  try {
+    const response = await fetch(`https://historiallaboral.com/api/JobTitle?rfc=${rfc}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error deleting job title: ${response.statusText}`);
     }
     return await response.json();
   } catch (error) {
