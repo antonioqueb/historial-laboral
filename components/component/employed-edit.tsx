@@ -230,231 +230,245 @@ export default function EditEmployee() {
 
   return (
     <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
-      <>
-        <h1 className="text-3xl font-bold mb-8">Editar Empleado</h1>
-        <div className="mb-4">
-          <Label htmlFor="companySelect">Seleccionar Empresa</Label>
-          <Select
-            value={employeeData.company.rfc}
-            onValueChange={handleCompanyChange}
-            required
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar empresa" />
-            </SelectTrigger>
-            <SelectContent>
-              {companies.map(company => (
-                <SelectItem key={company.rfc} value={company.rfc}>
-                  {company.name} - {company.rfc}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        {employeeData.company.rfc && (
+      <main>
+        <header>
+          <h1 className="text-3xl font-bold mb-8">Editar Empleado</h1>
+        </header>
+
+        <section>
           <div className="mb-4">
-            <Label htmlFor="employeeSelect">Seleccionar Empleado</Label>
+            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
             <Select
-              value={selectedEmployee}
-              onValueChange={handleEmployeeChange}
+              value={employeeData.company.rfc}
+              onValueChange={handleCompanyChange}
               required
             >
               <SelectTrigger>
-                <SelectValue placeholder="Seleccionar empleado" />
+                <SelectValue placeholder="Seleccionar empresa" />
               </SelectTrigger>
               <SelectContent>
-                {employees.map(employee => (
-                  <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
-                    {employee.name}
+                {companies.map(company => (
+                  <SelectItem key={company.rfc} value={company.rfc}>
+                    {company.name} - {company.rfc}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-        )}
+
+          {employeeData.company.rfc && (
+            <div className="mb-4">
+              <Label htmlFor="employeeSelect">Seleccionar Empleado</Label>
+              <Select
+                value={selectedEmployee}
+                onValueChange={handleEmployeeChange}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar empleado" />
+                </SelectTrigger>
+                <SelectContent>
+                  {employees.map(employee => (
+                    <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
+                      {employee.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </section>
+
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="space-y-4">
+          <section>
             <h2 className="text-xl font-semibold">Información General</h2>
-            <div>
-              <Label htmlFor="name">Nombre</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                value={employeeData.name}
-                onChange={handleInputChange}
-                required
-              />
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Nombre</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={employeeData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="role">Rol</Label>
+                <Input
+                  id="role"
+                  name="role"
+                  type="text"
+                  value={employeeData.role.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="department">Departamento</Label>
+                <Input
+                  id="department"
+                  name="department"
+                  type="text"
+                  value={employeeData.department.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">Correo Electrónico</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={employeeData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="role">Rol</Label>
-              <Input
-                id="role"
-                name="role"
-                type="text"
-                value={employeeData.role.name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="department">Departamento</Label>
-              <Input
-                id="department"
-                name="department"
-                type="text"
-                value={employeeData.department.name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Correo Electrónico</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={employeeData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-          <div className="space-y-4">
+          </section>
+
+          <section>
             <h2 className="text-xl font-semibold">Información Adicional</h2>
-            <div>
-              <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
-              <Input
-                id="birthDate"
-                name="birthDate"
-                type="date"
-                value={employeeData.birthDate ?? ""}
-                onChange={handleInputChange}
-                required
-              />
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="birthDate">Fecha de Nacimiento</Label>
+                <Input
+                  id="birthDate"
+                  name="birthDate"
+                  type="date"
+                  value={employeeData.birthDate ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="hireDate">Fecha de Contratación</Label>
+                <Input
+                  id="hireDate"
+                  name="hireDate"
+                  type="date"
+                  value={employeeData.hireDate ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="address">Dirección</Label>
+                <Input
+                  id="address"
+                  name="address"
+                  type="text"
+                  value={employeeData.address ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="phoneNumber">Número de Teléfono</Label>
+                <Input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="text"
+                  value={employeeData.phoneNumber ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="emergencyContact">Contacto de Emergencia</Label>
+                <Input
+                  id="emergencyContact"
+                  name="emergencyContact"
+                  type="text"
+                  value={employeeData.emergencyContact ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="emergencyPhone">Teléfono de Emergencia</Label>
+                <Input
+                  id="emergencyPhone"
+                  name="emergencyPhone"
+                  type="text"
+                  value={employeeData.emergencyPhone ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="maritalStatus">Estado Civil</Label>
+                <Input
+                  id="maritalStatus"
+                  name="maritalStatus"
+                  type="text"
+                  value={employeeData.maritalStatus ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="nationality">Nacionalidad</Label>
+                <Input
+                  id="nationality"
+                  name="nationality"
+                  type="text"
+                  value={employeeData.nationality ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="educationLevel">Nivel Educativo</Label>
+                <Input
+                  id="educationLevel"
+                  name="educationLevel"
+                  type="text"
+                  value={employeeData.educationLevel ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="gender">Género</Label>
+                <Input
+                  id="gender"
+                  name="gender"
+                  type="text"
+                  value={employeeData.gender ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="bloodType">Tipo de Sangre</Label>
+                <Input
+                  id="bloodType"
+                  name="bloodType"
+                  type="text"
+                  value={employeeData.bloodType ?? ""}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="hireDate">Fecha de Contratación</Label>
-              <Input
-                id="hireDate"
-                name="hireDate"
-                type="date"
-                value={employeeData.hireDate ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="address">Dirección</Label>
-              <Input
-                id="address"
-                name="address"
-                type="text"
-                value={employeeData.address ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="phoneNumber">Número de Teléfono</Label>
-              <Input
-                id="phoneNumber"
-                name="phoneNumber"
-                type="text"
-                value={employeeData.phoneNumber ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="emergencyContact">Contacto de Emergencia</Label>
-              <Input
-                id="emergencyContact"
-                name="emergencyContact"
-                type="text"
-                value={employeeData.emergencyContact ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="emergencyPhone">Teléfono de Emergencia</Label>
-              <Input
-                id="emergencyPhone"
-                name="emergencyPhone"
-                type="text"
-                value={employeeData.emergencyPhone ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="maritalStatus">Estado Civil</Label>
-              <Input
-                id="maritalStatus"
-                name="maritalStatus"
-                type="text"
-                value={employeeData.maritalStatus ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="nationality">Nacionalidad</Label>
-              <Input
-                id="nationality"
-                name="nationality"
-                type="text"
-                value={employeeData.nationality ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="educationLevel">Nivel Educativo</Label>
-              <Input
-                id="educationLevel"
-                name="educationLevel"
-                type="text"
-                value={employeeData.educationLevel ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="gender">Género</Label>
-              <Input
-                id="gender"
-                name="gender"
-                type="text"
-                value={employeeData.gender ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="bloodType">Tipo de Sangre</Label>
-              <Input
-                id="bloodType"
-                name="bloodType"
-                type="text"
-                value={employeeData.bloodType ?? ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-          <div className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:grid-cols-3">
+          </section>
+
+          <section className="flex justify-end mt-8 col-span-1 md:col-span-2 lg:grid-cols-3">
             <Button type="submit">Editar Empleado</Button>
             <Link href="/tablero/empleados" className="ml-2">
               <Button type="button">Cancelar</Button>
             </Link>
-          </div>
+          </section>
         </form>
+
         {message && (
           <p className="text-center text-green-600 text-md italic mt-4">{message}</p>
         )}
-      </>
+      </main>
     </div>
   );
 }
