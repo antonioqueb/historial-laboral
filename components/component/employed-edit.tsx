@@ -17,13 +17,13 @@ import {
 import { FaEdit } from 'react-icons/fa';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { 
-  getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, 
-  getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany, 
-  createDepartment, editDepartment, deleteDepartment, getRolesByCompany, createRole, editRole, 
-  deleteRole, getContractTypesByCompany, createContractType, editContractType, deleteContractType, 
-  getJobTitlesByCompany, createJobTitle, editJobTitle, deleteJobTitle, getWorkShiftsByCompany, 
-  createWorkShift, editWorkShift, deleteWorkShift 
+import {
+  getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes,
+  getCivilStatuses, getEducationLevels, getGenders, getNationalities, getDepartmentsByCompany,
+  createDepartment, editDepartment, deleteDepartment, getRolesByCompany, createRole, editRole,
+  deleteRole, getContractTypesByCompany, createContractType, editContractType, deleteContractType,
+  getJobTitlesByCompany, createJobTitle, editJobTitle, deleteJobTitle, getWorkShiftsByCompany,
+  createWorkShift, editWorkShift, deleteWorkShift
 } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department, Role, ContractType, JobTitle, WorkShift } from '@/interfaces/types';
 
@@ -551,11 +551,12 @@ export default function EditEmployee() {
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Seleccionar Empresa y Empleado</h2>
           <div className="mb-4">
-            <Label htmlFor="companySelect">Seleccionar Empresa</Label>
+            <Label htmlFor="companySelect" className="block mb-2">Seleccionar Empresa</Label>
             <Select
               value={employeeData.company.rfc || ''}
               onValueChange={handleCompanyChange}
               required
+              className="w-full"
             >
               <SelectTrigger>
                 <SelectValue placeholder="Seleccionar empresa" />
@@ -572,11 +573,12 @@ export default function EditEmployee() {
 
           {employeeData.company.rfc && (
             <div className="mb-4">
-              <Label htmlFor="employeeSelect">Seleccionar Empleado</Label>
+              <Label htmlFor="employeeSelect" className="block mb-2">Seleccionar Empleado</Label>
               <Select
                 value={selectedEmployee || ''}
                 onValueChange={handleEmployeeChange}
                 required
+                className="w-full"
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar empleado" />
@@ -597,8 +599,8 @@ export default function EditEmployee() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Información General</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex items-center">
-                <Label htmlFor="name" className="flex-grow">Nombre</Label>
+              <div>
+                <Label htmlFor="name" className="block mb-2">Nombre</Label>
                 <Input
                   id="name"
                   name="name"
@@ -606,10 +608,11 @@ export default function EditEmployee() {
                   value={employeeData.name || ''}
                   onChange={handleInputChange}
                   required
+                  className="w-full"
                 />
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="email" className="flex-grow">Correo Electrónico</Label>
+              <div>
+                <Label htmlFor="email" className="block mb-2">Correo Electrónico</Label>
                 <Input
                   id="email"
                   name="email"
@@ -617,10 +620,11 @@ export default function EditEmployee() {
                   value={employeeData.email || ''}
                   onChange={handleInputChange}
                   required
+                  className="w-full"
                 />
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="phoneNumber" className="flex-grow">Número de Teléfono</Label>
+              <div>
+                <Label htmlFor="phoneNumber" className="block mb-2">Número de Teléfono</Label>
                 <Input
                   id="phoneNumber"
                   name="phoneNumber"
@@ -628,10 +632,11 @@ export default function EditEmployee() {
                   value={employeeData.phoneNumber || ''}
                   onChange={handleInputChange}
                   required
+                  className="w-full"
                 />
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="address" className="flex-grow">Dirección</Label>
+              <div>
+                <Label htmlFor="address" className="block mb-2">Dirección</Label>
                 <Input
                   id="address"
                   name="address"
@@ -639,6 +644,7 @@ export default function EditEmployee() {
                   value={employeeData.address || ''}
                   onChange={handleInputChange}
                   required
+                  className="w-full"
                 />
               </div>
             </div>
@@ -647,8 +653,8 @@ export default function EditEmployee() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex items-center">
-                <Label htmlFor="role" className="flex-grow">Rol</Label>
+              <div>
+                <Label htmlFor="role" className="block mb-2">Rol</Label>
                 <Select
                   value={employeeData.role.id || ''}
                   onValueChange={(value) => {
@@ -656,6 +662,7 @@ export default function EditEmployee() {
                     setEmployeeData({ ...employeeData, role: { id: value, name: selectedRole?.name || '' } });
                   }}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar rol" />
@@ -701,6 +708,7 @@ export default function EditEmployee() {
                               placeholder="Nuevo nombre del rol"
                               value={newRoleName}
                               onChange={(e) => setNewRoleName(e.target.value)}
+                              className="w-full"
                             />
                             <Button onClick={handleCreateRole}>Crear</Button>
                             <Button onClick={() => setIsCreatingRole(false)}>Cancelar</Button>
@@ -714,8 +722,8 @@ export default function EditEmployee() {
                 </Dialog>
               </div>
 
-              <div className="flex items-center">
-                <Label htmlFor="department" className="flex-grow">Departamento</Label>
+              <div>
+                <Label htmlFor="department" className="block mb-2">Departamento</Label>
                 <Select
                   value={employeeData.department.id || ''}
                   onValueChange={(value) => {
@@ -723,6 +731,7 @@ export default function EditEmployee() {
                     setEmployeeData({ ...employeeData, department: { id: value, name: selectedDepartment?.name || '' } });
                   }}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar departamento" />
@@ -768,6 +777,7 @@ export default function EditEmployee() {
                               placeholder="Nuevo nombre del departamento"
                               value={newDepartmentName}
                               onChange={(e) => setNewDepartmentName(e.target.value)}
+                              className="w-full"
                             />
                             <Button onClick={handleCreateDepartment}>Crear</Button>
                             <Button onClick={() => setIsCreating(false)}>Cancelar</Button>
@@ -781,8 +791,8 @@ export default function EditEmployee() {
                 </Dialog>
               </div>
 
-              <div className="flex items-center">
-                <Label htmlFor="jobTitle" className="flex-grow">Título del Puesto</Label>
+              <div>
+                <Label htmlFor="jobTitle" className="block mb-2">Título del Puesto</Label>
                 <Select
                   value={employeeData.jobTitle.id || ''}
                   onValueChange={(value) => {
@@ -790,6 +800,7 @@ export default function EditEmployee() {
                     setEmployeeData({ ...employeeData, jobTitle: { id: value, name: selectedJobTitle?.name || '' } });
                   }}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar título del puesto" />
@@ -835,6 +846,7 @@ export default function EditEmployee() {
                               placeholder="Nuevo nombre del título de trabajo"
                               value={newJobTitleName}
                               onChange={(e) => setNewJobTitleName(e.target.value)}
+                              className="w-full"
                             />
                             <Button onClick={handleCreateJobTitle}>Crear</Button>
                             <Button onClick={() => setIsCreatingJobTitle(false)}>Cancelar</Button>
@@ -848,8 +860,8 @@ export default function EditEmployee() {
                 </Dialog>
               </div>
 
-              <div className="flex items-center">
-                <Label htmlFor="workShift" className="flex-grow">Turno de Trabajo</Label>
+              <div>
+                <Label htmlFor="workShift" className="block mb-2">Turno de Trabajo</Label>
                 <Select
                   value={employeeData.workShift.id || ''}
                   onValueChange={(value) => {
@@ -857,6 +869,7 @@ export default function EditEmployee() {
                     setEmployeeData({ ...employeeData, workShift: { id: value, name: selectedWorkShift?.name || '' } });
                   }}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar turno de trabajo" />
@@ -902,6 +915,7 @@ export default function EditEmployee() {
                               placeholder="Nuevo nombre del turno de trabajo"
                               value={newWorkShiftName}
                               onChange={(e) => setNewWorkShiftName(e.target.value)}
+                              className="w-full"
                             />
                             <Button onClick={handleCreateWorkShift}>Crear</Button>
                             <Button onClick={() => setIsCreatingWorkShift(false)}>Cancelar</Button>
@@ -915,8 +929,8 @@ export default function EditEmployee() {
                 </Dialog>
               </div>
 
-              <div className="flex items-center">
-                <Label htmlFor="contractType" className="flex-grow">Tipo de Contrato</Label>
+              <div>
+                <Label htmlFor="contractType" className="block mb-2">Tipo de Contrato</Label>
                 <Select
                   value={employeeData.contractType.id || ''}
                   onValueChange={(value) => {
@@ -924,6 +938,7 @@ export default function EditEmployee() {
                     setEmployeeData({ ...employeeData, contractType: { id: value, name: selectedContractType?.name || '' } });
                   }}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar tipo de contrato" />
@@ -969,6 +984,7 @@ export default function EditEmployee() {
                               placeholder="Nuevo nombre del tipo de contrato"
                               value={newContractTypeName}
                               onChange={(e) => setNewContractTypeName(e.target.value)}
+                              className="w-full"
                             />
                             <Button onClick={handleCreateContractType}>Crear</Button>
                             <Button onClick={() => setIsCreatingContractType(false)}>Cancelar</Button>
@@ -982,8 +998,8 @@ export default function EditEmployee() {
                 </Dialog>
               </div>
 
-              <div className="flex items-center">
-                <Label htmlFor="hireDate" className="flex-grow">Fecha de Contratación</Label>
+              <div>
+                <Label htmlFor="hireDate" className="block mb-2">Fecha de Contratación</Label>
                 <Input
                   id="hireDate"
                   name="hireDate"
@@ -991,6 +1007,7 @@ export default function EditEmployee() {
                   value={employeeData.hireDate || ''}
                   onChange={handleInputChange}
                   required
+                  className="w-full"
                 />
               </div>
             </div>
@@ -999,8 +1016,8 @@ export default function EditEmployee() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Información Personal</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex items-center">
-                <Label htmlFor="birthDate" className="flex-grow">Fecha de Nacimiento</Label>
+              <div>
+                <Label htmlFor="birthDate" className="block mb-2">Fecha de Nacimiento</Label>
                 <Input
                   id="birthDate"
                   name="birthDate"
@@ -1008,10 +1025,11 @@ export default function EditEmployee() {
                   value={employeeData.birthDate || ''}
                   onChange={handleInputChange}
                   required
+                  className="w-full"
                 />
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="emergencyContact" className="flex-grow">Nombre del Contacto de Emergencia</Label>
+              <div>
+                <Label htmlFor="emergencyContact" className="block mb-2">Nombre del Contacto de Emergencia</Label>
                 <Input
                   id="emergencyContact"
                   name="emergencyContact"
@@ -1019,10 +1037,11 @@ export default function EditEmployee() {
                   value={employeeData.emergencyContact || ''}
                   onChange={handleInputChange}
                   required
+                  className="w-full"
                 />
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="emergencyPhone" className="flex-grow">Teléfono del Contacto de Emergencia</Label>
+              <div>
+                <Label htmlFor="emergencyPhone" className="block mb-2">Teléfono del Contacto de Emergencia</Label>
                 <Input
                   id="emergencyPhone"
                   name="emergencyPhone"
@@ -1030,14 +1049,16 @@ export default function EditEmployee() {
                   value={employeeData.emergencyPhone || ''}
                   onChange={handleInputChange}
                   required
+                  className="w-full"
                 />
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="maritalStatus" className="flex-grow">Estado Civil</Label>
+              <div>
+                <Label htmlFor="maritalStatus" className="block mb-2">Estado Civil</Label>
                 <Select
                   value={employeeData.maritalStatus || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, maritalStatus: value })}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar estado civil" />
@@ -1051,12 +1072,13 @@ export default function EditEmployee() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="nationality" className="flex-grow">Nacionalidad</Label>
+              <div>
+                <Label htmlFor="nationality" className="block mb-2">Nacionalidad</Label>
                 <Select
                   value={employeeData.nationality || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, nationality: value })}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar nacionalidad" />
@@ -1067,6 +1089,7 @@ export default function EditEmployee() {
                         placeholder="Buscar nacionalidad"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full"
                       />
                     </div>
                     {filteredNationalities.map((nationality) => (
@@ -1077,12 +1100,13 @@ export default function EditEmployee() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="educationLevel" className="flex-grow">Nivel Educativo</Label>
+              <div>
+                <Label htmlFor="educationLevel" className="block mb-2">Nivel Educativo</Label>
                 <Select
                   value={employeeData.educationLevel || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, educationLevel: value })}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar nivel educativo" />
@@ -1096,12 +1120,13 @@ export default function EditEmployee() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="gender" className="flex-grow">Género</Label>
+              <div>
+                <Label htmlFor="gender" className="block mb-2">Género</Label>
                 <Select
                   value={employeeData.gender || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, gender: value })}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar género" />
@@ -1115,12 +1140,13 @@ export default function EditEmployee() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center">
-                <Label htmlFor="bloodType" className="flex-grow">Tipo de Sangre</Label>
+              <div>
+                <Label htmlFor="bloodType" className="block mb-2">Tipo de Sangre</Label>
                 <Select
                   value={employeeData.bloodType || ''}
                   onValueChange={(value) => setEmployeeData({ ...employeeData, bloodType: value })}
                   required
+                  className="w-full"
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccionar tipo de sangre" />
