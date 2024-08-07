@@ -138,10 +138,10 @@ export default function EditEmployee() {
     }
   }, [selectedEmployee]);
 
-  const fetchEmployeeData = async (id: string) => {
+  const fetchEmployeeData = async (rfc: string) => {
     try {
-      console.log("Fetching data for employee ID:", id);
-      const data = await getEmployeeByRfc(id);
+      console.log("Fetching data for employee RFC:", rfc);
+      const data = await getEmployeeByRfc(rfc);
       console.log("Fetched Employee Data:", data);
 
       if (data) {
@@ -192,7 +192,7 @@ export default function EditEmployee() {
   };
 
   const handleEmployeeChange = (value: string) => {
-    console.log("Selected Employee ID:", value);
+    console.log("Selected Employee RFC:", value);
     setSelectedEmployee(value);
   };
 
@@ -266,7 +266,7 @@ export default function EditEmployee() {
               </SelectTrigger>
               <SelectContent>
                 {employees.map(employee => (
-                  <SelectItem key={employee.id} value={employee.id}>
+                  <SelectItem key={employee.RFC} value={employee.RFC}>
                     {employee.name}
                   </SelectItem>
                 ))}
