@@ -240,7 +240,7 @@ export default function EditEmployee() {
           <div className="mb-4">
             <Label htmlFor="companySelect">Seleccionar Empresa</Label>
             <Select
-              value={employeeData.company.rfc}
+              value={employeeData.company.rfc || ''}
               onValueChange={handleCompanyChange}
               required
             >
@@ -261,7 +261,7 @@ export default function EditEmployee() {
             <div className="mb-4">
               <Label htmlFor="employeeSelect">Seleccionar Empleado</Label>
               <Select
-                value={selectedEmployee}
+                value={selectedEmployee || ''}
                 onValueChange={handleEmployeeChange}
                 required
               >
@@ -290,7 +290,7 @@ export default function EditEmployee() {
                   id="name"
                   name="name"
                   type="text"
-                  value={employeeData.name}
+                  value={employeeData.name || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -301,7 +301,7 @@ export default function EditEmployee() {
                   id="email"
                   name="email"
                   type="email"
-                  value={employeeData.email}
+                  value={employeeData.email || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -312,7 +312,7 @@ export default function EditEmployee() {
                   id="phoneNumber"
                   name="phoneNumber"
                   type="text"
-                  value={employeeData.phoneNumber}
+                  value={employeeData.phoneNumber || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -323,7 +323,7 @@ export default function EditEmployee() {
                   id="address"
                   name="address"
                   type="text"
-                  value={employeeData.address}
+                  value={employeeData.address || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -340,7 +340,7 @@ export default function EditEmployee() {
                   id="role"
                   name="role"
                   type="text"
-                  value={employeeData.role.name}
+                  value={employeeData.role.name || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -351,7 +351,7 @@ export default function EditEmployee() {
                   id="department"
                   name="department"
                   type="text"
-                  value={employeeData.department.name}
+                  value={employeeData.department.name || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -362,7 +362,7 @@ export default function EditEmployee() {
                   id="jobTitle"
                   name="jobTitle"
                   type="text"
-                  value={employeeData.jobTitle.name}
+                  value={employeeData.jobTitle.name || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -373,7 +373,7 @@ export default function EditEmployee() {
                   id="workShift"
                   name="workShift"
                   type="text"
-                  value={employeeData.workShift.name}
+                  value={employeeData.workShift.name || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -384,7 +384,7 @@ export default function EditEmployee() {
                   id="contractType"
                   name="contractType"
                   type="text"
-                  value={employeeData.contractType.name}
+                  value={employeeData.contractType.name || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -395,7 +395,7 @@ export default function EditEmployee() {
                   id="hireDate"
                   name="hireDate"
                   type="date"
-                  value={employeeData.hireDate}
+                  value={employeeData.hireDate || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -412,7 +412,7 @@ export default function EditEmployee() {
                   id="birthDate"
                   name="birthDate"
                   type="date"
-                  value={employeeData.birthDate}
+                  value={employeeData.birthDate || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -423,7 +423,7 @@ export default function EditEmployee() {
                   id="emergencyContact"
                   name="emergencyContact"
                   type="text"
-                  value={employeeData.emergencyContact}
+                  value={employeeData.emergencyContact || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -434,7 +434,7 @@ export default function EditEmployee() {
                   id="emergencyPhone"
                   name="emergencyPhone"
                   type="text"
-                  value={employeeData.emergencyPhone}
+                  value={employeeData.emergencyPhone || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -445,7 +445,7 @@ export default function EditEmployee() {
                   id="maritalStatus"
                   name="maritalStatus"
                   type="text"
-                  value={employeeData.maritalStatus}
+                  value={employeeData.maritalStatus || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -456,7 +456,7 @@ export default function EditEmployee() {
                   id="nationality"
                   name="nationality"
                   type="text"
-                  value={employeeData.nationality}
+                  value={employeeData.nationality || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -467,7 +467,7 @@ export default function EditEmployee() {
                   id="educationLevel"
                   name="educationLevel"
                   type="text"
-                  value={employeeData.educationLevel}
+                  value={employeeData.educationLevel || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -478,7 +478,7 @@ export default function EditEmployee() {
                   id="gender"
                   name="gender"
                   type="text"
-                  value={employeeData.gender}
+                  value={employeeData.gender || ''}
                   onChange={handleInputChange}
                   required
                 />
@@ -489,7 +489,7 @@ export default function EditEmployee() {
                   id="bloodType"
                   name="bloodType"
                   type="text"
-                  value={employeeData.bloodType}
+                  value={employeeData.bloodType || ''}
                   onChange={handleInputChange}
                   required
                 />
