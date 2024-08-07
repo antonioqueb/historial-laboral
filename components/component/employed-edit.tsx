@@ -552,45 +552,47 @@ export default function EditEmployee() {
           <h2 className="text-xl font-semibold mb-4">Seleccionar Empresa y Empleado</h2>
           <div className="mb-4">
             <Label htmlFor="companySelect" className="block mb-2">Seleccionar Empresa</Label>
-            <Select
-              value={employeeData.company.rfc || ''}
-              onValueChange={handleCompanyChange}
-              required
-              className="w-full"
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccionar empresa" />
-              </SelectTrigger>
-              <SelectContent>
-                {companies.map(company => (
-                  <SelectItem key={company.rfc} value={company.rfc}>
-                    {company.name} - {company.rfc}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="w-full">
+              <Select
+                value={employeeData.company.rfc || ''}
+                onValueChange={handleCompanyChange}
+                required
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccionar empresa" />
+                </SelectTrigger>
+                <SelectContent>
+                  {companies.map(company => (
+                    <SelectItem key={company.rfc} value={company.rfc}>
+                      {company.name} - {company.rfc}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {employeeData.company.rfc && (
             <div className="mb-4">
               <Label htmlFor="employeeSelect" className="block mb-2">Seleccionar Empleado</Label>
-              <Select
-                value={selectedEmployee || ''}
-                onValueChange={handleEmployeeChange}
-                required
-                className="w-full"
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar empleado" />
-                </SelectTrigger>
-                <SelectContent>
-                  {employees.map(employee => (
-                    <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
-                      {employee.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="w-full">
+                <Select
+                  value={selectedEmployee || ''}
+                  onValueChange={handleEmployeeChange}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar empleado" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {employees.map(employee => (
+                      <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
+                        {employee.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           )}
         </section>
@@ -655,26 +657,27 @@ export default function EditEmployee() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="role" className="block mb-2">Rol</Label>
-                <Select
-                  value={employeeData.role.id || ''}
-                  onValueChange={(value) => {
-                    const selectedRole = roles.find(role => role.id === value);
-                    setEmployeeData({ ...employeeData, role: { id: value, name: selectedRole?.name || '' } });
-                  }}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar rol" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {roles.map(role => (
-                      <SelectItem key={role.id} value={role.id}>
-                        {role.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.role.id || ''}
+                    onValueChange={(value) => {
+                      const selectedRole = roles.find(role => role.id === value);
+                      setEmployeeData({ ...employeeData, role: { id: value, name: selectedRole?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar rol" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {roles.map(role => (
+                        <SelectItem key={role.id} value={role.id}>
+                          {role.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" className="ml-2">
@@ -724,26 +727,27 @@ export default function EditEmployee() {
 
               <div>
                 <Label htmlFor="department" className="block mb-2">Departamento</Label>
-                <Select
-                  value={employeeData.department.id || ''}
-                  onValueChange={(value) => {
-                    const selectedDepartment = departments.find(dept => dept.id === value);
-                    setEmployeeData({ ...employeeData, department: { id: value, name: selectedDepartment?.name || '' } });
-                  }}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar departamento" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {departments.map(department => (
-                      <SelectItem key={department.id} value={department.id}>
-                        {department.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.department.id || ''}
+                    onValueChange={(value) => {
+                      const selectedDepartment = departments.find(dept => dept.id === value);
+                      setEmployeeData({ ...employeeData, department: { id: value, name: selectedDepartment?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar departamento" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {departments.map(department => (
+                        <SelectItem key={department.id} value={department.id}>
+                          {department.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" className="ml-2">
@@ -793,26 +797,27 @@ export default function EditEmployee() {
 
               <div>
                 <Label htmlFor="jobTitle" className="block mb-2">Título del Puesto</Label>
-                <Select
-                  value={employeeData.jobTitle.id || ''}
-                  onValueChange={(value) => {
-                    const selectedJobTitle = jobTitles.find(jt => jt.id === value);
-                    setEmployeeData({ ...employeeData, jobTitle: { id: value, name: selectedJobTitle?.name || '' } });
-                  }}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar título del puesto" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {jobTitles.map(jobTitle => (
-                      <SelectItem key={jobTitle.id} value={jobTitle.id}>
-                        {jobTitle.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.jobTitle.id || ''}
+                    onValueChange={(value) => {
+                      const selectedJobTitle = jobTitles.find(jt => jt.id === value);
+                      setEmployeeData({ ...employeeData, jobTitle: { id: value, name: selectedJobTitle?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar título del puesto" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {jobTitles.map(jobTitle => (
+                        <SelectItem key={jobTitle.id} value={jobTitle.id}>
+                          {jobTitle.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" className="ml-2">
@@ -862,26 +867,27 @@ export default function EditEmployee() {
 
               <div>
                 <Label htmlFor="workShift" className="block mb-2">Turno de Trabajo</Label>
-                <Select
-                  value={employeeData.workShift.id || ''}
-                  onValueChange={(value) => {
-                    const selectedWorkShift = workShifts.find(ws => ws.id === value);
-                    setEmployeeData({ ...employeeData, workShift: { id: value, name: selectedWorkShift?.name || '' } });
-                  }}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar turno de trabajo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {workShifts.map(workShift => (
-                      <SelectItem key={workShift.id} value={workShift.id}>
-                        {workShift.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.workShift.id || ''}
+                    onValueChange={(value) => {
+                      const selectedWorkShift = workShifts.find(ws => ws.id === value);
+                      setEmployeeData({ ...employeeData, workShift: { id: value, name: selectedWorkShift?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar turno de trabajo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {workShifts.map(workShift => (
+                        <SelectItem key={workShift.id} value={workShift.id}>
+                          {workShift.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" className="ml-2">
@@ -931,26 +937,27 @@ export default function EditEmployee() {
 
               <div>
                 <Label htmlFor="contractType" className="block mb-2">Tipo de Contrato</Label>
-                <Select
-                  value={employeeData.contractType.id || ''}
-                  onValueChange={(value) => {
-                    const selectedContractType = contractTypes.find(ct => ct.id === value);
-                    setEmployeeData({ ...employeeData, contractType: { id: value, name: selectedContractType?.name || '' } });
-                  }}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar tipo de contrato" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {contractTypes.map(contractType => (
-                      <SelectItem key={contractType.id} value={contractType.id}>
-                        {contractType.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.contractType.id || ''}
+                    onValueChange={(value) => {
+                      const selectedContractType = contractTypes.find(ct => ct.id === value);
+                      setEmployeeData({ ...employeeData, contractType: { id: value, name: selectedContractType?.name || '' } });
+                    }}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar tipo de contrato" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {contractTypes.map(contractType => (
+                        <SelectItem key={contractType.id} value={contractType.id}>
+                          {contractType.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" className="ml-2">
@@ -1054,111 +1061,116 @@ export default function EditEmployee() {
               </div>
               <div>
                 <Label htmlFor="maritalStatus" className="block mb-2">Estado Civil</Label>
-                <Select
-                  value={employeeData.maritalStatus || ''}
-                  onValueChange={(value) => setEmployeeData({ ...employeeData, maritalStatus: value })}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar estado civil" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {civilStatuses.map((status) => (
-                      <SelectItem key={status} value={status}>
-                        {status}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.maritalStatus || ''}
+                    onValueChange={(value) => setEmployeeData({ ...employeeData, maritalStatus: value })}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar estado civil" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {civilStatuses.map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {status}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div>
                 <Label htmlFor="nationality" className="block mb-2">Nacionalidad</Label>
-                <Select
-                  value={employeeData.nationality || ''}
-                  onValueChange={(value) => setEmployeeData({ ...employeeData, nationality: value })}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar nacionalidad" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <div className="px-4 py-2">
-                      <Input
-                        placeholder="Buscar nacionalidad"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full"
-                      />
-                    </div>
-                    {filteredNationalities.map((nationality) => (
-                      <SelectItem key={nationality.sigla} value={nationality.nombre}>
-                        {nationality.nombre}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.nationality || ''}
+                    onValueChange={(value) => setEmployeeData({ ...employeeData, nationality: value })}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar nacionalidad" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <div className="px-4 py-2">
+                        <Input
+                          placeholder="Buscar nacionalidad"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                      {filteredNationalities.map((nationality) => (
+                        <SelectItem key={nationality.sigla} value={nationality.nombre}>
+                          {nationality.nombre}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div>
                 <Label htmlFor="educationLevel" className="block mb-2">Nivel Educativo</Label>
-                <Select
-                  value={employeeData.educationLevel || ''}
-                  onValueChange={(value) => setEmployeeData({ ...employeeData, educationLevel: value })}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar nivel educativo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {educationLevels.map((level) => (
-                      <SelectItem key={level} value={level}>
-                        {level}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.educationLevel || ''}
+                    onValueChange={(value) => setEmployeeData({ ...employeeData, educationLevel: value })}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar nivel educativo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {educationLevels.map((level) => (
+                        <SelectItem key={level} value={level}>
+                          {level}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div>
                 <Label htmlFor="gender" className="block mb-2">Género</Label>
-                <Select
-                  value={employeeData.gender || ''}
-                  onValueChange={(value) => setEmployeeData({ ...employeeData, gender: value })}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar género" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {genders.map((gender) => (
-                      <SelectItem key={gender} value={gender}>
-                        {gender}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.gender || ''}
+                    onValueChange={(value) => setEmployeeData({ ...employeeData, gender: value })}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar género" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {genders.map((gender) => (
+                        <SelectItem key={gender} value={gender}>
+                          {gender}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
               <div>
                 <Label htmlFor="bloodType" className="block mb-2">Tipo de Sangre</Label>
-                <Select
-                  value={employeeData.bloodType || ''}
-                  onValueChange={(value) => setEmployeeData({ ...employeeData, bloodType: value })}
-                  required
-                  className="w-full"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar tipo de sangre" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {bloodTypes.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="w-full">
+                  <Select
+                    value={employeeData.bloodType || ''}
+                    onValueChange={(value) => setEmployeeData({ ...employeeData, bloodType: value })}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar tipo de sangre" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {bloodTypes.map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </section>
