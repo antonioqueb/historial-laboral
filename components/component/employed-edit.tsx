@@ -655,75 +655,78 @@ export default function EditEmployee() {
           <section>
             <h2 className="text-xl font-semibold mb-4">Información Laboral</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <Label htmlFor="role" className="block mb-2">Rol</Label>
-                <div className="w-full">
-                  <Select
-                    value={employeeData.role.id || ''}
-                    onValueChange={(value) => {
-                      const selectedRole = roles.find(role => role.id === value);
-                      setEmployeeData({ ...employeeData, role: { id: value, name: selectedRole?.name || '' } });
-                    }}
-                    required
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar rol" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {roles.map(role => (
-                        <SelectItem key={role.id} value={role.id}>
-                          {role.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="ghost" className="ml-2">
-                      <FaEdit />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Editar Roles</DialogTitle>
-                      <DialogDescription>
-                        Gestiona roles desde aquí.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <section className="mb-8">
-                      <h2 className="text-xl font-semibold mb-4">Roles</h2>
-                      <div className="flex flex-col space-y-2">
-                        {roles.map(role => (
-                          <div key={role.id} className="flex justify-between items-center">
-                            <span>{role.name}</span>
-                            <div className="space-x-2">
-                              <Button onClick={() => setEditingRole(role)}>Editar</Button>
-                              <Button onClick={() => handleDeleteRole(role.id)}>Eliminar</Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="mt-4">
-                        {isCreatingRole ? (
-                          <div className="flex space-x-2">
-                            <Input
-                              placeholder="Nuevo nombre del rol"
-                              value={newRoleName}
-                              onChange={(e) => setNewRoleName(e.target.value)}
-                              className="w-full"
-                            />
-                            <Button onClick={handleCreateRole}>Crear</Button>
-                            <Button onClick={() => setIsCreatingRole(false)}>Cancelar</Button>
-                          </div>
-                        ) : (
-                          <Button onClick={() => setIsCreatingRole(true)}>Añadir Rol</Button>
-                        )}
-                      </div>
-                    </section>
-                  </DialogContent>
-                </Dialog>
+            <div>
+            <Label htmlFor="role" className="block mb-2">Rol</Label>
+            <div className="flex items-center space-x-2">
+              <div className="w-full">
+                <Select
+                  value={employeeData.role.id || ''}
+                  onValueChange={(value) => {
+                    const selectedRole = roles.find(role => role.id === value);
+                    setEmployeeData({ ...employeeData, role: { id: value, name: selectedRole?.name || '' } });
+                  }}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar rol" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {roles.map(role => (
+                      <SelectItem key={role.id} value={role.id}>
+                        {role.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" className="ml-2">
+                    <FaEdit />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Editar Roles</DialogTitle>
+                    <DialogDescription>
+                      Gestiona roles desde aquí.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <section className="mb-8">
+                    <h2 className="text-xl font-semibold mb-4">Roles</h2>
+                    <div className="flex flex-col space-y-2">
+                      {roles.map(role => (
+                        <div key={role.id} className="flex justify-between items-center">
+                          <span>{role.name}</span>
+                          <div className="space-x-2">
+                            <Button onClick={() => setEditingRole(role)}>Editar</Button>
+                            <Button onClick={() => handleDeleteRole(role.id)}>Eliminar</Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4">
+                      {isCreatingRole ? (
+                        <div className="flex space-x-2">
+                          <Input
+                            placeholder="Nuevo nombre del rol"
+                            value={newRoleName}
+                            onChange={(e) => setNewRoleName(e.target.value)}
+                            className="w-full"
+                          />
+                          <Button onClick={handleCreateRole}>Crear</Button>
+                          <Button onClick={() => setIsCreatingRole(false)}>Cancelar</Button>
+                        </div>
+                      ) : (
+                        <Button onClick={() => setIsCreatingRole(true)}>Añadir Rol</Button>
+                      )}
+                    </div>
+                  </section>
+                </DialogContent>
+              </Dialog>
+                </div>
+                </div>
+
 
               <div>
                 <Label htmlFor="department" className="block mb-2">Departamento</Label>
