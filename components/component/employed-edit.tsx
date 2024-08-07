@@ -418,7 +418,7 @@ export default function EditEmployee() {
                 />
               </div>
               <div>
-                <Label htmlFor="emergencyContact">Contacto de Emergencia</Label>
+                <Label htmlFor="emergencyContact">Nombre del Contacto de Emergencia</Label>
                 <Input
                   id="emergencyContact"
                   name="emergencyContact"
@@ -429,7 +429,7 @@ export default function EditEmployee() {
                 />
               </div>
               <div>
-                <Label htmlFor="emergencyPhone">Teléfono de Emergencia</Label>
+                <Label htmlFor="emergencyPhone">Teléfono del Contacto de Emergencia</Label>
                 <Input
                   id="emergencyPhone"
                   name="emergencyPhone"
