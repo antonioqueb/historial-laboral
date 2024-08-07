@@ -8,7 +8,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses } from '@/utils/fetchData';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses, getEducationLevels } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
@@ -93,6 +93,8 @@ export default function EditEmployee() {
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const [bloodTypes, setBloodTypes] = useState<string[]>([]);
   const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
+  const [educationLevels, setEducationLevels] = useState<string[]>([]);
+
 
 
   useEffect(() => {
@@ -140,13 +142,14 @@ export default function EditEmployee() {
   }, [selectedEmployee]);
 
   useEffect(() => {
-    const fetchBloodTypesAndCivilStatuses = async () => {
-      const [types, statuses] = await Promise.all([getBloodTypes(), getCivilStatuses()]);
+    const fetchData = async () => {
+      const [types, statuses, levels] = await Promise.all([getBloodTypes(), getCivilStatuses(), getEducationLevels()]);
       setBloodTypes(types);
       setCivilStatuses(statuses);
+      setEducationLevels(levels);
     };
   
-    fetchBloodTypesAndCivilStatuses();
+    fetchData();
   }, []);
   
 
@@ -485,14 +488,22 @@ export default function EditEmployee() {
               </div>
               <div>
                 <Label htmlFor="educationLevel">Nivel Educativo</Label>
-                <Input
-                  id="educationLevel"
-                  name="educationLevel"
-                  type="text"
+                <Select
                   value={employeeData.educationLevel || ''}
-                  onChange={handleInputChange}
+                  onValueChange={(value) => setEmployeeData({ ...employeeData, educationLevel: value })}
                   required
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar nivel educativo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {educationLevels.map((level) => (
+                      <SelectItem key={level} value={level}>
+                        {level}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <Label htmlFor="gender">Género</Label>

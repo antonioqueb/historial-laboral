@@ -332,3 +332,18 @@ export const getCivilStatuses = async (): Promise<string[]> => {
     return [];
   }
 };
+
+// Función para obtener los niveles educativos desde la API
+export const getEducationLevels = async (): Promise<string[]> => {
+  try {
+    const response = await fetch('https://historiallaboral.com/api/EducationLevels');
+    if (!response.ok) {
+      throw new Error('Failed to fetch education levels');
+    }
+    const data = await response.json();
+    return data.educationLevels;
+  } catch (error) {
+    console.error("Error al obtener los niveles educativos:", error);
+    return [];
+  }
+};
