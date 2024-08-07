@@ -317,3 +317,18 @@ export const getBloodTypes = async (): Promise<string[]> => {
     return [];
   }
 };
+
+// Función para obtener los estados civiles desde la API
+export const getCivilStatuses = async (): Promise<string[]> => {
+  try {
+    const response = await fetch('https://historiallaboral.com/api/CivilStatus');
+    if (!response.ok) {
+      throw new Error('Failed to fetch civil statuses');
+    }
+    const data = await response.json();
+    return data.civilStatuses;
+  } catch (error) {
+    console.error("Error al obtener los estados civiles:", error);
+    return [];
+  }
+};

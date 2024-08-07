@@ -8,7 +8,7 @@ import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@
 import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
-import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes } from '@/utils/fetchData';
+import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany, getBloodTypes, getCivilStatuses } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
@@ -92,6 +92,8 @@ export default function EditEmployee() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const [bloodTypes, setBloodTypes] = useState<string[]>([]);
+  const [civilStatuses, setCivilStatuses] = useState<string[]>([]);
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -138,13 +140,15 @@ export default function EditEmployee() {
   }, [selectedEmployee]);
 
   useEffect(() => {
-    const fetchBloodTypes = async () => {
-      const types = await getBloodTypes();
+    const fetchBloodTypesAndCivilStatuses = async () => {
+      const [types, statuses] = await Promise.all([getBloodTypes(), getCivilStatuses()]);
       setBloodTypes(types);
+      setCivilStatuses(statuses);
     };
-
-    fetchBloodTypes();
+  
+    fetchBloodTypesAndCivilStatuses();
   }, []);
+  
 
   const fetchEmployeeData = async (nss: string) => {
     try {
@@ -450,16 +454,24 @@ export default function EditEmployee() {
                 />
               </div>
               <div>
-                <Label htmlFor="maritalStatus">Estado Civil</Label>
-                <Input
-                  id="maritalStatus"
-                  name="maritalStatus"
-                  type="text"
-                  value={employeeData.maritalStatus || ''}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
+                  <Label htmlFor="maritalStatus">Estado Civil</Label>
+                  <Select
+                    value={employeeData.maritalStatus || ''}
+                    onValueChange={(value) => setEmployeeData({ ...employeeData, maritalStatus: value })}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleccionar estado civil" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {civilStatuses.map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {status}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               <div>
                 <Label htmlFor="nationality">Nacionalidad</Label>
                 <Input
