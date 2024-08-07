@@ -11,6 +11,21 @@ import { z } from 'zod';
 import { getEmployeeByNss, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company } from '@/interfaces/types';
 
+// Función para obtener los tipos de sangre desde la API
+const getBloodTypes = async (): Promise<string[]> => {
+  try {
+    const response = await fetch('https://historiallaboral.com/api/bloodTypes');
+    if (!response.ok) {
+      throw new Error('Failed to fetch blood types');
+    }
+    const data = await response.json();
+    return data.bloodTypes;
+  } catch (error) {
+    console.error("Error al obtener los tipos de sangre:", error);
+    return [];
+  }
+};
+
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;
   department: SimpleDepartment;
@@ -91,6 +106,7 @@ export default function EditEmployee() {
   const [companies, setCompanies] = useState<{ id: string; name: string; rfc: string }[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
+  const [bloodTypes, setBloodTypes] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -135,6 +151,15 @@ export default function EditEmployee() {
       fetchEmployeeData(selectedEmployee);
     }
   }, [selectedEmployee]);
+
+  useEffect(() => {
+    const fetchBloodTypes = async () => {
+      const types = await getBloodTypes();
+      setBloodTypes(types);
+    };
+
+    fetchBloodTypes();
+  }, []);
 
   const fetchEmployeeData = async (nss: string) => {
     try {
@@ -485,14 +510,22 @@ export default function EditEmployee() {
               </div>
               <div>
                 <Label htmlFor="bloodType">Tipo de Sangre</Label>
-                <Input
-                  id="bloodType"
-                  name="bloodType"
-                  type="text"
+                <Select
                   value={employeeData.bloodType || ''}
-                  onChange={handleInputChange}
+                  onValueChange={(value) => setEmployeeData({ ...employeeData, bloodType: value })}
                   required
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Seleccionar tipo de sangre" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {bloodTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </section>
