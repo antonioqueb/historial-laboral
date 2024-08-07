@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { editEmployeeSchema } from '@/schemas/editEmployeeSchema';
 import { z } from 'zod';
 import { getEmployeeByRfc, editEmployee, getCompaniesRFC, getUserId, getEmployeesByCompany } from '@/utils/fetchData';
-import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType } from '@/interfaces/types';
+import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company } from '@/interfaces/types';
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;
@@ -89,7 +89,7 @@ export default function EditEmployee() {
   });
 
   const [message, setMessage] = useState<string | null>(null);
-  const [companies, setCompanies] = useState<{ name: string; rfc: string }[]>([]);
+  const [companies, setCompanies] = useState<{ id: string; name: string; rfc: string }[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
 
@@ -102,7 +102,9 @@ export default function EditEmployee() {
         const companyRFCs = await getCompaniesRFC();
         console.log("Fetched Company RFCs:", companyRFCs);
 
-        setCompanies(companyRFCs.rfcs);
+        // Transformar los RFCs a objetos con id
+        const companiesFormatted = companyRFCs.rfcs.map((rfc: string) => ({ id: rfc, name: rfc, rfc }));
+        setCompanies(companiesFormatted);
       } catch (error) {
         console.error("Error fetching user data or companies:", error);
       }
@@ -180,6 +182,7 @@ export default function EditEmployee() {
       companyId: selectedCompany?.id ?? "",
       company: {
         ...prevState.company,
+        id: selectedCompany?.id ?? "", // Aseguramos que id se establece correctamente
         rfc: selectedCompany?.rfc ?? "",
         name: selectedCompany?.name ?? ""
       }
