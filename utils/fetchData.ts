@@ -347,3 +347,19 @@ export const getEducationLevels = async (): Promise<string[]> => {
     return [];
   }
 };
+
+
+// Función para obtener los géneros desde la API
+export const getGenders = async (): Promise<string[]> => {
+  try {
+    const response = await fetch('https://historiallaboral.com/api/Genders');
+    if (!response.ok) {
+      throw new Error('Failed to fetch genders');
+    }
+    const data = await response.json();
+    return data.genders;
+  } catch (error) {
+    console.error("Error al obtener los géneros:", error);
+    return [];
+  }
+};
