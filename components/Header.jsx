@@ -7,11 +7,13 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Login from '@/components/Login';
+import { useTheme } from "next-themes";
 
 export default function Header() {
   const [imageError, setImageError] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState(null);
   const { data: session } = useSession();
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (session) {
@@ -49,12 +51,11 @@ export default function Header() {
     <header className="flex h-16 w-full items-center justify-between px-4 md:px-6">
       <Link className="flex items-center gap-2" href="/">
         <Image
-          src="/logo.svg"
+          src={theme === "dark" ? "/logo-white.png" : "/logo.svg"}
           alt="Logo"
           width={60}
           height={60}
         />
-        
       </Link>
       <div className="flex items-center gap-4 ml-auto">
         {session ? (
