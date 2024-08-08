@@ -382,9 +382,11 @@ export default function EditEmployee() {
         setMessage(`Employee updated successfully`);
         router.push('/tablero/empleados');
       } else {
+        console.error('Error from editEmployee API:', result.error);
         setMessage(result.error ?? "Failed to update employee");
       }
     } catch (error) {
+      console.error('Error in handleSubmit:', error);
       setMessage("Error updating employee.");
     }
   };
