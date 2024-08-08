@@ -50,52 +50,38 @@ export async function PATCH(req: Request) {
 
     const updateData: Record<string, any> = Object.fromEntries(formData.entries());
 
-    delete updateData.id;
+    // Asegúrate de convertir las fechas correctamente y de que los campos de relación tengan los valores correctos.
+    if (updateData.birthDate) updateData.birthDate = new Date(updateData.birthDate);
+    if (updateData.hireDate) updateData.hireDate = new Date(updateData.hireDate);
 
-    if (imageUrl) {
-      updateData.profileImageUrl = imageUrl;
-    }
+    const {
+      role,
+      department,
+      jobTitle,
+      workShift,
+      contractType,
+      companyId,
+      ...restUpdateData
+    } = updateData;
 
-    // Actualiza las relaciones correctamente
+    const dataToUpdate: any = {
+      ...restUpdateData,
+      profileImageUrl: imageUrl,
+      company: {
+        connect: { id: companyId }
+      }
+    };
+
+    if (role) dataToUpdate.role = { connect: { id: role } };
+    if (department) dataToUpdate.department = { connect: { id: department } };
+    if (jobTitle) dataToUpdate.jobTitle = { connect: { id: jobTitle } };
+    if (workShift) dataToUpdate.workShift = { connect: { id: workShift } };
+    if (contractType) dataToUpdate.contractType = { connect: { id: contractType } };
+
+    // Realiza la actualización en Prisma.
     const updatedEmployee = await prisma.employee.update({
       where: { id },
-      data: {
-        name: updateData.name,
-        socialSecurityNumber: updateData.socialSecurityNumber,
-        CURP: updateData.CURP,
-        RFC: updateData.RFC,
-        address: updateData.address,
-        phoneNumber: updateData.phoneNumber,
-        email: updateData.email,
-        birthDate: new Date(updateData.birthDate),
-        hireDate: new Date(updateData.hireDate),
-        emergencyContact: updateData.emergencyContact,
-        emergencyPhone: updateData.emergencyPhone,
-        maritalStatus: updateData.maritalStatus,
-        nationality: updateData.nationality,
-        educationLevel: updateData.educationLevel,
-        gender: updateData.gender,
-        bloodType: updateData.bloodType,
-        profileImageUrl: updateData.profileImageUrl,
-        company: {
-          connect: { id: updateData.companyId },
-        },
-        role: {
-          connect: { id: updateData.roleId },
-        },
-        department: {
-          connect: { id: updateData.departmentId },
-        },
-        jobTitle: {
-          connect: { id: updateData.jobTitleId },
-        },
-        workShift: {
-          connect: { id: updateData.workShiftId },
-        },
-        contractType: {
-          connect: { id: updateData.contractTypeId },
-        },
-      },
+      data: dataToUpdate,
     });
 
     return NextResponse.json(updatedEmployee);
