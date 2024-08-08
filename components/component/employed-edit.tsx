@@ -349,7 +349,7 @@ export default function EditEmployee() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       editEmployeeSchema.parse(employeeData);
     } catch (error) {
@@ -358,18 +358,26 @@ export default function EditEmployee() {
         return;
       }
     }
-
+  
     const form = new FormData();
     Object.keys(employeeData).forEach(key => {
       const value = employeeData[key as keyof EditEmployeeData];
-      if (value !== null && value !== undefined && value !== '') {
+      if (typeof value === 'object' && value !== null && 'id' in value) {
+        form.append(key, (value as { id: string }).id);
+      } else if (value !== null && value !== undefined) {
         form.append(key, value as any);
       }
     });
-
+  
+    // Log del formData antes de enviar
+    console.log('FormData contents:');
+    form.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+  
     try {
       const result = await editEmployee(form);
-
+  
       if (result.success) {
         setMessage(`Employee updated successfully`);
         router.push('/tablero/empleados');
@@ -380,6 +388,7 @@ export default function EditEmployee() {
       setMessage("Error updating employee.");
     }
   };
+  
 
   const handleCreateDepartment = async () => {
     if (!newDepartmentName) return;
