@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { getEmployeesByCompany, getCompaniesList } from "@/utils/fetchData";
@@ -32,7 +31,7 @@ export default function DashboardEmployedList() {
     if (selectedCompany) {
       const loadEmployees = async () => {
         try {
-          console.log("Fetching employees for company ID:", selectedCompany);
+          console.log("Fetching employees for company RFC:", selectedCompany);
           const filteredEmployees = await getEmployeesByCompany(selectedCompany);
           console.log("Filtered employees:", filteredEmployees);
           setEmployees(filteredEmployees);
@@ -115,19 +114,10 @@ export default function DashboardEmployedList() {
             {companies.map((company) => (
               <div
                 key={company.id}
-                className={`cursor-pointer ${selectedCompany === company.id ? 'border-2 border-indigo-500' : ''}`}
-                onClick={() => setSelectedCompany(company.id)}
+                className={`cursor-pointer ${selectedCompany === company.rfc ? 'border-2 border-indigo-500' : ''}`}
+                onClick={() => setSelectedCompany(company.rfc)}
               >
-                <CompanyCard company={{
-                  ...company,
-                  nombreComercial: company.nombreComercial ?? "",
-                  representanteLegalCurp: company.representanteLegalCurp ?? "",
-                  capitalSocial: company.capitalSocial ?? 0,
-                  registrosImss: company.registrosImss ?? "",
-                  registrosInfonavit: company.registrosInfonavit ?? "",
-                  giroActividadEconomica: company.giroActividadEconomica ?? "",
-                  logoUrl: company.logoUrl ?? ""
-                }} />
+                <CompanyCard company={company} />
               </div>
             ))}
           </div>
