@@ -3,8 +3,14 @@ import { z } from "zod";
 export const editEmployeeSchema = z.object({
   id: z.string().nonempty("ID es requerido"),
   name: z.string().nonempty("Nombre completo es requerido"),
-  role: z.string().nonempty("Rol es requerido"),
-  department: z.string().nonempty("Departamento es requerido"),
+  role: z.object({
+    id: z.string().nonempty("ID del Rol es requerido"),
+    name: z.string().nonempty("Nombre del Rol es requerido")
+  }),
+  department: z.object({
+    id: z.string().nonempty("ID del Departamento es requerido"),
+    name: z.string().nonempty("Nombre del Departamento es requerido")
+  }),
   companyId: z.string().nonempty("Empresa es requerida"),
   socialSecurityNumber: z.string().nonempty("Número de Seguridad Social es requerido"),
   CURP: z.string().nonempty("CURP es requerido"),
@@ -33,5 +39,5 @@ export const editEmployeeSchema = z.object({
     id: z.string().nonempty("ID del Tipo de Contrato es requerido"),
     name: z.string().nonempty("Nombre del Tipo de Contrato es requerido")
   }),
-  profileImage: z.any().optional(), // Optional file
+  profileImageUrl: z.string().nullable(), // URL opcional para la imagen de perfil
 });
