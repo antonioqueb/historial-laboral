@@ -28,8 +28,8 @@ export default function DashboardSidebar() {
           <Image
           src="/logo-full.svg"
           alt="Logo"
-          width={170}
-          height={170}
+          width={180}
+          height={180}
         />
           </Link>
           <button className="md:hidden" onClick={toggleSidebar}>
