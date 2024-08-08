@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select';
 import Link from 'next/link';
 import {
   Dialog,
@@ -624,22 +623,19 @@ export default function EditEmployee() {
             <div className="mb-4">
               <Label htmlFor="employeeSelect" className="block mb-2">Seleccionar Empleado</Label>
               <div className="w-full">
-                <Select
-                  value={selectedEmployee || ''}
-                  onValueChange={handleEmployeeChange}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccionar empleado" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {employees.map(employee => (
-                      <SelectItem key={employee.socialSecurityNumber} value={employee.socialSecurityNumber}>
-                        {employee.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {employees.map(employee => (
+                    <div 
+                      key={employee.socialSecurityNumber} 
+                      className="cursor-pointer border p-4 rounded-lg shadow hover:bg-gray-200"
+                      onClick={() => handleEmployeeChange(employee.socialSecurityNumber)}
+                    >
+                      <h3 className="text-lg font-semibold">{employee.name}</h3>
+                      <p>{employee.email}</p>
+                      <p>{employee.phoneNumber}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
