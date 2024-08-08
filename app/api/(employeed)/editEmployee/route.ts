@@ -56,41 +56,51 @@ export async function PATCH(req: Request) {
       updateData.profileImageUrl = imageUrl;
     }
 
-    if (!updateData.profileImage || Object.keys(updateData.profileImage).length === 0) {
-      delete updateData.profileImage;
-    }
-
-    if (typeof updateData.birthDate === 'string' && updateData.birthDate) {
-      updateData.birthDate = new Date(updateData.birthDate).toISOString();
-    }
-    if (typeof updateData.hireDate === 'string' && updateData.hireDate) {
-      updateData.hireDate = new Date(updateData.hireDate).toISOString();
-    }
-
-    delete updateData.company;
-    delete updateData.description;
-    delete updateData.bankAccountNumber;
-    delete updateData.clabeNumber;
-
-    console.log("Update data prepared for employee update:", updateData);
-
+    // Actualiza las relaciones correctamente
     const updatedEmployee = await prisma.employee.update({
-      where: { id: id as string },
+      where: { id },
       data: {
-        ...updateData,
-        jobTitle: { connect: { id: updateData.jobTitle } },
-        workShift: { connect: { id: updateData.workShift } },
-        contractType: { connect: { id: updateData.contractType } },
-        role: { connect: { id: updateData.role } },
-        department: { connect: { id: updateData.department } },
+        name: updateData.name,
+        socialSecurityNumber: updateData.socialSecurityNumber,
+        CURP: updateData.CURP,
+        RFC: updateData.RFC,
+        address: updateData.address,
+        phoneNumber: updateData.phoneNumber,
+        email: updateData.email,
+        birthDate: new Date(updateData.birthDate),
+        hireDate: new Date(updateData.hireDate),
+        emergencyContact: updateData.emergencyContact,
+        emergencyPhone: updateData.emergencyPhone,
+        maritalStatus: updateData.maritalStatus,
+        nationality: updateData.nationality,
+        educationLevel: updateData.educationLevel,
+        gender: updateData.gender,
+        bloodType: updateData.bloodType,
+        profileImageUrl: updateData.profileImageUrl,
+        company: {
+          connect: { id: updateData.companyId },
+        },
+        role: {
+          connect: { id: updateData.roleId },
+        },
+        department: {
+          connect: { id: updateData.departmentId },
+        },
+        jobTitle: {
+          connect: { id: updateData.jobTitleId },
+        },
+        workShift: {
+          connect: { id: updateData.workShiftId },
+        },
+        contractType: {
+          connect: { id: updateData.contractTypeId },
+        },
       },
     });
 
-    console.log("Updated employee:", updatedEmployee);
-
-    return NextResponse.json({ employee: updatedEmployee }, { status: 200 });
+    return NextResponse.json(updatedEmployee);
   } catch (error) {
     console.error("Error updating employee:", error);
-    return NextResponse.json({ error: (error as any).message }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update employee" }, { status: 500 });
   }
 }
