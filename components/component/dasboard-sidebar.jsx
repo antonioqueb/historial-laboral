@@ -23,13 +23,13 @@ export default function DashboardSidebar() {
     <div className="fixed inset-y-0 left-0 z-50 flex flex-col min-h-screen lg:max-w-[280px] dark:bg-zinc-900 transition-transform transform md:relative">
       {/* Sidebar for desktop */}
       <div className={`fixed inset-y-0 left-0 z-50 flex flex-col min-h-screen max-w-[280px] dark:bg-zinc-900 transition-transform transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 md:relative`}>
-        <div className="flex items-center justify-between h-16 px-4 border-b border-zinc-200 dark:border-zinc-800">
-          <Link className="ml-3 flex items-center gap-2 font-semibold text-lg md:text-xl" href="/">
+        <div className="flex items-center justify-between h-16 border-b border-zinc-200 dark:border-zinc-800">
+          <Link className="flex items-center gap-2 font-semibold text-lg md:text-xl" href="/">
           <Image
           src="/logo-full.svg"
           alt="Logo"
-          width={190}
-          height={190}
+          width={170}
+          height={170}
         />
           </Link>
           <button className="md:hidden" onClick={toggleSidebar}>
