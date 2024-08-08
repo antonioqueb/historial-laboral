@@ -1,4 +1,3 @@
-// app\api\(employeed)\editEmployee\route.ts
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
@@ -24,7 +23,7 @@ export async function PATCH(req: Request) {
   try {
     const formData = await req.formData();
     console.log("Received formData:", Array.from(formData.entries()));
-    
+
     const image = formData.get("profileImage") as File | null;
     const nss = formData.get("socialSecurityNumber") as string | null;
     const id = formData.get("id") as string;
@@ -50,7 +49,7 @@ export async function PATCH(req: Request) {
     }
 
     const updateData: Record<string, any> = Object.fromEntries(formData.entries());
-    
+
     delete updateData.id;
 
     if (imageUrl) {
@@ -72,6 +71,8 @@ export async function PATCH(req: Request) {
     delete updateData.description;
     delete updateData.bankAccountNumber;
     delete updateData.clabeNumber;
+
+    console.log("Update data prepared for employee update:", updateData);
 
     const updatedEmployee = await prisma.employee.update({
       where: { id: id as string },
