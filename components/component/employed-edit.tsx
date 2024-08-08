@@ -26,7 +26,8 @@ import {
   createWorkShift, editWorkShift, deleteWorkShift
 } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department, Role, ContractType, JobTitle, WorkShift } from '@/interfaces/types';
-import CompanyCard from '@/components/component/CompanyCard'; // Importa tu componente CompanyCard
+import CompanyCard from '@/components/component/CompanyCard';
+import EmployeeCard from '@/components/component/EmployeeCard'; // Importa tu componente EmployeeCard
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;
@@ -627,10 +628,7 @@ export default function EditEmployee() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {employees.map(employee => (
                     <div key={employee.socialSecurityNumber} onClick={() => handleEmployeeChange(employee.socialSecurityNumber)}>
-                      <div className="card">
-                        <h3>{employee.name}</h3>
-                        <p>{employee.socialSecurityNumber}</p>
-                      </div>
+                      <EmployeeCard employee={employee} onClick={() => handleEmployeeChange(employee.socialSecurityNumber)} />
                     </div>
                   ))}
                 </div>
