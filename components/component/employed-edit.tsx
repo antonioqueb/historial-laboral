@@ -161,7 +161,45 @@ export default function EditEmployee() {
         const companyRFCs = await getCompaniesRFC();
         console.log("Fetched Company RFCs:", companyRFCs);
 
-        const companiesFormatted = companyRFCs.rfcs.map((rfc: string) => ({ id: rfc, name: rfc, rfc }));
+        const defaultCompany: Company = {
+          id: '',
+          name: '',
+          userId: '',
+          user: { id: '', email: '', name: '', companies: [] },
+          employees: [],
+          razonSocial: '',
+          rfc: '',
+          domicilioFiscalCalle: '',
+          domicilioFiscalNumero: '',
+          domicilioFiscalColonia: '',
+          domicilioFiscalMunicipio: '',
+          domicilioFiscalEstado: '',
+          domicilioFiscalCodigoPostal: '',
+          nombreComercial: '',
+          objetoSocial: '',
+          representanteLegalNombre: '',
+          representanteLegalCurp: '',
+          capitalSocial: 0,
+          registrosImss: '',
+          registrosInfonavit: '',
+          giroActividadEconomica: '',
+          certificaciones: [],
+          reviewsGiven: [],
+          logoUrl: '',
+          roles: [],
+          workShifts: [],
+          departments: [],
+          contractTypes: [],
+          jobTitles: []
+        };
+
+        const companiesFormatted = companyRFCs.rfcs.map((rfc: string) => ({
+          ...defaultCompany,
+          id: rfc,
+          name: rfc,
+          rfc
+        }));
+
         setCompanies(companiesFormatted);
       } catch (error) {
         console.error("Error fetching user data or companies:", error);
