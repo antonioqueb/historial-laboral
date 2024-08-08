@@ -31,13 +31,13 @@ export default function Header() {
           const profileImageData = await profileImageResponse.json();
           setProfileImageUrl(profileImageData.profileImageUrl);
         } else {
-          // console.error('Failed to fetch profile image URL');
+          console.error('Failed to fetch profile image URL');
         }
       } else {
-        // console.error('Failed to fetch user ID');
+        console.error('Failed to fetch user ID');
       }
     } catch (error) {
-      // console.error('Error fetching user ID or profile image URL:', error);
+      console.error('Error fetching user ID or profile image URL:', error);
     }
   };
 
@@ -48,15 +48,21 @@ export default function Header() {
   return (
     <header className="flex h-16 w-full items-center justify-between px-4 md:px-6">
       <Link className="flex items-center gap-2" href="/">
-        <h2 className="font-bold text-xl lg:text-2xl">Historial Laboral</h2>
+        <Image
+          src="/logo.svg"
+          alt="Logo"
+          width={60}
+          height={60}
+        />
+        
       </Link>
       <div className="flex items-center gap-4 ml-auto">
         {session ? (
           <>
-          <Link href="/tablero">
-            <Button>
-              Tablero
-            </Button>
+            <Link href="/tablero">
+              <Button>
+                Tablero
+              </Button>
             </Link>
             <Button className="rounded-full" size="icon" variant="ghost">
               <ModeToggle />
