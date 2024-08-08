@@ -2,9 +2,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { Company, Employee } from "@/interfaces/types";
+import { Company } from "@/interfaces/types";
 
-// Define the type for the session with the user ID
 interface ExtendedSession {
   user: {
     id: string;
@@ -25,22 +24,25 @@ export async function GET(req: Request) {
     const userId = session.user.id;
 
     try {
-        // Obtener las empresas del usuario
         const companies = await prisma.company.findMany({
             where: { userId: userId },
-            select: { rfc: true } // Seleccionar solo el campo RFC
+            select: { 
+                rfc: true,
+                name: true, 
+                domicilioFiscalCalle: true,
+                domicilioFiscalNumero: true,
+                domicilioFiscalColonia: true,
+                domicilioFiscalMunicipio: true,
+                domicilioFiscalEstado: true,
+                domicilioFiscalCodigoPostal: true,
+                nombreComercial: true,
+                representanteLegalNombre: true,
+                logoUrl: true
+            }
         });
-        type Company = {
-            rfc: string;
-            // Otros campos que tenga la interfaz de Company
-          };
 
-        // Extraer solo los RFCs de las empresas
-        const rfcs = companies.map((company: Company) => company.rfc);
-
-        return NextResponse.json({ rfcs }, { status: 200 });
+        return NextResponse.json({ companies }, { status: 200 });
     } catch (error) {
-        // Convertir 'error' a tipo 'any'
         return NextResponse.json({ error: (error as any).message }, { status: 500 });
     }
 }

@@ -1,5 +1,4 @@
 'use client';
-import React, { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -9,6 +8,9 @@ import Link from 'next/link';
 import { getUserId, getCompanyByRfc, editCompanyData, uploadCompanyImage, getCompaniesRFC } from "@/utils/fetchData";
 import { z } from "zod";
 import { editCompanySchema } from "@/schemas/editCompanySchema";
+import CompanyCard from "@/components/component/CompanyCard";
+import { Company } from "@/interfaces/types";
+import React, { useState, useEffect } from "react";
 
 export default function EditCompany() {
   const { data: session } = useSession();
@@ -31,7 +33,7 @@ export default function EditCompany() {
   const [representanteLegalNombre, setRepresentanteLegalNombre] = useState("");
   const [logo, setLogo] = useState<File | null>(null);
 
-  const [companies, setCompanies] = useState<string[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
   const loadUserId = async () => {
     try {
@@ -44,7 +46,7 @@ export default function EditCompany() {
 
   const loadCompanies = async () => {
     const data = await getCompaniesRFC();
-    setCompanies(data.rfcs);
+    setCompanies(data); // Aquí asignamos el array completo de compañías
   };
 
   const fetchCompanyData = async (rfc: string) => {
@@ -144,8 +146,7 @@ export default function EditCompany() {
     }
   };
 
-  const handleCompanySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedRfc = e.target.value;
+  const handleCompanySelect = (selectedRfc: string) => {
     setRfc(selectedRfc);
     fetchCompanyData(selectedRfc);
   };
@@ -168,19 +169,13 @@ export default function EditCompany() {
           <h1 className="text-3xl font-bold mb-8">Editar Empresa</h1>
           <div className="mb-4">
             <Label htmlFor="companySelect">Seleccionar Empresa</Label>
-            <select
-              id="companySelect"
-              value={rfc}
-              onChange={handleCompanySelect}
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-zinc-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-            >
-              <option value="">Seleccionar...</option>
-              {companies.map((companyRfc) => (
-                <option key={companyRfc} value={companyRfc}>
-                  {companyRfc}
-                </option>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {companies.map((company) => (
+                <div key={company.rfc} onClick={() => handleCompanySelect(company.rfc)}>
+                  <CompanyCard company={company} />
+                </div>
               ))}
-            </select>
+            </div>
           </div>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-4">

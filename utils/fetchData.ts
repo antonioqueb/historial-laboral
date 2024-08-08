@@ -1,3 +1,4 @@
+// utils\fetchData.ts
 import { Company, Employee, Review, Department, Role, ContractType, JobTitle, WorkShift } from '@/interfaces/types';
 
 // Función para cargar archivos de empleados por RFC
@@ -26,17 +27,18 @@ export async function uploadEmployeeFiles(rfc: string, files: File[]): Promise<{
   }
 }
 
-// Función para obtener la lista de compañías por RFC
-export async function getCompaniesRFC(): Promise<{ rfcs: string[] }> {
+// Modifica la función para devolver un array de objetos Company
+export async function getCompaniesRFC(): Promise<Company[]> {
   try {
     const response = await fetch("/api/getCompanyRFC");
     const data = await response.json();
-    return data;
+    return data.companies;  // Suponiendo que ahora devuelves un array de objetos Company
   } catch (error) {
     console.error("Error al obtener las compañías:", error);
-    return { rfcs: [] };
+    return [];
   }
 }
+
 
 // Función para obtener los empleados filtrados por el RFC de la compañía seleccionada
 export async function getEmployeesByCompany(selectedCompanyRFC: string): Promise<Employee[]> {
