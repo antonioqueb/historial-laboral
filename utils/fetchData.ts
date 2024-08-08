@@ -776,3 +776,4 @@ export async function deleteWorkShift(rfc: string, id: string): Promise<void> {
     throw error;
   }
 }
+
