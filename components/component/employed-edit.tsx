@@ -26,6 +26,7 @@ import {
   createWorkShift, editWorkShift, deleteWorkShift
 } from '@/utils/fetchData';
 import { Employee, SimpleRole, SimpleDepartment, SimpleJobTitle, SimpleWorkShift, SimpleContractType, Company, Department, Role, ContractType, JobTitle, WorkShift } from '@/interfaces/types';
+import CompanyCard from '@/components/component/CompanyCard'; // Importa tu componente CompanyCard
 
 interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTitle' | 'workShift' | 'contractType'> {
   role: SimpleRole;
@@ -104,7 +105,7 @@ export default function EditEmployee() {
   });
 
   const [message, setMessage] = useState<string | null>(null);
-  const [companies, setCompanies] = useState<{ id: string; name: string; rfc: string }[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
   const [bloodTypes, setBloodTypes] = useState<string[]>([]);
@@ -325,17 +326,16 @@ export default function EditEmployee() {
     }));
   };
 
-  const handleCompanyChange = (value: string) => {
-    const selectedCompany = companies.find(company => company.rfc === value);
-    console.log("Selected Company RFC:", value);
+  const handleCompanyChange = (company: Company) => {
+    console.log("Selected Company RFC:", company.rfc);
     setEmployeeData(prevState => ({
       ...prevState,
-      companyId: selectedCompany?.id ?? "",
+      companyId: company.id ?? "",
       company: {
         ...prevState.company,
-        id: selectedCompany?.id ?? "",
-        rfc: selectedCompany?.rfc ?? "",
-        name: selectedCompany?.name ?? ""
+        id: company.id ?? "",
+        rfc: company.rfc ?? "",
+        name: company.name ?? ""
       }
     }));
     setSelectedEmployee(""); // Reset the selected employee when company changes
@@ -390,7 +390,6 @@ export default function EditEmployee() {
       setMessage("Error updating employee.");
     }
   };
-  
 
   const handleCreateDepartment = async () => {
     if (!newDepartmentName) return;
@@ -564,22 +563,13 @@ export default function EditEmployee() {
           <div className="mb-4">
             <Label htmlFor="companySelect" className="block mb-2">Seleccionar Empresa</Label>
             <div className="w-full">
-              <Select
-                value={employeeData.company.rfc || ''}
-                onValueChange={handleCompanyChange}
-                required
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar empresa" />
-                </SelectTrigger>
-                <SelectContent>
-                  {companies.map(company => (
-                    <SelectItem key={company.rfc} value={company.rfc}>
-                      {company.name} - {company.rfc}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {companies.map(company => (
+                  <div key={company.rfc} onClick={() => handleCompanyChange(company)}>
+                    <CompanyCard company={company} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
