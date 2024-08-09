@@ -28,7 +28,7 @@ export default function DashboardSidebar() {
           <div className="flex items-center justify-between h-16 border-b border-zinc-200 dark:border-zinc-800">
             <Link className="flex items-center gap-2 font-semibold text-lg md:text-xl" href="/">
               <Image
-                src={theme === "dark" ? "/logo-full-white.png" : "/logo-full.svg"}
+                src={theme === "dark" ? "/logo-white.png" : "/logo-full.svg"}
                 alt="Logo"
                 width={180}
                 height={180}
