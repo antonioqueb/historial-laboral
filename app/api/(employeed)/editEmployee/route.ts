@@ -29,6 +29,7 @@ export async function PATCH(req: Request) {
     const id = formData.get("id") as string;
     let imageUrl: string | null = null;
 
+    // Subida de la imagen si existe
     if (image && nss) {
       const uploadForm = new FormData();
       uploadForm.append("image", image);
@@ -49,9 +50,10 @@ export async function PATCH(req: Request) {
       imageUrl = uploadResult.imageUrl;
     }
 
+    // Convertir y preparar los datos de actualización
     const updateData: Record<string, any> = Object.fromEntries(formData.entries());
 
-    // Asegúrate de convertir las fechas correctamente y de que los campos de relación tengan los valores correctos.
+    // Conversión de fechas
     if (updateData.birthDate) updateData.birthDate = new Date(updateData.birthDate);
     if (updateData.hireDate) updateData.hireDate = new Date(updateData.hireDate);
 
@@ -62,24 +64,26 @@ export async function PATCH(req: Request) {
       workShift,
       contractType,
       companyId,
+      profileImage, // Excluir el archivo de la actualización en Prisma
       ...restUpdateData
     } = updateData;
 
     const dataToUpdate: any = {
       ...restUpdateData,
-      profileImageUrl: imageUrl || null,  // Asegúrate de que profileImageUrl sea una cadena o null
+      profileImageUrl: imageUrl || null,  // Asignación de la URL de la imagen o null
       company: {
         connect: { id: companyId }
       }
     };
 
+    // Conexión de las relaciones
     if (role) dataToUpdate.role = { connect: { id: role } };
     if (department) dataToUpdate.department = { connect: { id: department } };
     if (jobTitle) dataToUpdate.jobTitle = { connect: { id: jobTitle } };
     if (workShift) dataToUpdate.workShift = { connect: { id: workShift } };
     if (contractType) dataToUpdate.contractType = { connect: { id: contractType } };
 
-    // Realiza la actualización en Prisma.
+    // Realización de la actualización en Prisma
     const updatedEmployee = await prisma.employee.update({
       where: { id },
       data: dataToUpdate,
