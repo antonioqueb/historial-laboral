@@ -1,3 +1,4 @@
+// app\api\(companies)\getCompanyRFC\route.ts
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/authOptions";
 import { NextResponse } from "next/server";
@@ -27,6 +28,7 @@ export async function GET(req: Request) {
         const companies = await prisma.company.findMany({
             where: { userId: userId },
             select: { 
+                id: true,  // Añadir el ID aquí
                 rfc: true,
                 name: true, 
                 domicilioFiscalCalle: true,

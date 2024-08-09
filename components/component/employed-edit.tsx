@@ -607,6 +607,9 @@ export default function EditEmployee() {
     }
   };
 
+  console.log("Companies data in EditEmployee:", companies);
+
+
   return (
     <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
       <main>
