@@ -28,6 +28,7 @@ export async function PATCH(req: Request) {
     const nss = formData.get("socialSecurityNumber") as string | null;
     const id = formData.get("id") as string;
     let imageUrl: string | null = null;
+
     if (image && nss) {
       const uploadForm = new FormData();
       uploadForm.append("image", image);
@@ -66,7 +67,7 @@ export async function PATCH(req: Request) {
 
     const dataToUpdate: any = {
       ...restUpdateData,
-      profileImageUrl: imageUrl,
+      profileImageUrl: imageUrl || null,  // Asegúrate de que profileImageUrl sea una cadena o null
       company: {
         connect: { id: companyId }
       }
