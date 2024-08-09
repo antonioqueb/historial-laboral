@@ -204,7 +204,8 @@ export default function EditEmployee() {
           ...defaultCompany,
           id: company.rfc,
           name: company.name,
-          rfc: company.rfc
+          rfc: company.rfc,
+          logoUrl: company.logoUrl
         }));
 
         setCompanies(companiesFormatted);
