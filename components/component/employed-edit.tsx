@@ -1233,6 +1233,17 @@ export default function EditEmployee() {
                     </Select>
                   </div>
                 </div>
+                <div>
+                <Label htmlFor="profileImage" className="block mb-2">Imagen de Perfil</Label>
+                <Input
+                  id="profileImage"
+                  name="profileImage"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="w-full"
+                />
+              </div>
               </div>
             </section>
 
