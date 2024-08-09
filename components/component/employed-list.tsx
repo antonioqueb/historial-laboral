@@ -110,7 +110,7 @@ export default function DashboardEmployedList() {
       {!selectedCompany ? (
         <div className="mb-4">
           <Label htmlFor="companySelect">Seleccionar Empresa</Label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {companies.map((company) => (
               <div
                 key={company.id}
@@ -123,9 +123,9 @@ export default function DashboardEmployedList() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {employees.map((employee) => (
-            <div key={employee.id} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden">
+            <div key={employee.id} className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden w-full max-w-md mx-auto">
               <div className="aspect-square">
                 <Image
                   alt={`Foto de ${employee.name ?? "N/A"}`}
