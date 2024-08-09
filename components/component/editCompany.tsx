@@ -1,3 +1,4 @@
+'use client';
 import { useSession, signIn } from "next-auth/react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
