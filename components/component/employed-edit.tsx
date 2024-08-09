@@ -157,62 +157,66 @@ export default function EditEmployee() {
     );
   }, [searchTerm, nationalities]);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+// Código existente de imports y demás configuraciones
+
+useEffect(() => {
+  const fetchUserData = async () => {
       try {
-        const userId = await getUserId();
-        console.log("Fetched User ID:", userId);
+          const userId = await getUserId();
+          console.log("Fetched User ID:", userId);
 
-        const companyRFCs = await getCompaniesRFC();
-        console.log("Fetched Company RFCs:", companyRFCs);
+          const companyRFCs = await getCompaniesRFC();
+          console.log("Fetched Company RFCs:", companyRFCs);
 
-        const defaultCompany: Company = {
-          id: '',
-          name: '',
-          userId: '',
-          user: { id: '', email: '', name: '', companies: [] },
-          employees: [],
-          razonSocial: '',
-          rfc: '',
-          domicilioFiscalCalle: '',
-          domicilioFiscalNumero: '',
-          domicilioFiscalColonia: '',
-          domicilioFiscalMunicipio: '',
-          domicilioFiscalEstado: '',
-          domicilioFiscalCodigoPostal: '',
-          nombreComercial: '',
-          objetoSocial: '',
-          representanteLegalNombre: '',
-          representanteLegalCurp: '',
-          capitalSocial: 0,
-          registrosImss: '',
-          registrosInfonavit: '',
-          giroActividadEconomica: '',
-          certificaciones: [],
-          reviewsGiven: [],
-          logoUrl: '',
-          roles: [],
-          workShifts: [],
-          departments: [],
-          contractTypes: [],
-          jobTitles: []
-        };
+          const defaultCompany: Company = {
+              id: '',
+              name: '',
+              userId: '',
+              user: { id: '', email: '', name: '', companies: [] },
+              employees: [],
+              razonSocial: '',
+              rfc: '',
+              domicilioFiscalCalle: '',
+              domicilioFiscalNumero: '',
+              domicilioFiscalColonia: '',
+              domicilioFiscalMunicipio: '',
+              domicilioFiscalEstado: '',
+              domicilioFiscalCodigoPostal: '',
+              nombreComercial: '',
+              objetoSocial: '',
+              representanteLegalNombre: '',
+              representanteLegalCurp: '',
+              capitalSocial: 0,
+              registrosImss: '',
+              registrosInfonavit: '',
+              giroActividadEconomica: '',
+              certificaciones: [],
+              reviewsGiven: [],
+              logoUrl: '',
+              roles: [],
+              workShifts: [],
+              departments: [],
+              contractTypes: [],
+              jobTitles: []
+          };
 
-        const companiesFormatted = companyRFCs.rfcs.map((rfc: string) => ({
-          ...defaultCompany,
-          id: rfc,
-          name: rfc,
-          rfc
-        }));
+          const companiesFormatted = companyRFCs.map((company: Company) => ({
+              ...defaultCompany,
+              id: company.rfc,
+              name: company.name,
+              rfc: company.rfc
+          }));
 
-        setCompanies(companiesFormatted);
+          setCompanies(companiesFormatted);
       } catch (error) {
-        console.error("Error fetching user data or companies:", error);
+          console.error("Error fetching user data or companies:", error);
       }
-    };
+  };
 
-    fetchUserData();
-  }, []);
+  fetchUserData();
+}, []);
+
+
 
   useEffect(() => {
     if (employeeData.company.rfc) {
