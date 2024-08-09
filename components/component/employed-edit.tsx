@@ -612,7 +612,7 @@ export default function EditEmployee() {
 
 
   return (
-    <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto my-12">
       <main>
         <header>
           <h1 className="text-3xl font-bold mb-8">Editar Empleado</h1>
