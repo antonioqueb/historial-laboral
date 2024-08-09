@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -35,6 +34,7 @@ interface EditEmployeeData extends Omit<Employee, 'role' | 'department' | 'jobTi
   jobTitle: SimpleJobTitle;
   workShift: SimpleWorkShift;
   contractType: SimpleContractType;
+  profileImage: File | null;
 }
 
 export default function EditEmployee() {
@@ -47,6 +47,9 @@ export default function EditEmployee() {
     name: "",
     role: { id: "", name: "" },
     department: { id: "", name: "" },
+    jobTitle: { id: "", name: "" },
+    workShift: { id: "", name: "" },
+    contractType: { id: "", name: "" },
     companyId: "",
     company: {
       id: "",
@@ -94,10 +97,7 @@ export default function EditEmployee() {
     educationLevel: "",
     gender: "",
     bloodType: "",
-    jobTitle: { id: "", name: "" },
-    workShift: { id: "", name: "" },
-    contractType: { id: "", name: "" },
-    profileImageUrl: null,
+    profileImage: null,
     createdAt: "",
     updatedAt: "",
     reviewsReceived: [],
@@ -157,66 +157,62 @@ export default function EditEmployee() {
     );
   }, [searchTerm, nationalities]);
 
-// Código existente de imports y demás configuraciones
-
-useEffect(() => {
-  const fetchUserData = async () => {
+  useEffect(() => {
+    const fetchUserData = async () => {
       try {
-          const userId = await getUserId();
-          console.log("Fetched User ID:", userId);
+        const userId = await getUserId();
+        console.log("Fetched User ID:", userId);
 
-          const companyRFCs = await getCompaniesRFC();
-          console.log("Fetched Company RFCs:", companyRFCs);
+        const companyRFCs = await getCompaniesRFC();
+        console.log("Fetched Company RFCs:", companyRFCs);
 
-          const defaultCompany: Company = {
-              id: '',
-              name: '',
-              userId: '',
-              user: { id: '', email: '', name: '', companies: [] },
-              employees: [],
-              razonSocial: '',
-              rfc: '',
-              domicilioFiscalCalle: '',
-              domicilioFiscalNumero: '',
-              domicilioFiscalColonia: '',
-              domicilioFiscalMunicipio: '',
-              domicilioFiscalEstado: '',
-              domicilioFiscalCodigoPostal: '',
-              nombreComercial: '',
-              objetoSocial: '',
-              representanteLegalNombre: '',
-              representanteLegalCurp: '',
-              capitalSocial: 0,
-              registrosImss: '',
-              registrosInfonavit: '',
-              giroActividadEconomica: '',
-              certificaciones: [],
-              reviewsGiven: [],
-              logoUrl: '',
-              roles: [],
-              workShifts: [],
-              departments: [],
-              contractTypes: [],
-              jobTitles: []
-          };
+        const defaultCompany: Company = {
+          id: '',
+          name: '',
+          userId: '',
+          user: { id: '', email: '', name: '', companies: [] },
+          employees: [],
+          razonSocial: '',
+          rfc: '',
+          domicilioFiscalCalle: '',
+          domicilioFiscalNumero: '',
+          domicilioFiscalColonia: '',
+          domicilioFiscalMunicipio: '',
+          domicilioFiscalEstado: '',
+          domicilioFiscalCodigoPostal: '',
+          nombreComercial: '',
+          objetoSocial: '',
+          representanteLegalNombre: '',
+          representanteLegalCurp: '',
+          capitalSocial: 0,
+          registrosImss: '',
+          registrosInfonavit: '',
+          giroActividadEconomica: '',
+          certificaciones: [],
+          reviewsGiven: [],
+          logoUrl: '',
+          roles: [],
+          workShifts: [],
+          departments: [],
+          contractTypes: [],
+          jobTitles: []
+        };
 
-          const companiesFormatted = companyRFCs.map((company: Company) => ({
-              ...defaultCompany,
-              id: company.rfc,
-              name: company.name,
-              rfc: company.rfc
-          }));
+        const companiesFormatted = companyRFCs.map((company: Company) => ({
+          ...defaultCompany,
+          id: company.rfc,
+          name: company.name,
+          rfc: company.rfc
+        }));
 
-          setCompanies(companiesFormatted);
+        setCompanies(companiesFormatted);
       } catch (error) {
-          console.error("Error fetching user data or companies:", error);
+        console.error("Error fetching user data or companies:", error);
       }
-  };
+    };
 
-  fetchUserData();
-}, []);
-
-
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     if (employeeData.company.rfc) {
@@ -353,7 +349,7 @@ useEffect(() => {
           contractType: { id: data.contractType.id, name: data.contractType.name },
           birthDate: data.birthDate ? new Date(data.birthDate).toISOString().split('T')[0] : "",
           hireDate: data.hireDate ? new Date(data.hireDate).toISOString().split('T')[0] : "",
-          profileImageUrl: data.profileImageUrl ?? null,
+          profileImage: null, // Aquí puedes asignar el valor actual de la imagen o dejarlo como null si no está disponible
           companyId: data.companyId,
           company: { ...employeeData.company, id: data.companyId }
         });
@@ -412,7 +408,9 @@ useEffect(() => {
     const form = new FormData();
     Object.keys(employeeData).forEach(key => {
       const value = employeeData[key as keyof EditEmployeeData];
-      if (typeof value === 'object' && value !== null && 'id' in value) {
+      if (key === "profileImage" && value instanceof File) {
+        form.append(key, value);
+      } else if (typeof value === 'object' && value !== null && 'id' in value) {
         form.append(key, (value as { id: string }).id);
       } else if (value !== null && value !== undefined) {
         form.append(key, value as any);
