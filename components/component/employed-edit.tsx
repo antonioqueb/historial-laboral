@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -368,6 +369,12 @@ export default function EditEmployee() {
       ...prevState,
       [name]: value
     }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setEmployeeData({ ...employeeData, profileImage: e.target.files[0] });
+    }
   };
 
   const handleCompanyChange = (company: Company) => {
