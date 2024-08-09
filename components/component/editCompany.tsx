@@ -46,7 +46,7 @@ export default function EditCompany() {
 
   const loadCompanies = async () => {
     const data = await getCompaniesRFC();
-    setCompanies(data); // Aquí asignamos el array completo de compañías
+    setCompanies(data); // Se asigna el array de compañías directamente
   };
 
   const fetchCompanyData = async (rfc: string) => {
